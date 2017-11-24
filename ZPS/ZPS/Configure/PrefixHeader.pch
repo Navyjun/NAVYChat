@@ -1,0 +1,47 @@
+//
+//  PrefixHeader.pch
+//  ZPS
+//
+//  Created by 张海军 on 2017/11/23.
+//  Copyright © 2017年 baoqianli. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+#ifdef __OBJC__
+
+#ifdef DEBUG
+
+#define MYLog(...) NSLog(__VA_ARGS__)
+
+#else
+
+#define MYLog(...)
+
+#endif
+
+#import "UIView+Extension.h"
+#import "UIImage+Image.h"
+#import "NSString+path.h"
+#import <Masonry.h>
+#import "ZPSConfigHead.h"
+
+#endif
+
+// 弱引用
+#define WS(weakSelf)  __weak __typeof(&*self)weakSelf = self;
+// 屏幕宽高
+#define HJSCREENW  ([UIScreen mainScreen].bounds.size.width)
+#define HJSCREENH  ([UIScreen mainScreen].bounds.size.height)
+
+// 聊天相关
+#define MESSAGEFONT  17.0
+#define USERNAMEH    17.0
+#define USERICONH    61.0
+#define MESSAGELRMARGIN 71.0
+
+// 公共
+#define NAVBARH 64.0
+
+#endif /* PrefixHeader_pch */
