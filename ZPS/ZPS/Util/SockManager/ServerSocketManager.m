@@ -95,7 +95,7 @@ static ServerSocketManager *socketManager = nil;
 
 /// 新的客户端连接上
 - (void)socket:(GCDAsyncSocket *)sock didAcceptNewSocket:(GCDAsyncSocket *)newSocket{
-    NSLog(@"%s \n localHost = %@ \n connectedHost = %@",__func__,newSocket.localHost,newSocket.connectedHost);
+    
     if (!self.clientSocketArray) {
         self.clientSocketArray = [NSMutableArray array];
     }

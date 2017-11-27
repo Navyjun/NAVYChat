@@ -18,28 +18,35 @@
             totalH = USERICONH;
         }
         _cellH = totalH;
-        NSLog(@"_cellH = %f",_cellH);
     }
     return _cellH;
 }
 
 - (CGFloat)messageH{
     if (_messageH == 0) {
-        [self messageContentWH];
+        if (self.ChatMessageType == ChatMessageText) {
+            [self messageContentWH];
+        }else if (self.ChatMessageType == ChatMessageImage || self.ChatMessageType == ChatMessageVideo){
+            _messageH = self.messageW * 1.5;
+        }
     }
     return _messageH;
 }
 
 - (CGFloat)messageW{
     if (_messageW == 0) {
-        [self messageContentWH];
+        if (self.ChatMessageType == ChatMessageText) {
+            [self messageContentWH];
+        }else if (self.ChatMessageType == ChatMessageImage || self.ChatMessageType == ChatMessageVideo){
+            CGFloat maxW = HJSCREENW - 2 * MESSAGELRMARGIN - (messageLabelForHeadLeftMargin + messageLabelForHeadRightMargin);
+            _messageW = maxW - 40;
+        }
     }
     return _messageW;
 }
 
 - (void)messageContentWH{
     CGFloat maxW = HJSCREENW - 2 * MESSAGELRMARGIN - (messageLabelForHeadLeftMargin + messageLabelForHeadRightMargin);
-//    CGRect topicRect = [self.messageContent boundingRectWithSize:CGSizeMake(maxW, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:MESSAGEFONT]} context:nil];
     CGRect topicRect = [self.messageContentAttributed boundingRectWithSize:CGSizeMake(maxW, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin context:nil];
     
     _messageH = topicRect.size.height+10;

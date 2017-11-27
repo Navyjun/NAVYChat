@@ -8,6 +8,7 @@
 
 #import "ESKeyBoardToolView.h"
 #import "ESEmoticonView.h"
+#import "ESAddOpationView.h"
 
 static CGFloat fontValue = 16.0;
 
@@ -20,8 +21,12 @@ static CGFloat fontValue = 16.0;
 @property (nonatomic, strong) UIButton *addButton;
 /// 占位文字的label
 @property (nonatomic, strong) UILabel *placeTitleLabel;
+/// inputView
+@property (nonatomic, strong) UIView *inputView;
 /// 表情view
 @property (nonatomic, strong) ESEmoticonView *emoticonView;
+/// 其它选项view
+@property (nonatomic, strong) ESAddOpationView *addOpationView;
 /// 当前textView的高度
 @property (nonatomic, assign) CGFloat nowHeight;
 /// 没一行文字的高度
@@ -116,6 +121,7 @@ static CGFloat fontValue = 16.0;
     // 加号按钮
     self.addButton = [[UIButton alloc] init];
     [self.addButton setImage:[UIImage imageNamed:@"添加_bt"] forState:UIControlStateNormal];
+    [self.addButton addTarget:self action:@selector(addButtonDidClick:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.addButton];
     
     // 监听键盘高度变化
@@ -185,11 +191,11 @@ static CGFloat fontValue = 16.0;
     // 判断最后一个字符是否为 "\n"
     if ([textStr hasSuffix:@"\n"]) {
         // 1.发送消息
-        self.isEditing = NO;
-        textView.text = nil;
         self.hj_height = TitleViewHeight;
         self.y += self.textRowHeight * (lines - 1);
         _currentLine = 1;
+        self.isEditing = NO;
+        textView.text = nil;
         textView.scrollEnabled = NO;
         [textView resignFirstResponder];
         
@@ -252,17 +258,45 @@ static CGFloat fontValue = 16.0;
 - (void)emoticonButtonDidClick:(UIButton *)button
 {
     _isChangeEmoticon = YES;
+    if (self.addButton.selected) {
+        self.addButton.selected = NO;
+    }
+    self.addOpationView.hidden = YES;
+    self.emoticonView.hidden = NO;
+    if (!self.emoticonView.superview) {
+        [self.inputView addSubview:self.emoticonView];
+    }
+    [self changeInputView:self.inputView selected:button.selected];
     button.selected = !button.selected;
+}
+
+- (void)addButtonDidClick:(UIButton *)button{
+    if (self.emoticonButton.selected) {
+        self.emoticonButton.selected = NO;
+    }
+    self.emoticonView.hidden = YES;
+    self.addOpationView.hidden = NO;
+    if (!self.addOpationView.superview) {
+        [self.inputView addSubview:self.addOpationView];
+    }
+    [self changeInputView:self.inputView selected:button.selected];
+    button.selected = !button.selected;
+}
+
+- (void)changeInputView:(UIView *)inputView selected:(BOOL)isSelected{
+    if (!isSelected && self.inputTextView.inputView) {
+        self.inputTextView.inputView = inputView;
+        return;
+    }
+    
     __block CGFloat orginY = self.y;
     if (!self.inputTextView.inputView) {
-        self.inputTextView.inputView = self.emoticonView;
+        self.inputTextView.inputView = inputView;
     }else{
         self.inputTextView.inputView = nil;
     }
-    
     // 退出键盘
     [self.inputTextView resignFirstResponder];
-    
     // 再次成为第一响应者
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self.inputTextView becomeFirstResponder];
@@ -274,8 +308,6 @@ static CGFloat fontValue = 16.0;
             }
             _isChangeEmoticon = NO;
         });
-        
-        
     });
 }
 
@@ -298,20 +330,32 @@ static CGFloat fontValue = 16.0;
             for (NSInteger i = 0; i < count; i++) {
                 [weakSelf.inputTextView deleteBackward];
             }
-
             [weakSelf.inputTextView resignFirstResponder];
-            
         };
-        
         _emoticonView.insetEmoticonBlock = ^ (NSString *message){
             [weakSelf.inputTextView insertText:message];
         };
-        
         _emoticonView.deleteEmoticonBlock = ^{
             [weakSelf.inputTextView deleteBackward];
         };
     }
     return _emoticonView;
+}
+
+- (ESAddOpationView *)addOpationView{
+    if (!_addOpationView) {
+        _addOpationView = [ESAddOpationView addOpationView];
+        OpationItem *item = [OpationItem opationItemWithName:@"照片" iconName:@"chat_img"];
+        _addOpationView.opationItem = @[item];
+    }
+    return _addOpationView;
+}
+
+- (UIView *)inputView{
+    if (!_inputView) {
+        _inputView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, HJSCREENW, 216)];
+    }
+    return _inputView;
 }
 
 @end

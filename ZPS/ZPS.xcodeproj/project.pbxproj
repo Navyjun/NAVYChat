@@ -37,6 +37,7 @@
 		EED35A2A1FC6BC0B005B0A26 /* ChatMessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = EED35A291FC6BC0B005B0A26 /* ChatMessageModel.m */; };
 		EEE795511FCB9D5400541A69 /* ZPBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EEE795501FCB9D5400541A69 /* ZPBaseViewController.m */; };
 		EEE795551FCBAEA800541A69 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = EEE795541FCBAEA800541A69 /* RegexKitLite.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		EEE795581FCBEA9200541A69 /* ESAddOpationView.m in Sources */ = {isa = PBXBuildFile; fileRef = EEE795571FCBEA9200541A69 /* ESAddOpationView.m */; };
 		F2E15B4460F03A4EEE867D65 /* libPods-ZPS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 95BFAECA09AF58978697F367 /* libPods-ZPS.a */; };
 /* End PBXBuildFile section */
 
@@ -103,6 +104,8 @@
 		EEE795501FCB9D5400541A69 /* ZPBaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZPBaseViewController.m; sourceTree = "<group>"; };
 		EEE795531FCBAEA800541A69 /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
 		EEE795541FCBAEA800541A69 /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
+		EEE795561FCBEA9200541A69 /* ESAddOpationView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ESAddOpationView.h; sourceTree = "<group>"; };
+		EEE795571FCBEA9200541A69 /* ESAddOpationView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ESAddOpationView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -344,6 +347,8 @@
 				EED35A091FC65CAE005B0A26 /* ESEmoticonTool.m */,
 				EED35A0A1FC65CAE005B0A26 /* ESEmoticonView.h */,
 				EED35A0C1FC65CAE005B0A26 /* ESEmoticonView.m */,
+				EEE795561FCBEA9200541A69 /* ESAddOpationView.h */,
+				EEE795571FCBEA9200541A69 /* ESAddOpationView.m */,
 				EED35A061FC65CAE005B0A26 /* ESKeyBoardToolView.h */,
 				EED35A071FC65CAE005B0A26 /* ESKeyBoardToolView.m */,
 			);
@@ -532,6 +537,7 @@
 				EE4051251FB3ECBF0054BC53 /* ViewController.m in Sources */,
 				EED35A201FC664F4005B0A26 /* ChatViewController.m in Sources */,
 				EE86840D1FBD62D50010B0C7 /* LocationFileViewController.m in Sources */,
+				EEE795581FCBEA9200541A69 /* ESAddOpationView.m in Sources */,
 				EE5CE2101FB52FB9001F5A30 /* HJWifiUtil.m in Sources */,
 				EEE795551FCBAEA800541A69 /* RegexKitLite.m in Sources */,
 				EE4051511FB404410054BC53 /* ServerSocketItem.m in Sources */,

@@ -44,6 +44,7 @@ UITableViewDataSource>
 #pragma mark -
 - (void)setupInit{
     self.navigationItem.title = @"NAVY-Chat";
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"设置聊天背景" style:UIBarButtonItemStyleDone target:self action:@selector(rightItemDidClick)];
     
     // UI
     [self tableView];
@@ -79,7 +80,13 @@ UITableViewDataSource>
 }
 
 #pragma mark - event
+- (void)hideKeyBoard{
+    [self.keyBoardToolView exitKeyBoard];
+}
 
+- (void)rightItemDidClick{
+    
+}
 
 #pragma mark - ESKeyBoardToolViewDelegate
 - (void)ESKeyBoardToolViewSendButtonDidClick:(ESKeyBoardToolView *)view message:(NSString *)message{
@@ -87,9 +94,10 @@ UITableViewDataSource>
     messageM.isFormMe = message.length % 2 == 0 ? YES : NO;
     messageM.userName = message.length % 2 == 0 ? @"NAVY" : @"friend";
     messageM.messageContent = message;
+    messageM.ChatMessageType = ChatMessageText;
     [self.messageItems addObject:messageM];
     [self.tableView reloadData];
-    [self scrollToLastCell];
+    //[self scrollToLastCell];
 }
 
 - (void)ESKeyBoardToolViewDidEditing:(ESKeyBoardToolView *)view changeY:(CGFloat)yValue{
@@ -98,7 +106,6 @@ UITableViewDataSource>
     self.orginalOffsetY = NAVBARH;
     CGFloat showH = view.y - self.orginalOffsetY;
     CGFloat needOffsetY = contentH - showH;
-    //MYLog(@"showH = %f,needOffsetY = %f",showH,needOffsetY);
     if (needOffsetY >= 0) {
         [self.tableView setContentOffset:CGPointMake(self.tableView.contentOffset.x, needOffsetY-self.orginalOffsetY) animated:yValue == 0 ? YES : NO];
     }
@@ -125,10 +132,6 @@ UITableViewDataSource>
     ChatMessageCell *cell = [ChatMessageCell chatMessageCell:tableView];
     ChatMessageModel *messageM = self.messageItems[indexPath.row];
     cell.dataModel = messageM;
-    WS(weakSelf);
-    cell.cellTapBlock = ^{
-        [weakSelf.keyBoardToolView exitKeyBoard];
-    };
     return cell;
 }
 
@@ -171,7 +174,9 @@ UITableViewDataSource>
         self.tableView.dataSource = self;
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         self.tableView.backgroundColor = [UIColor colorWithRed:231.0/255.0 green:232.0/255.0 blue:238.0/255.0 alpha:1];
-        
+        UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyBoard)];
+        tapGestureRecognizer.cancelsTouchesInView = NO;
+        [self.tableView addGestureRecognizer:tapGestureRecognizer];
         [self.view addSubview:self.tableView];
         [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.right.mas_equalTo(self.view);

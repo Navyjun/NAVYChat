@@ -18,6 +18,12 @@
 @property (strong, nonatomic)  UIImageView *messageBgImageView;
 @property (strong, nonatomic)  UILabel *messageLabel;
 @property (strong, nonatomic)  UIImageView *meIconImageView;
+/// 图片或者视频
+@property (strong, nonatomic)  UIView *imageOrVideoView;
+/// 发送的内容为图片
+@property (strong, nonatomic)  UIImageView *messageImageView;
+/// 视频播放按钮
+@property (strong, nonatomic)  UIImageView *videoPlayImage;
 @end
 
 @implementation ChatMessageCell
@@ -25,7 +31,8 @@
     ChatMessageCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([self class])];
     if (!cell) {
         cell = [[ChatMessageCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([self class])];
-        cell.backgroundColor = [UIColor colorWithRed:231.0/255.0 green:232.0/255.0 blue:238.0/255.0 alpha:1];
+        //cell.backgroundColor = [UIColor colorWithRed:231.0/255.0 green:232.0/255.0 blue:238.0/255.0 alpha:1];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return cell;
 }
@@ -43,50 +50,65 @@
     [self meIconImageView];
     [self userNameLabel];
     [self messageBgImageView];
-    [self messageLabel];
+    //[self messageLabel];
 }
 
 - (void)setDataModel:(ChatMessageModel *)dataModel{
     _dataModel = dataModel;
     
     [_messageBgImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(dataModel.messageW);
+        make.width.mas_equalTo(_dataModel.messageW);
         make.top.mas_equalTo(self.userNameLabel.mas_bottom).offset(6);
         make.bottom.mas_equalTo(self.mas_bottom).offset(-8);
-        if (dataModel.isFormMe) {
+        if (_dataModel.isFormMe) {
             make.right.mas_equalTo(self.meIconImageView.mas_left).offset(-15);
         }else{
             make.left.mas_equalTo(self.userIconImageView.mas_right).offset(15);
         }
     }];
     
-    [_messageLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.top.bottom.mas_equalTo(self.messageBgImageView);
-        make.left.mas_equalTo(self.messageBgImageView.mas_left).offset(dataModel.isFormMe ? messageLabelForHeadRightMargin : messageLabelForHeadLeftMargin);
-        make.right.mas_equalTo(self.messageBgImageView.mas_right).offset(dataModel.isFormMe ? -messageLabelForHeadLeftMargin : -messageLabelForHeadRightMargin);
-    }];
-    
-    
+    if (_dataModel.ChatMessageType == ChatMessageText) {
+        [self layoutForMessageTextType];
+    }else if (_dataModel.ChatMessageType == ChatMessageImage || _dataModel.ChatMessageType == ChatMessageVideo){
+        [self layoutForMessageImageOrVidelType];
+    }
+
     self.userIconImageView.hidden = _dataModel.isFormMe ? YES : NO;
     self.meIconImageView.hidden = _dataModel.isFormMe ? NO : YES;
     self.messageBgImageView.image = _dataModel.isFormMe ? self.meMessageImage : self.friendMessageImage;
     self.userNameLabel.textAlignment = _dataModel.isFormMe ? NSTextAlignmentRight : NSTextAlignmentLeft;
-    
-    //self.messageLabel.text = _dataModel.messageContent;
-    self.messageLabel.attributedText = _dataModel.messageContentAttributed;
     self.userNameLabel.text = _dataModel.userName;
     
 }
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
-    if (self.cellTapBlock) {
-        self.cellTapBlock();
-    }
+// 文字
+-(void)layoutForMessageTextType{
+    _imageOrVideoView.hidden = YES;
+    self.messageLabel.hidden = NO;
+    
+    [self.messageLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.bottom.mas_equalTo(self.messageBgImageView);
+        make.left.mas_equalTo(self.messageBgImageView.mas_left).offset(_dataModel.isFormMe ? messageLabelForHeadRightMargin : messageLabelForHeadLeftMargin);
+        make.right.mas_equalTo(self.messageBgImageView.mas_right).offset(_dataModel.isFormMe ? -messageLabelForHeadLeftMargin : -messageLabelForHeadRightMargin);
+    }];
+    
+    self.messageLabel.attributedText = _dataModel.messageContentAttributed;
+}
+// 图片/视频
+-(void)layoutForMessageImageOrVidelType{
+    self.imageOrVideoView.hidden = NO;
+    _messageLabel.hidden = YES;
+    self.videoPlayImage.hidden = _dataModel.ChatMessageType == ChatMessageVideo ? NO : YES;
+    [self.imageOrVideoView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.messageBgImageView.mas_top).offset(1);
+        make.bottom.mas_equalTo(self.messageBgImageView.mas_bottom).offset(-1);
+        make.left.mas_equalTo(self.messageBgImageView.mas_left).offset(_dataModel.isFormMe ? 1 : 9.0);
+        make.right.mas_equalTo(self.messageBgImageView.mas_right).offset(_dataModel.isFormMe ? -9.0 : -1);
+    }];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
 }
 
 #pragma mark - set / get
@@ -171,12 +193,38 @@
         _messageLabel.numberOfLines = 0;
         [self addSubview:_messageLabel];
         [_messageLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.messageBgImageView.mas_top);//.offset(5);
-            make.bottom.mas_equalTo(self.messageBgImageView.mas_bottom);//.offset(-5);
+            make.top.mas_equalTo(self.messageBgImageView.mas_top);
+            make.bottom.mas_equalTo(self.messageBgImageView.mas_bottom);
         }];
         
     }
     return _messageLabel;
+}
+
+- (UIView *)imageOrVideoView{
+    if (!_imageOrVideoView) {
+        _imageOrVideoView = [[UIView alloc] init];
+        _imageOrVideoView.backgroundColor = [UIColor redColor];
+        [_imageOrVideoView hj_viewCornerRadiusValue:6.0];
+        [self addSubview:_imageOrVideoView];
+        [_imageOrVideoView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.messageBgImageView.mas_top);
+            make.bottom.mas_equalTo(self.messageBgImageView.mas_bottom);
+        }];
+        
+        self.messageImageView = [[UIImageView alloc] init];
+        [_imageOrVideoView addSubview:self.messageImageView];
+        [self.messageImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.top.bottom.mas_equalTo(_imageOrVideoView);
+        }];
+        
+        self.videoPlayImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"video-play"]];
+        [_imageOrVideoView addSubview:self.videoPlayImage];
+        [self.videoPlayImage mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.center.mas_equalTo(CGPointMake(_imageOrVideoView.hj_width/2, _imageOrVideoView.hj_height/2));
+        }];
+    }
+    return _imageOrVideoView;
 }
 
 @end

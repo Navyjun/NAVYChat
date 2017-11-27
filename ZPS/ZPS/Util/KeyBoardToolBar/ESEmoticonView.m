@@ -68,7 +68,7 @@ static CGFloat viewH = 216;
 
     // 分割线
     self.marginView = [[UIView alloc] init];
-    self.marginView.backgroundColor = [UIColor grayColor];
+    self.marginView.backgroundColor = [UIColor lightGrayColor];
     self.marginView.frame = CGRectMake(0, 0, HJSCREENW, 0.5);
     
     

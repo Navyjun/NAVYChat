@@ -4,7 +4,7 @@
 //
 //  Created by 张海军 on 16/8/11.
 //  Copyright © 2016年 baoqianli. All rights reserved.
-//
+//  表情view
 
 #import <UIKit/UIKit.h>
 
