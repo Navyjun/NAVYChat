@@ -56,14 +56,13 @@ UITableViewDataSource>
 }
 
 
-
 #pragma mark - notification hadle
 - (void)keyBoardWillChange:(NSNotification *)notification
 {
     NSDictionary *userInfo = notification.userInfo;
     double duration = [userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     CGRect keyboardF = [userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    if (keyboardF.origin.y >= self.view.hj_height) { // 键盘的Y值已经远远超过了控制器view的高度 退出键盘
+    if (keyboardF.origin.y >= self.view.hj_height) { // 退出键盘
         [self.keyBoardToolView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.bottom.mas_equalTo(self.view.mas_bottom);
             make.height.mas_equalTo(TitleViewHeight);
@@ -84,7 +83,6 @@ UITableViewDataSource>
 
 #pragma mark - ESKeyBoardToolViewDelegate
 - (void)ESKeyBoardToolViewSendButtonDidClick:(ESKeyBoardToolView *)view message:(NSString *)message{
-    NSLog(@"message = %@",message);
     ChatMessageModel *messageM = [ChatMessageModel new];
     messageM.isFormMe = message.length % 2 == 0 ? YES : NO;
     messageM.userName = message.length % 2 == 0 ? @"NAVY" : @"friend";
@@ -100,6 +98,7 @@ UITableViewDataSource>
     self.orginalOffsetY = NAVBARH;
     CGFloat showH = view.y - self.orginalOffsetY;
     CGFloat needOffsetY = contentH - showH;
+    //MYLog(@"showH = %f,needOffsetY = %f",showH,needOffsetY);
     if (needOffsetY >= 0) {
         [self.tableView setContentOffset:CGPointMake(self.tableView.contentOffset.x, needOffsetY-self.orginalOffsetY) animated:yValue == 0 ? YES : NO];
     }
@@ -139,19 +138,12 @@ UITableViewDataSource>
 }
 
 #pragma mark - table view delegate
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    /*
-    if (!self.keyBoardToolView.inputTextView.isFirstResponder) {
-        CGFloat scrollH = scrollView.hj_height;
-        CGFloat contentH = scrollView.contentSize.height;
-        CGFloat offsetY = scrollView.contentOffset.y;
-        if ((contentH - offsetY) <= scrollH) {
-            [self.keyBoardToolView showKeyBoard];
-        }
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
+    if (velocity.y >= 0.5) {
+         [self.keyBoardToolView showKeyBoard];
+    }else if(velocity.y < 0){
+         [self.keyBoardToolView exitKeyBoard];
     }
-     */
-    [self.keyBoardToolView exitKeyBoard];
 }
 
 

@@ -9,9 +9,9 @@
 #import "ChatMessageCell.h"
 
 @interface ChatMessageCell ()
-/// friend
+/// 朋友消息的背景图
 @property (strong, nonatomic)  UIImage *friendMessageImage;
-/// me
+/// 自己消息的背景图
 @property (strong, nonatomic)  UIImage *meMessageImage;
 @property (strong, nonatomic)  UIImageView *userIconImageView;
 @property (strong, nonatomic)  UILabel *userNameLabel;
@@ -72,7 +72,8 @@
     self.messageBgImageView.image = _dataModel.isFormMe ? self.meMessageImage : self.friendMessageImage;
     self.userNameLabel.textAlignment = _dataModel.isFormMe ? NSTextAlignmentRight : NSTextAlignmentLeft;
     
-    self.messageLabel.text = _dataModel.messageContent;
+    //self.messageLabel.text = _dataModel.messageContent;
+    self.messageLabel.attributedText = _dataModel.messageContentAttributed;
     self.userNameLabel.text = _dataModel.userName;
     
 }

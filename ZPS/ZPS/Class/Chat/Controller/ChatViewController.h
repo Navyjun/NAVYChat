@@ -6,8 +6,8 @@
 //  Copyright © 2017年 baoqianli. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "ZPBaseViewController.h"
 
-@interface ChatViewController : UIViewController
+@interface ChatViewController : ZPBaseViewController
 
 @end

@@ -7,4 +7,5 @@ target 'ZPS' do
  pod 'SDWebImage'
  pod 'SVProgressHUD'
  pod 'Masonry'
+ pod 'TTTAttributedLabel'
 end

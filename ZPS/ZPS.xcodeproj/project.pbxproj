@@ -35,6 +35,8 @@
 		EED35A221FC665D0005B0A26 /* defaultEmotion.plist in Resources */ = {isa = PBXBuildFile; fileRef = EED35A211FC665D0005B0A26 /* defaultEmotion.plist */; };
 		EED35A261FC6A3AA005B0A26 /* ChatMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EED35A241FC6A3AA005B0A26 /* ChatMessageCell.m */; };
 		EED35A2A1FC6BC0B005B0A26 /* ChatMessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = EED35A291FC6BC0B005B0A26 /* ChatMessageModel.m */; };
+		EEE795511FCB9D5400541A69 /* ZPBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EEE795501FCB9D5400541A69 /* ZPBaseViewController.m */; };
+		EEE795551FCBAEA800541A69 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = EEE795541FCBAEA800541A69 /* RegexKitLite.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		F2E15B4460F03A4EEE867D65 /* libPods-ZPS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 95BFAECA09AF58978697F367 /* libPods-ZPS.a */; };
 /* End PBXBuildFile section */
 
@@ -97,6 +99,10 @@
 		EED35A281FC6BC0B005B0A26 /* ChatMessageModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatMessageModel.h; sourceTree = "<group>"; };
 		EED35A291FC6BC0B005B0A26 /* ChatMessageModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatMessageModel.m; sourceTree = "<group>"; };
 		EED35A2B1FC6C554005B0A26 /* ZPSConfigHead.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZPSConfigHead.h; sourceTree = "<group>"; };
+		EEE7954F1FCB9D5400541A69 /* ZPBaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZPBaseViewController.h; sourceTree = "<group>"; };
+		EEE795501FCB9D5400541A69 /* ZPBaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZPBaseViewController.m; sourceTree = "<group>"; };
+		EEE795531FCBAEA800541A69 /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
+		EEE795541FCBAEA800541A69 /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -170,6 +176,7 @@
 		EE4051371FB3ED970054BC53 /* Class */ = {
 			isa = PBXGroup;
 			children = (
+				EEE7954B1FCB9D0800541A69 /* Base */,
 				EED35A011FC65B09005B0A26 /* Chat */,
 				EED35A001FC65AD4005B0A26 /* FileAccept */,
 			);
@@ -222,6 +229,7 @@
 		EE40513C1FB3EE0D0054BC53 /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				EEE795521FCBAEA800541A69 /* RegexKitLite */,
 				EED35A051FC65C82005B0A26 /* KeyBoardToolBar */,
 				EE5CE2091FB52FB9001F5A30 /* wifi */,
 				EE40514B1FB403FD0054BC53 /* Category */,
@@ -349,6 +357,48 @@
 				EED35A2B1FC6C554005B0A26 /* ZPSConfigHead.h */,
 			);
 			path = Configure;
+			sourceTree = "<group>";
+		};
+		EEE7954B1FCB9D0800541A69 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				EEE7954E1FCB9D2800541A69 /* View */,
+				EEE7954D1FCB9D2100541A69 /* Model */,
+				EEE7954C1FCB9D1600541A69 /* Controller */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
+		EEE7954C1FCB9D1600541A69 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				EEE7954F1FCB9D5400541A69 /* ZPBaseViewController.h */,
+				EEE795501FCB9D5400541A69 /* ZPBaseViewController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		EEE7954D1FCB9D2100541A69 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		EEE7954E1FCB9D2800541A69 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		EEE795521FCBAEA800541A69 /* RegexKitLite */ = {
+			isa = PBXGroup;
+			children = (
+				EEE795531FCBAEA800541A69 /* RegexKitLite.h */,
+				EEE795541FCBAEA800541A69 /* RegexKitLite.m */,
+			);
+			path = RegexKitLite;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -483,6 +533,7 @@
 				EED35A201FC664F4005B0A26 /* ChatViewController.m in Sources */,
 				EE86840D1FBD62D50010B0C7 /* LocationFileViewController.m in Sources */,
 				EE5CE2101FB52FB9001F5A30 /* HJWifiUtil.m in Sources */,
+				EEE795551FCBAEA800541A69 /* RegexKitLite.m in Sources */,
 				EE4051511FB404410054BC53 /* ServerSocketItem.m in Sources */,
 				EE5CE2391FB55651001F5A30 /* ImageViewController.m in Sources */,
 				EE4051301FB3ECBF0054BC53 /* main.m in Sources */,
@@ -496,6 +547,7 @@
 				EE40514A1FB3F0470054BC53 /* ServerSocketManager.m in Sources */,
 				EED35A2A1FC6BC0B005B0A26 /* ChatMessageModel.m in Sources */,
 				EED35A261FC6A3AA005B0A26 /* ChatMessageCell.m in Sources */,
+				EEE795511FCB9D5400541A69 /* ZPBaseViewController.m in Sources */,
 				EE4051551FB43B770054BC53 /* ZPHomeCell.m in Sources */,
 				EED35A141FC65CD5005B0A26 /* ESEmotionModel.m in Sources */,
 			);
@@ -639,6 +691,35 @@
 				INFOPLIST_FILE = "$(SRCROOT)/ZPS/resource/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-l\"AFNetworking\"",
+					"-l\"MJExtension\"",
+					"-l\"Masonry\"",
+					"-l\"SDWebImage\"",
+					"-l\"SVProgressHUD\"",
+					"-l\"TTTAttributedLabel\"",
+					"-framework",
+					"\"CoreGraphics\"",
+					"-framework",
+					"\"CoreText\"",
+					"-framework",
+					"\"Foundation\"",
+					"-framework",
+					"\"ImageIO\"",
+					"-framework",
+					"\"MobileCoreServices\"",
+					"-framework",
+					"\"QuartzCore\"",
+					"-framework",
+					"\"Security\"",
+					"-framework",
+					"\"SystemConfiguration\"",
+					"-framework",
+					"\"UIKit\"",
+					"-licucore",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.qianliyun.zhipingserver.ZPS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -657,6 +738,35 @@
 				INFOPLIST_FILE = "$(SRCROOT)/ZPS/resource/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-l\"AFNetworking\"",
+					"-l\"MJExtension\"",
+					"-l\"Masonry\"",
+					"-l\"SDWebImage\"",
+					"-l\"SVProgressHUD\"",
+					"-l\"TTTAttributedLabel\"",
+					"-framework",
+					"\"CoreGraphics\"",
+					"-framework",
+					"\"CoreText\"",
+					"-framework",
+					"\"Foundation\"",
+					"-framework",
+					"\"ImageIO\"",
+					"-framework",
+					"\"MobileCoreServices\"",
+					"-framework",
+					"\"QuartzCore\"",
+					"-framework",
+					"\"Security\"",
+					"-framework",
+					"\"SystemConfiguration\"",
+					"-framework",
+					"\"UIKit\"",
+					"-licucore",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.qianliyun.zhipingserver.ZPS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";

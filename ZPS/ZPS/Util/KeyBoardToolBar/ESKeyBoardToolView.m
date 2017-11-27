@@ -172,6 +172,7 @@ static CGFloat fontValue = 16.0;
 #pragma mark - textView delegate
 - (void)textViewDidChange:(UITextView *)textView
 {
+    
     NSString *textStr = textView.text;
     if (textStr.length) {
         self.placeTitleLabel.hidden = YES;
@@ -189,7 +190,7 @@ static CGFloat fontValue = 16.0;
         self.hj_height = TitleViewHeight;
         self.y += self.textRowHeight * (lines - 1);
         _currentLine = 1;
-        textView.scrollEnabled = YES;
+        textView.scrollEnabled = NO;
         [textView resignFirstResponder];
         
         NSRange range = [textStr rangeOfString:@"\n"];
@@ -231,7 +232,10 @@ static CGFloat fontValue = 16.0;
 
 - (void)textViewDidBeginEditing:(UITextView *)textView{
     if ([self.delegate respondsToSelector:@selector(ESKeyBoardToolViewDidEditing:changeY:)]) {
-        [self.delegate ESKeyBoardToolViewDidEditing:self changeY:0];
+        // 此处需延时回调  不然会跟上拉弹出键盘有冲突
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.showTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self.delegate ESKeyBoardToolViewDidEditing:self changeY:0];
+        });
     }
 }
 

@@ -11,7 +11,7 @@
 
 @interface ChatMessageCell : UITableViewCell
 @property (nonatomic, strong) ChatMessageModel *dataModel;
-@property (nonatomic, copy) void(^cellTapBlock)();
+@property (nonatomic, copy) void(^cellTapBlock)(void);
 + (instancetype)chatMessageCell:(UITableView *)tableView;
 
 @end
