@@ -90,4 +90,8 @@ static CGFloat viewH = 216;
                                       imgW, imgW);
 }
 
+- (void)setHighlighted:(BOOL)highlighted{
+    
+}
+
 @end

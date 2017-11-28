@@ -35,6 +35,10 @@
 		EED35A221FC665D0005B0A26 /* defaultEmotion.plist in Resources */ = {isa = PBXBuildFile; fileRef = EED35A211FC665D0005B0A26 /* defaultEmotion.plist */; };
 		EED35A261FC6A3AA005B0A26 /* ChatMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EED35A241FC6A3AA005B0A26 /* ChatMessageCell.m */; };
 		EED35A2A1FC6BC0B005B0A26 /* ChatMessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = EED35A291FC6BC0B005B0A26 /* ChatMessageModel.m */; };
+		EEE519051FCCECB10000AA7E /* PickerImageVideoTool.m in Sources */ = {isa = PBXBuildFile; fileRef = EEE519041FCCECB10000AA7E /* PickerImageVideoTool.m */; };
+		EEE519081FCCEF530000AA7E /* SocketManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EEE519071FCCEF530000AA7E /* SocketManager.m */; };
+		EEE519111FCCF81B0000AA7E /* ZPPublicMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = EEE5190D1FCCF81B0000AA7E /* ZPPublicMethod.m */; };
+		EEE519121FCCF81B0000AA7E /* ZPCommentData.m in Sources */ = {isa = PBXBuildFile; fileRef = EEE5190F1FCCF81B0000AA7E /* ZPCommentData.m */; };
 		EEE795511FCB9D5400541A69 /* ZPBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EEE795501FCB9D5400541A69 /* ZPBaseViewController.m */; };
 		EEE795551FCBAEA800541A69 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = EEE795541FCBAEA800541A69 /* RegexKitLite.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EEE795581FCBEA9200541A69 /* ESAddOpationView.m in Sources */ = {isa = PBXBuildFile; fileRef = EEE795571FCBEA9200541A69 /* ESAddOpationView.m */; };
@@ -100,6 +104,14 @@
 		EED35A281FC6BC0B005B0A26 /* ChatMessageModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatMessageModel.h; sourceTree = "<group>"; };
 		EED35A291FC6BC0B005B0A26 /* ChatMessageModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatMessageModel.m; sourceTree = "<group>"; };
 		EED35A2B1FC6C554005B0A26 /* ZPSConfigHead.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZPSConfigHead.h; sourceTree = "<group>"; };
+		EEE519031FCCECB10000AA7E /* PickerImageVideoTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PickerImageVideoTool.h; sourceTree = "<group>"; };
+		EEE519041FCCECB10000AA7E /* PickerImageVideoTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PickerImageVideoTool.m; sourceTree = "<group>"; };
+		EEE519061FCCEF530000AA7E /* SocketManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SocketManager.h; sourceTree = "<group>"; };
+		EEE519071FCCEF530000AA7E /* SocketManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SocketManager.m; sourceTree = "<group>"; };
+		EEE5190D1FCCF81B0000AA7E /* ZPPublicMethod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZPPublicMethod.m; sourceTree = "<group>"; };
+		EEE5190E1FCCF81B0000AA7E /* ZPCommentData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZPCommentData.h; sourceTree = "<group>"; };
+		EEE5190F1FCCF81B0000AA7E /* ZPCommentData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZPCommentData.m; sourceTree = "<group>"; };
+		EEE519101FCCF81B0000AA7E /* ZPPublicMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZPPublicMethod.h; sourceTree = "<group>"; };
 		EEE7954F1FCB9D5400541A69 /* ZPBaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZPBaseViewController.h; sourceTree = "<group>"; };
 		EEE795501FCB9D5400541A69 /* ZPBaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZPBaseViewController.m; sourceTree = "<group>"; };
 		EEE795531FCBAEA800541A69 /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
@@ -232,6 +244,8 @@
 		EE40513C1FB3EE0D0054BC53 /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				EEE5190C1FCCF8060000AA7E /* Comment */,
+				EEE519021FCCEC770000AA7E /* GetImageOrVideo */,
 				EEE795521FCBAEA800541A69 /* RegexKitLite */,
 				EED35A051FC65C82005B0A26 /* KeyBoardToolBar */,
 				EE5CE2091FB52FB9001F5A30 /* wifi */,
@@ -260,6 +274,8 @@
 				EE4051491FB3F0470054BC53 /* ServerSocketManager.m */,
 				EE40514F1FB404410054BC53 /* ServerSocketItem.h */,
 				EE4051501FB404410054BC53 /* ServerSocketItem.m */,
+				EEE519061FCCEF530000AA7E /* SocketManager.h */,
+				EEE519071FCCEF530000AA7E /* SocketManager.m */,
 			);
 			path = SockManager;
 			sourceTree = "<group>";
@@ -362,6 +378,26 @@
 				EED35A2B1FC6C554005B0A26 /* ZPSConfigHead.h */,
 			);
 			path = Configure;
+			sourceTree = "<group>";
+		};
+		EEE519021FCCEC770000AA7E /* GetImageOrVideo */ = {
+			isa = PBXGroup;
+			children = (
+				EEE519031FCCECB10000AA7E /* PickerImageVideoTool.h */,
+				EEE519041FCCECB10000AA7E /* PickerImageVideoTool.m */,
+			);
+			path = GetImageOrVideo;
+			sourceTree = "<group>";
+		};
+		EEE5190C1FCCF8060000AA7E /* Comment */ = {
+			isa = PBXGroup;
+			children = (
+				EEE5190E1FCCF81B0000AA7E /* ZPCommentData.h */,
+				EEE5190F1FCCF81B0000AA7E /* ZPCommentData.m */,
+				EEE519101FCCF81B0000AA7E /* ZPPublicMethod.h */,
+				EEE5190D1FCCF81B0000AA7E /* ZPPublicMethod.m */,
+			);
+			path = Comment;
 			sourceTree = "<group>";
 		};
 		EEE7954B1FCB9D0800541A69 /* Base */ = {
@@ -537,11 +573,14 @@
 				EE4051251FB3ECBF0054BC53 /* ViewController.m in Sources */,
 				EED35A201FC664F4005B0A26 /* ChatViewController.m in Sources */,
 				EE86840D1FBD62D50010B0C7 /* LocationFileViewController.m in Sources */,
+				EEE519121FCCF81B0000AA7E /* ZPCommentData.m in Sources */,
 				EEE795581FCBEA9200541A69 /* ESAddOpationView.m in Sources */,
 				EE5CE2101FB52FB9001F5A30 /* HJWifiUtil.m in Sources */,
+				EEE519051FCCECB10000AA7E /* PickerImageVideoTool.m in Sources */,
 				EEE795551FCBAEA800541A69 /* RegexKitLite.m in Sources */,
 				EE4051511FB404410054BC53 /* ServerSocketItem.m in Sources */,
 				EE5CE2391FB55651001F5A30 /* ImageViewController.m in Sources */,
+				EEE519111FCCF81B0000AA7E /* ZPPublicMethod.m in Sources */,
 				EE4051301FB3ECBF0054BC53 /* main.m in Sources */,
 				EED35A1A1FC65F70005B0A26 /* UIView+Extension.m in Sources */,
 				EED35A0F1FC65CAE005B0A26 /* ESEmoticonTool.m in Sources */,
@@ -556,6 +595,7 @@
 				EEE795511FCB9D5400541A69 /* ZPBaseViewController.m in Sources */,
 				EE4051551FB43B770054BC53 /* ZPHomeCell.m in Sources */,
 				EED35A141FC65CD5005B0A26 /* ESEmotionModel.m in Sources */,
+				EEE519081FCCEF530000AA7E /* SocketManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -705,7 +745,6 @@
 					"-l\"Masonry\"",
 					"-l\"SDWebImage\"",
 					"-l\"SVProgressHUD\"",
-					"-l\"TTTAttributedLabel\"",
 					"-framework",
 					"\"CoreGraphics\"",
 					"-framework",
@@ -752,7 +791,6 @@
 					"-l\"Masonry\"",
 					"-l\"SDWebImage\"",
 					"-l\"SVProgressHUD\"",
-					"-l\"TTTAttributedLabel\"",
 					"-framework",
 					"\"CoreGraphics\"",
 					"-framework",

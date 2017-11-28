@@ -47,6 +47,8 @@ typedef NS_ENUM(NSInteger, ESKeyBoardToolView_type)
 @property (nonatomic, assign) BOOL isChangeEmoticon;
 /// 键盘完全弹出所需的时间
 @property (nonatomic, assign) CGFloat showTime;
+/// 系统键盘的高度
+@property (nonatomic, assign) CGFloat systemKeyboardH;
 
 - (void)exitKeyBoard;
 

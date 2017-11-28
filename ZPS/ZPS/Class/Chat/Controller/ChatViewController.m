@@ -9,16 +9,22 @@
 #import "ChatViewController.h"
 #import "ESKeyBoardToolView.h"
 #import "ChatMessageCell.h"
+#import "SocketManager.h"
+#import <TZImagePickerController.h>
 
 @interface ChatViewController ()
 <ESKeyBoardToolViewDelegate,
 UITableViewDelegate,
-UITableViewDataSource>
+UITableViewDataSource,
+TZImagePickerControllerDelegate,
+SocketManagerDelegate>
 
 /// 键盘工具条
 @property (nonatomic, strong) ESKeyBoardToolView *keyBoardToolView;
 /// tableView
 @property (nonatomic, strong) UITableView *tableView;
+/// 聊天背景图
+@property (nonatomic, strong) UIImageView *chatBgImageView;
 /// tableView y 原始偏移值
 @property (nonatomic, assign) CGFloat orginalOffsetY;
 /// 消息
@@ -29,6 +35,11 @@ UITableViewDataSource>
 #pragma mark - life cycle
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    SocketManager *manager = [SocketManager shareSockManager];
+    manager.delegate = self;
+    [manager startListenPort:CURRENT_PORT];
+    
     [self setupInit];
 }
 
@@ -44,7 +55,9 @@ UITableViewDataSource>
 #pragma mark -
 - (void)setupInit{
     self.navigationItem.title = @"NAVY-Chat";
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"设置聊天背景" style:UIBarButtonItemStyleDone target:self action:@selector(rightItemDidClick)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"背景" style:UIBarButtonItemStyleDone target:self action:@selector(rightItemDidClick)];
+    
+//    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"连接" style:UIBarButtonItemStyleDone target:self action:@selector(leftItemDidClick)];
     
     // UI
     [self tableView];
@@ -85,30 +98,46 @@ UITableViewDataSource>
 }
 
 - (void)rightItemDidClick{
-    
+    TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:1 columnNumber:4 delegate:self pushPhotoPickerVc:NO];
+    imagePickerVc.allowTakePicture = YES; //内部显示拍照按钮
+    imagePickerVc.allowPickingVideo = NO;
+    imagePickerVc.allowPickingImage = YES;
+    imagePickerVc.allowPickingOriginalPhoto = YES;
+    imagePickerVc.allowPickingGif = YES;
+    [self presentViewController:imagePickerVc animated:YES completion:nil];
+}
+
+- (void)leftItemDidClick{
+    SocketManager *manager = [SocketManager shareSockManager];
+    manager.delegate = self;
+    [manager connentHost:CURRENT_HOST prot:CURRENT_PORT];
 }
 
 #pragma mark - ESKeyBoardToolViewDelegate
 - (void)ESKeyBoardToolViewSendButtonDidClick:(ESKeyBoardToolView *)view message:(NSString *)message{
     ChatMessageModel *messageM = [ChatMessageModel new];
-    messageM.isFormMe = message.length % 2 == 0 ? YES : NO;
-    messageM.userName = message.length % 2 == 0 ? @"NAVY" : @"friend";
+    messageM.isFormMe = YES;
+    messageM.userName = [UIDevice currentDevice].name;
     messageM.messageContent = message;
-    messageM.ChatMessageType = ChatMessageText;
-    [self.messageItems addObject:messageM];
-    [self.tableView reloadData];
-    //[self scrollToLastCell];
+    messageM.chatMessageType = ChatMessageText;
+    [self sendMessageWithItem:messageM];
 }
 
 - (void)ESKeyBoardToolViewDidEditing:(ESKeyBoardToolView *)view changeY:(CGFloat)yValue{
-    CGFloat contentH = self.tableView.contentSize.height;
-    // 此处需判断  导航条是否存在
-    self.orginalOffsetY = NAVBARH;
-    CGFloat showH = view.y - self.orginalOffsetY;
-    CGFloat needOffsetY = contentH - showH;
-    if (needOffsetY >= 0) {
-        [self.tableView setContentOffset:CGPointMake(self.tableView.contentOffset.x, needOffsetY-self.orginalOffsetY) animated:yValue == 0 ? YES : NO];
-    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        CGFloat contentH = self.tableView.contentSize.height;
+        // 此处需判断  导航条是否存在
+        self.orginalOffsetY = NAVBARH;
+        CGFloat showH = view.y - self.orginalOffsetY;
+        CGFloat needOffsetY = contentH - showH;
+        if (needOffsetY >= 0) {
+            [self.tableView setContentOffset:CGPointMake(self.tableView.contentOffset.x, needOffsetY-self.orginalOffsetY) animated:yValue == 0 ? YES : NO];
+        }
+        
+    });
+    
 }
 
 - (void)ESKeyBoardToolViewDidEndEdit:(ESKeyBoardToolView *)view{
@@ -119,9 +148,56 @@ UITableViewDataSource>
     if (self.messageItems.count <= 0) {
         return;
     }
-    NSIndexPath *indexpath = [NSIndexPath indexPathForRow:(self.messageItems.count - 1) inSection:0];
-    [self.tableView scrollToRowAtIndexPath:indexpath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        CGFloat contentH = self.tableView.contentSize.height;
+        CGFloat showH = self.tableView.hj_height - (self.view.hj_height - self.keyBoardToolView.y - TitleViewHeight);
+        CGFloat needOffsetY =  (contentH - showH);
+        if (needOffsetY > 0) {
+            [self.tableView setContentOffset:CGPointMake(self.tableView.contentOffset.x, needOffsetY) animated:YES];
+        }
+        
+    });
+    
 }
+
+- (void)sendMessageWithItem:(ChatMessageModel *)item{
+    SocketManager *manager = [SocketManager shareSockManager];
+    [manager sendMessageWithItem:item];
+}
+
+#pragma mark - TZImagePickerControllerDelegate
+- (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto{
+    if (!self.chatBgImageView) {
+        self.chatBgImageView = [[UIImageView alloc] initWithFrame:self.tableView.frame];
+        self.chatBgImageView.contentMode = UIViewContentModeScaleAspectFill;
+    }
+    if (photos.count>0) {
+        self.chatBgImageView.image = [photos firstObject];
+        self.tableView.backgroundView = self.chatBgImageView;
+    }
+}
+
+#pragma mark - SocketManagerDelegate
+- (void)socketManager:(SocketManager *)manager  itemUpingrefresh:(ChatMessageModel *)upingItem{
+    
+}
+
+- (void)socketManager:(SocketManager *)manager  itemUpFinishrefresh:(ChatMessageModel *)finishItem{
+    [self.messageItems addObject:finishItem];
+    [self.tableView reloadData];
+    [self scrollToLastCell];
+}
+
+// 正在接受的文件回调
+- (void)socketManager:(SocketManager *)manager  itemAcceptingrefresh:(ChatMessageModel *)acceptingItem{
+    if (acceptingItem.finishAccept) {
+        [self.messageItems addObject:acceptingItem];
+        [self.tableView reloadData];
+        [self scrollToLastCell];
+    }
+}
+
 
 #pragma mark - table view data source delegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -132,6 +208,10 @@ UITableViewDataSource>
     ChatMessageCell *cell = [ChatMessageCell chatMessageCell:tableView];
     ChatMessageModel *messageM = self.messageItems[indexPath.row];
     cell.dataModel = messageM;
+    WS(weakSelf);
+    cell.tapCellBlock = ^{
+        [weakSelf.keyBoardToolView exitKeyBoard];
+    };
     return cell;
 }
 
@@ -142,7 +222,7 @@ UITableViewDataSource>
 
 #pragma mark - table view delegate
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
-    if (velocity.y >= 0.5) {
+    if (velocity.y >= 0.1) {
          [self.keyBoardToolView showKeyBoard];
     }else if(velocity.y < 0){
          [self.keyBoardToolView exitKeyBoard];

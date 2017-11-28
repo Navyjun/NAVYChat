@@ -32,6 +32,7 @@
     if (!cell) {
         cell = [[ChatMessageCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([self class])];
         //cell.backgroundColor = [UIColor colorWithRed:231.0/255.0 green:232.0/255.0 blue:238.0/255.0 alpha:1];
+        cell.backgroundColor = [UIColor clearColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return cell;
@@ -53,6 +54,12 @@
     //[self messageLabel];
 }
 
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    if (self.tapCellBlock) {
+        self.tapCellBlock();
+    }
+}
+
 - (void)setDataModel:(ChatMessageModel *)dataModel{
     _dataModel = dataModel;
     
@@ -67,9 +74,9 @@
         }
     }];
     
-    if (_dataModel.ChatMessageType == ChatMessageText) {
+    if (_dataModel.chatMessageType == ChatMessageText) {
         [self layoutForMessageTextType];
-    }else if (_dataModel.ChatMessageType == ChatMessageImage || _dataModel.ChatMessageType == ChatMessageVideo){
+    }else if (_dataModel.chatMessageType == ChatMessageImage || _dataModel.chatMessageType == ChatMessageVideo){
         [self layoutForMessageImageOrVidelType];
     }
 
@@ -98,7 +105,7 @@
 -(void)layoutForMessageImageOrVidelType{
     self.imageOrVideoView.hidden = NO;
     _messageLabel.hidden = YES;
-    self.videoPlayImage.hidden = _dataModel.ChatMessageType == ChatMessageVideo ? NO : YES;
+    self.videoPlayImage.hidden = _dataModel.chatMessageType == ChatMessageVideo ? NO : YES;
     [self.imageOrVideoView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.messageBgImageView.mas_top).offset(1);
         make.bottom.mas_equalTo(self.messageBgImageView.mas_bottom).offset(-1);

@@ -24,9 +24,9 @@
 
 - (CGFloat)messageH{
     if (_messageH == 0) {
-        if (self.ChatMessageType == ChatMessageText) {
+        if (self.chatMessageType == ChatMessageText) {
             [self messageContentWH];
-        }else if (self.ChatMessageType == ChatMessageImage || self.ChatMessageType == ChatMessageVideo){
+        }else if (self.chatMessageType == ChatMessageImage || self.chatMessageType == ChatMessageVideo){
             _messageH = self.messageW * 1.5;
         }
     }
@@ -35,9 +35,9 @@
 
 - (CGFloat)messageW{
     if (_messageW == 0) {
-        if (self.ChatMessageType == ChatMessageText) {
+        if (self.chatMessageType == ChatMessageText) {
             [self messageContentWH];
-        }else if (self.ChatMessageType == ChatMessageImage || self.ChatMessageType == ChatMessageVideo){
+        }else if (self.chatMessageType == ChatMessageImage || self.chatMessageType == ChatMessageVideo){
             CGFloat maxW = HJSCREENW - 2 * MESSAGELRMARGIN - (messageLabelForHeadLeftMargin + messageLabelForHeadRightMargin);
             _messageW = maxW - 40;
         }
