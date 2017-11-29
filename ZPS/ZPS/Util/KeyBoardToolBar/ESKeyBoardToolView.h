@@ -7,11 +7,11 @@
 //  键盘工具条
 
 #import <UIKit/UIKit.h>
-/**
- *  输入框最多显示多少行
- */
+#import "ESAddOpationView.h"
+
+/// 输入框最多显示多少行
 static NSInteger maxLines = 4;
-// 输入框的高度
+/// 输入框的高度
 static CGFloat const TitleViewHeight = 44.0;
 
 typedef NS_ENUM(NSInteger, ESKeyBoardToolView_type)
@@ -25,7 +25,8 @@ typedef NS_ENUM(NSInteger, ESKeyBoardToolView_type)
 @protocol ESKeyBoardToolViewDelegate <NSObject>
 
 @optional
-- (void)ESKeyBoardToolViewDidClick:(UIButton *)button withType:(ESKeyBoardToolView_type)type;
+/// 加号选项view的点击
+- (void)ESKeyBoardToolViewAddOpationDidSelected:(ESKeyBoardToolView *)view withType:(OpationItem_type)type;
 /// 点击发送按钮
 - (void)ESKeyBoardToolViewSendButtonDidClick:(ESKeyBoardToolView *)view message:(NSString *)message;
 /// 当正在编辑文字时view的Y值变化

@@ -30,13 +30,15 @@
 + (NSInteger)getFileSize:(NSString*)path;
 
 
+
 /**
  获取 Assert / ALAsset 文件名称
-
+ 
  @param asset Assert / ALAsset
+ @param isOnly 是否需要加上时间戳
  @return 名称
  */
-+ (NSString *)getAssetsName:(id)asset;
++ (NSString *)getAssetsName:(id)asset only:(BOOL)isOnly;
 
 
 /**

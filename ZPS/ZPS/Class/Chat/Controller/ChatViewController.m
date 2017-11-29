@@ -10,7 +10,8 @@
 #import "ESKeyBoardToolView.h"
 #import "ChatMessageCell.h"
 #import "SocketManager.h"
-#import <TZImagePickerController.h>
+#import "PickerImageVideoTool.h"
+#import <SDImageCache.h>
 
 @interface ChatViewController ()
 <ESKeyBoardToolViewDelegate,
@@ -36,9 +37,10 @@ SocketManagerDelegate>
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    SocketManager *manager = [SocketManager shareSockManager];
-    manager.delegate = self;
-    [manager startListenPort:CURRENT_PORT];
+//    SocketManager *manager = [SocketManager shareSockManager];
+//    manager.delegate = self;
+//    [manager dataSavePath];
+//    [manager startListenPort:CURRENT_PORT];
     
     [self setupInit];
 }
@@ -57,7 +59,7 @@ SocketManagerDelegate>
     self.navigationItem.title = @"NAVY-Chat";
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"背景" style:UIBarButtonItemStyleDone target:self action:@selector(rightItemDidClick)];
     
-//    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"连接" style:UIBarButtonItemStyleDone target:self action:@selector(leftItemDidClick)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"连接" style:UIBarButtonItemStyleDone target:self action:@selector(leftItemDidClick)];
     
     // UI
     [self tableView];
@@ -98,13 +100,18 @@ SocketManagerDelegate>
 }
 
 - (void)rightItemDidClick{
-    TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:1 columnNumber:4 delegate:self pushPhotoPickerVc:NO];
-    imagePickerVc.allowTakePicture = YES; //内部显示拍照按钮
-    imagePickerVc.allowPickingVideo = NO;
-    imagePickerVc.allowPickingImage = YES;
-    imagePickerVc.allowPickingOriginalPhoto = YES;
-    imagePickerVc.allowPickingGif = YES;
-    [self presentViewController:imagePickerVc animated:YES completion:nil];
+    WS(weakSelf);
+    [[PickerImageVideoTool sharePickerImageVideoTool] showImagePickerWithMaxCount:1 completion:^(NSArray<UIImage *> *photos, NSArray *assets) {
+        if (!weakSelf.chatBgImageView) {
+            weakSelf.chatBgImageView = [[UIImageView alloc] initWithFrame:weakSelf.tableView.frame];
+            weakSelf.chatBgImageView.contentMode = UIViewContentModeScaleAspectFill;
+        }
+        if (photos.count>0) {
+            weakSelf.chatBgImageView.image = [photos firstObject];
+            weakSelf.tableView.backgroundView = weakSelf.chatBgImageView;
+        }
+    }];
+    
 }
 
 - (void)leftItemDidClick{
@@ -123,10 +130,20 @@ SocketManagerDelegate>
     [self sendMessageWithItem:messageM];
 }
 
+- (void)ESKeyBoardToolViewAddOpationDidSelected:(ESKeyBoardToolView *)view withType:(OpationItem_type)type{
+    switch (type) {
+        case OpationItem_image:{
+            [self sendImageOrVideo];
+        }
+            break;
+            
+        default:
+            break;
+    }
+}
+
 - (void)ESKeyBoardToolViewDidEditing:(ESKeyBoardToolView *)view changeY:(CGFloat)yValue{
-    
     dispatch_async(dispatch_get_main_queue(), ^{
-        
         CGFloat contentH = self.tableView.contentSize.height;
         // 此处需判断  导航条是否存在
         self.orginalOffsetY = NAVBARH;
@@ -135,47 +152,11 @@ SocketManagerDelegate>
         if (needOffsetY >= 0) {
             [self.tableView setContentOffset:CGPointMake(self.tableView.contentOffset.x, needOffsetY-self.orginalOffsetY) animated:yValue == 0 ? YES : NO];
         }
-        
     });
-    
 }
 
 - (void)ESKeyBoardToolViewDidEndEdit:(ESKeyBoardToolView *)view{
     [self scrollToLastCell];
-}
-
-- (void)scrollToLastCell{
-    if (self.messageItems.count <= 0) {
-        return;
-    }
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        CGFloat contentH = self.tableView.contentSize.height;
-        CGFloat showH = self.tableView.hj_height - (self.view.hj_height - self.keyBoardToolView.y - TitleViewHeight);
-        CGFloat needOffsetY =  (contentH - showH);
-        if (needOffsetY > 0) {
-            [self.tableView setContentOffset:CGPointMake(self.tableView.contentOffset.x, needOffsetY) animated:YES];
-        }
-        
-    });
-    
-}
-
-- (void)sendMessageWithItem:(ChatMessageModel *)item{
-    SocketManager *manager = [SocketManager shareSockManager];
-    [manager sendMessageWithItem:item];
-}
-
-#pragma mark - TZImagePickerControllerDelegate
-- (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto{
-    if (!self.chatBgImageView) {
-        self.chatBgImageView = [[UIImageView alloc] initWithFrame:self.tableView.frame];
-        self.chatBgImageView.contentMode = UIViewContentModeScaleAspectFill;
-    }
-    if (photos.count>0) {
-        self.chatBgImageView.image = [photos firstObject];
-        self.tableView.backgroundView = self.chatBgImageView;
-    }
 }
 
 #pragma mark - SocketManagerDelegate
@@ -195,9 +176,82 @@ SocketManagerDelegate>
         [self.messageItems addObject:acceptingItem];
         [self.tableView reloadData];
         [self scrollToLastCell];
+    }else{
+        // 刷新当前进度
     }
 }
 
+#pragma mark - private
+- (void)scrollToLastCell{
+    if (self.messageItems.count <= 0) {
+        return;
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        CGFloat contentH = self.tableView.contentSize.height;
+        CGFloat showH = self.tableView.hj_height - (self.view.hj_height - self.keyBoardToolView.y - TitleViewHeight);
+        CGFloat needOffsetY =  (contentH - showH);
+        if (needOffsetY > 0) {
+            [self.tableView setContentOffset:CGPointMake(self.tableView.contentOffset.x, needOffsetY) animated:NO];
+        }
+        
+    });
+    
+}
+
+- (void)sendMessageWithItem:(ChatMessageModel *)item{
+    SocketManager *manager = [SocketManager shareSockManager];
+    [manager sendMessageWithItem:item];
+}
+
+- (void)sendImageOrVideo{
+    WS(weakSelf);
+    [[PickerImageVideoTool sharePickerImageVideoTool] showImagePickerWithMaxCount:1 completion:^(NSArray<UIImage *> *photos, NSArray *assets) {
+        NSInteger count = assets.count;
+        id objc = nil;
+        for (NSInteger i = 0; i < count; i++) {
+            objc = assets[i];
+            if (![objc isKindOfClass:[PHAsset class]]) {
+                continue;
+            }
+            PHAsset *asset = (PHAsset *)objc;
+            ChatMessageModel *messageM = [ChatMessageModel new];
+            messageM.isFormMe = YES;
+            messageM.userName = [UIDevice currentDevice].name;
+            messageM.asset = asset;
+            messageM.fileName = [ZPPublicMethod getAssetsName:asset only:YES];
+            messageM.temImage = photos[i];
+            if (asset.mediaType == PHAssetMediaTypeImage){
+                messageM.chatMessageType = ChatMessageImage;
+                messageM.fileSize = UIImagePNGRepresentation(messageM.temImage).length;
+                SDImageCache *cache = [SDImageCache sharedImageCache];
+                [cache storeImage:messageM.temImage forKey:messageM.fileName toDisk:YES completion:^{
+                    messageM.mediaMessageUrl = [NSURL fileURLWithPath:[cache defaultCachePathForKey:messageM.fileName]];
+                }];
+                [weakSelf sendMessageWithItem:messageM];
+            }else if (asset.mediaType == PHAssetMediaTypeAudio){
+                messageM.chatMessageType = ChatMessageAudio;
+            }else if (asset.mediaType == PHAssetMediaTypeVideo) {
+                messageM.chatMessageType = ChatMessageVideo;
+            }
+            
+            // 视频
+            /*
+            [ZPPublicMethod getfilePath:asset Complete:^(NSURL *fileUrl) {
+                SDImageCache *cache = [SDImageCache sharedImageCache];
+                NSString *pathStr = [[fileUrl absoluteString] substringFromIndex:8];
+                [cache storeImage:messageM.temImage forKey:pathStr toDisk:YES completion:^{
+                    messageM.mediaMessageUrl = [NSURL fileURLWithPath:[cache defaultCachePathForKey:pathStr]];
+                }];
+                messageM.fileSize = [ZPPublicMethod getFileSize:pathStr];
+                [weakSelf sendMessageWithItem:messageM];
+            }];
+             */
+        }
+        
+        
+    }];
+}
 
 #pragma mark - table view data source delegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{

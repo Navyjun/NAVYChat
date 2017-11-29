@@ -8,7 +8,6 @@
 
 #import "ESKeyBoardToolView.h"
 #import "ESEmoticonView.h"
-#import "ESAddOpationView.h"
 
 static CGFloat fontValue = 16.0;
 
@@ -240,10 +239,7 @@ static CGFloat fontValue = 16.0;
 
 - (void)textViewDidBeginEditing:(UITextView *)textView{
     if ([self.delegate respondsToSelector:@selector(ESKeyBoardToolViewDidEditing:changeY:)]) {
-        // 此处需延时回调  不然会跟上拉弹出键盘有冲突
-//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.showTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self.delegate ESKeyBoardToolViewDidEditing:self changeY:0];
-//        });
     }
 }
 
@@ -302,14 +298,11 @@ static CGFloat fontValue = 16.0;
     // 再次成为第一响应者
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self.inputTextView becomeFirstResponder];
-//        CGFloat time = self.showTime;
-//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(time * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             orginY = self.y - orginY;
             if ([self.delegate respondsToSelector:@selector(ESKeyBoardToolViewDidEditing:changeY:)]) {
                 [self.delegate ESKeyBoardToolViewDidEditing:self changeY:orginY];
             }
             _isChangeEmoticon = NO;
-//        });
     });
 }
 
@@ -347,8 +340,15 @@ static CGFloat fontValue = 16.0;
 - (ESAddOpationView *)addOpationView{
     if (!_addOpationView) {
         _addOpationView = [ESAddOpationView addOpationView];
-        OpationItem *item = [OpationItem opationItemWithName:@"照片" iconName:@"chat_img"];
+        OpationItem *item = [OpationItem opationItemWithName:@"照片" iconName:@"chat_img" type:OpationItem_image];
         _addOpationView.opationItem = @[item];
+        
+        WS(weakSelf);
+        _addOpationView.selectedOpationHandle = ^(OpationItem_type type){
+            if ([weakSelf.delegate respondsToSelector:@selector(ESKeyBoardToolViewAddOpationDidSelected:withType:)]) {
+                [weakSelf.delegate ESKeyBoardToolViewAddOpationDidSelected:weakSelf withType:type];
+            }
+        };
     }
     return _addOpationView;
 }

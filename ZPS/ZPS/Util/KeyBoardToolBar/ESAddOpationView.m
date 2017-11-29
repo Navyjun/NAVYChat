@@ -47,7 +47,16 @@ static CGFloat viewH = 216;
         button.tag = i;
         [button setTitle:item.itemName forState:UIControlStateNormal];
         [button setImage:[UIImage imageNamed:item.itemIconName] forState:UIControlStateNormal];
+        [button addTarget:self action:@selector(opationButtonDidClick:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:button];
+    }
+}
+
+- (void)opationButtonDidClick:(OpationButton *)button{
+    NSInteger tagCount = button.tag;
+    if (self.selectedOpationHandle && tagCount < self.opationItem.count) {
+        OpationItem *item = self.opationItem[tagCount];
+        self.selectedOpationHandle(item.type);
     }
 }
 
@@ -57,10 +66,11 @@ static CGFloat viewH = 216;
 
 @implementation OpationItem
 
-+ (instancetype)opationItemWithName:(NSString *)itemName iconName:(NSString *)iconName{
++ (instancetype)opationItemWithName:(NSString *)itemName iconName:(NSString *)iconName type:(OpationItem_type)type{
     OpationItem *item = [[self alloc] init];
     item.itemName = itemName;
     item.itemIconName = iconName;
+    item.type = type;
     return item;
 }
 

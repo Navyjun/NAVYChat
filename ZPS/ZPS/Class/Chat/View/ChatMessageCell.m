@@ -7,6 +7,7 @@
 //
 
 #import "ChatMessageCell.h"
+#import <UIImageView+WebCache.h>
 
 @interface ChatMessageCell ()
 /// 朋友消息的背景图
@@ -112,6 +113,14 @@
         make.left.mas_equalTo(self.messageBgImageView.mas_left).offset(_dataModel.isFormMe ? 1 : 9.0);
         make.right.mas_equalTo(self.messageBgImageView.mas_right).offset(_dataModel.isFormMe ? -9.0 : -1);
     }];
+    
+    if (_dataModel.mediaMessageUrl) {
+        // 使用不保存到本地磁盘策略 <本地已保存图片>
+        [self.messageImageView sd_setImageWithURL:_dataModel.mediaMessageUrl placeholderImage:nil options:SDWebImageCacheMemoryOnly];
+    }else{
+        self.messageImageView.image = _dataModel.temImage;
+    }
+    
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -220,6 +229,7 @@
         }];
         
         self.messageImageView = [[UIImageView alloc] init];
+        self.messageImageView.contentMode = UIViewContentModeScaleAspectFill;
         [_imageOrVideoView addSubview:self.messageImageView];
         [self.messageImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.right.top.bottom.mas_equalTo(_imageOrVideoView);

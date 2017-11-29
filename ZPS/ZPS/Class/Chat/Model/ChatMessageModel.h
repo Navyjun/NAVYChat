@@ -36,6 +36,8 @@ typedef NS_ENUM(int,ChatMessageType) {
 @property (nonatomic, copy) NSURL *mediaMessageUrl;
 /// 是否来至于自己
 @property (nonatomic, assign) BOOL isFormMe;
+/// 临时引用图片
+@property (nonatomic, strong) UIImage *temImage;
 
 /*************************** 传输相关 *****************************/
 /// userName

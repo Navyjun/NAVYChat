@@ -10,11 +10,19 @@
 
 @class OpationItem;
 
+typedef NS_ENUM(NSInteger, OpationItem_type)
+{
+    OpationItem_image = 0 // 照片选择
+};
+
+
 @interface ESAddOpationView : UIView
 /// 功能选项数组
 @property (nonatomic, strong) NSArray<OpationItem*>* opationItem;
-
+/// 选中回调
+@property (nonatomic, copy) void(^selectedOpationHandle)(OpationItem_type type);
 + (instancetype)addOpationView;
+
 @end
 
 
@@ -23,8 +31,10 @@
 @property (nonatomic, copy) NSString *itemName;
 /// 选项图片名
 @property (nonatomic, copy) NSString *itemIconName;
+/// 类型
+@property (nonatomic, assign)  OpationItem_type type;
 
-+ (instancetype)opationItemWithName:(NSString *)itemName iconName:(NSString *)iconName;
++ (instancetype)opationItemWithName:(NSString *)itemName iconName:(NSString *)iconName type:(OpationItem_type)type;
 @end
 
 

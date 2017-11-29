@@ -7,7 +7,11 @@
 //  获取图片/视频工具类
 
 #import <Foundation/Foundation.h>
+#import <TZImagePickerController.h>
+
+typedef void(^pickerFinishBlock)(NSArray<UIImage *> *photos,NSArray *assets );
 
 @interface PickerImageVideoTool : NSObject
-
++ (instancetype)sharePickerImageVideoTool;
+- (void)showImagePickerWithMaxCount:(NSInteger)maxCount completion:(pickerFinishBlock)finishBlock;
 @end

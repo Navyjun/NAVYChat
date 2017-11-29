@@ -42,14 +42,14 @@
 }
 
 /// 获取asset名字
-+ (NSString *)getAssetsName:(id)asset {
-    NSString *fileName;
++ (NSString *)getAssetsName:(id)asset only:(BOOL)isOnly{
+    NSString *fileName = isOnly ? [NSString stringWithFormat:@"%zd",[[NSDate date] timeIntervalSinceReferenceDate]] : nil;
     if ([asset isKindOfClass:[PHAsset class]]) {
         PHAsset *phAsset = (PHAsset *)asset;
-        fileName = [phAsset valueForKey:@"filename"];
+        fileName = [fileName stringByAppendingString:[phAsset valueForKey:@"filename"]];
     } else if ([asset isKindOfClass:[ALAsset class]]) {
         ALAsset *alAsset = (ALAsset *)asset;
-        fileName = alAsset.defaultRepresentation.filename;;
+        fileName = [fileName stringByAppendingString:alAsset.defaultRepresentation.filename];
     }
     return fileName;
 }

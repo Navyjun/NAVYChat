@@ -88,12 +88,12 @@ static SocketManager *manager = nil;
 /// 发送数据
 - (void)sendMessageWithItem:(ChatMessageModel *)item{
     self.currentSendItem = item;
-    if (item.chatMessageType == ChatMessageText) {
-        NSData *textData = [self creationMessageDataWithItem:item];
-        [self writeMediaMessageWithData:textData];
-    }else if (item.chatMessageType == ChatMessageImage || item.chatMessageType == ChatMessageVideo){
-        [self imageOrVideoFileSend:item];
-    }
+    NSData *textData = [self creationMessageDataWithItem:item];
+    [self writeMediaMessageWithData:textData];
+//    if (item.chatMessageType == ChatMessageText) {
+//    }else if (item.chatMessageType == ChatMessageImage || item.chatMessageType == ChatMessageVideo){
+//        [self imageOrVideoFileSend:item];
+//    }
 }
 
 // 创建消息体
@@ -105,6 +105,9 @@ static SocketManager *manager = nil;
     messageData[@"fileSize"] = [NSNumber numberWithInteger:item.fileSize];
     if (item.chatMessageType == ChatMessageText) {
         messageData[@"messageContent"] = item.messageContent;
+    }else if (item.chatMessageType == ChatMessageImage){
+        item.isWaitAcceptFile = YES;
+        messageData[@"isWaitAcceptFile"] = [NSNumber numberWithBool:YES];
     }
     NSString *bodStr = [NSString hj_dicToJsonStr:messageData];
     return [bodStr dataUsingEncoding:NSUTF8StringEncoding];
@@ -112,12 +115,18 @@ static SocketManager *manager = nil;
 
 // 图片或者视频文件传输
 - (void)imageOrVideoFileSend:(ChatMessageModel *)sendItem{
-    PHAsset *asset = (PHAsset *)sendItem.asset;
-    [ZPPublicMethod getfilePath:asset Complete:^(NSURL *fileUrl) {
-        sendItem.mediaMessageUrl = fileUrl;
-        NSData *sendData = [NSData dataWithContentsOfURL:sendItem.mediaMessageUrl options:NSDataReadingMappedIfSafe error:nil];
+    if (sendItem.chatMessageType == ChatMessageImage) {
+        NSData *sendData = UIImagePNGRepresentation(sendItem.temImage);
         [self writeMediaMessageWithData:sendData];
-    }];
+    }else if (sendItem.chatMessageType == ChatMessageVideo){
+        PHAsset *asset = (PHAsset *)sendItem.asset;
+        [ZPPublicMethod getfilePath:asset Complete:^(NSURL *fileUrl) {
+            sendItem.mediaMessageUrl = fileUrl;
+            NSData *sendData = [NSData dataWithContentsOfURL:sendItem.mediaMessageUrl options:NSDataReadingMappedIfSafe error:nil];
+            [self writeMediaMessageWithData:sendData];
+        }];
+    }
+    
 }
 
 // 传输数据到服务端
@@ -156,32 +165,33 @@ static SocketManager *manager = nil;
     NSDictionary *readDic = [readStr hj_jsonStringToDic];
     
     if ([readDic isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"readDic = %@",readDic);
         self.acceptItem = [ChatMessageModel mj_objectWithKeyValues:readDic];
         self.acceptItem.isFormMe = NO;
+        self.acceptItem.finishAccept = self.acceptItem.chatMessageType != ChatMessageText ? NO : YES;
         // 接收到非字符串类型
-        self.acceptItem.isWaitAcceptFile = self.acceptItem.chatMessageType != ChatMessageText ? YES : NO;
-    }
-   
-    if (self.acceptItem.isWaitAcceptFile) {
+        //self.acceptItem.isWaitAcceptFile = self.acceptItem.chatMessageType != ChatMessageText ? YES : NO;
+    }else if (self.acceptItem.isWaitAcceptFile) {
+        self.acceptItem.finishAccept = NO;
         self.acceptItem.acceptSize += data.length;
         self.acceptItem.beginAccept = YES;
-        NSLog(@"acceptSize = %zd",self.acceptItem.acceptSize);
         if (!self.outputStream) {
-            self.acceptItem.acceptFilePath = [self.dataSavePath stringByAppendingPathComponent:[_currentSendItem.fileName lastPathComponent]];
+            self.acceptItem.acceptFilePath = [self.dataSavePath stringByAppendingPathComponent:[self.acceptItem.fileName lastPathComponent]];
+            self.acceptItem.mediaMessageUrl = [NSURL fileURLWithPath:self.acceptItem.acceptFilePath];
             self.outputStream = [[NSOutputStream alloc] initToFileAtPath:self.acceptItem.acceptFilePath append:YES];
             [self.outputStream open];
         }
         // 输出流 写数据
         NSInteger byt = [self.outputStream write:data.bytes maxLength:data.length];
-        NSLog(@"byt = %zd",byt);
+        NSLog(@"byt = %zd totalSize = %zd",byt,self.acceptItem.fileSize);
         
         if (self.acceptItem.acceptSize >= self.acceptItem.fileSize) {
-            _currentSendItem.finishAccept = YES;
+            self.acceptItem.finishAccept = YES;
             [self.outputStream close];
             self.outputStream = nil;
         }
     }else{
-        self.acceptItem.finishAccept = YES;
+        
     }
     
     if ([self.delegate respondsToSelector:@selector(socketManager:itemAcceptingrefresh:)]) {
@@ -195,9 +205,20 @@ static SocketManager *manager = nil;
 // 文件传输完毕后的回调
 - (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag{
     MYLog(@"%s \n tag = %ld",__func__,tag);
-    if ([self.delegate respondsToSelector:@selector(socketManager:itemUpFinishrefresh:)]) {
-        [self.delegate socketManager:self itemUpFinishrefresh:self.currentSendItem];
+    if (self.currentSendItem.sendTag == tag) {
+        if (!self.currentSendItem.isWaitAcceptFile) {
+            self.currentSendItem.temImage = nil;
+            if ([self.delegate respondsToSelector:@selector(socketManager:itemUpFinishrefresh:)]) {
+                [self.delegate socketManager:self itemUpFinishrefresh:self.currentSendItem];
+            }
+            
+        }else{
+            // 接下来需要传输文件
+            self.currentSendItem.isWaitAcceptFile = NO; // 改变状态
+            [self imageOrVideoFileSend:self.currentSendItem];
+        }
     }
+    
     [self.tcpSocketManager setAutoDisconnectOnClosedReadStream:YES];
     
 }
@@ -242,7 +263,7 @@ static SocketManager *manager = nil;
             [fileManager createDirectoryAtPath:filePath withIntermediateDirectories:YES attributes:nil error:nil];
         }
         _dataSavePath = filePath;
-        NSLog(@"%@",filePath);
+        NSLog(@"filePath = %@",filePath);
     }
     return _dataSavePath;
 }
