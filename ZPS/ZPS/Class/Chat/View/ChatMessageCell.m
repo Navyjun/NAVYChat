@@ -220,7 +220,7 @@
 - (UIView *)imageOrVideoView{
     if (!_imageOrVideoView) {
         _imageOrVideoView = [[UIView alloc] init];
-        _imageOrVideoView.backgroundColor = [UIColor redColor];
+        //_imageOrVideoView.backgroundColor = [UIColor redColor];
         [_imageOrVideoView hj_viewCornerRadiusValue:6.0];
         [self addSubview:_imageOrVideoView];
         [_imageOrVideoView mas_makeConstraints:^(MASConstraintMaker *make) {

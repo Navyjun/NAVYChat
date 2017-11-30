@@ -30,6 +30,7 @@ SocketManagerDelegate>
 @property (nonatomic, assign) CGFloat orginalOffsetY;
 /// 消息
 @property (nonatomic, strong) NSMutableArray *messageItems;
+@property (nonatomic, weak) NSTimer *refreshTime;
 @end
 
 @implementation ChatViewController
@@ -37,10 +38,13 @@ SocketManagerDelegate>
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-//    SocketManager *manager = [SocketManager shareSockManager];
-//    manager.delegate = self;
-//    [manager dataSavePath];
-//    [manager startListenPort:CURRENT_PORT];
+    // 便于测试
+    if (HJSCREENH < 667) {
+        SocketManager *manager = [SocketManager shareSockManager];
+        manager.delegate = self;
+        [manager dataSavePath];
+        [manager startListenPort:CURRENT_PORT];
+    }
     
     [self setupInit];
 }
@@ -58,8 +62,9 @@ SocketManagerDelegate>
 - (void)setupInit{
     self.navigationItem.title = @"NAVY-Chat";
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"背景" style:UIBarButtonItemStyleDone target:self action:@selector(rightItemDidClick)];
-    
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"连接" style:UIBarButtonItemStyleDone target:self action:@selector(leftItemDidClick)];
+    if (HJSCREENH >= 667) {
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"连接" style:UIBarButtonItemStyleDone target:self action:@selector(leftItemDidClick)];
+    }
     
     // UI
     [self tableView];
@@ -142,21 +147,30 @@ SocketManagerDelegate>
     }
 }
 
-- (void)ESKeyBoardToolViewDidEditing:(ESKeyBoardToolView *)view changeY:(CGFloat)yValue{
+- (void)ESKeyBoardToolViewDidEditing:(ESKeyBoardToolView *)view changeY:(CGFloat)yValue{    
     dispatch_async(dispatch_get_main_queue(), ^{
         CGFloat contentH = self.tableView.contentSize.height;
-        // 此处需判断  导航条是否存在
-        self.orginalOffsetY = NAVBARH;
-        CGFloat showH = view.y - self.orginalOffsetY;
-        CGFloat needOffsetY = contentH - showH;
-        if (needOffsetY >= 0) {
-            [self.tableView setContentOffset:CGPointMake(self.tableView.contentOffset.x, needOffsetY-self.orginalOffsetY) animated:yValue == 0 ? YES : NO];
+        if (yValue == 0) { // 键盘弹出的时候
+            CGFloat offsetY = contentH - self.tableView.hj_height + view.systemKeyboardH;
+            if (offsetY > 0) {
+                [self.tableView setContentOffset:CGPointMake(self.tableView.contentOffset.x, offsetY) animated:YES];
+            }
+        }else{
+            // 此处需判断  导航条是否存在
+            self.orginalOffsetY = NAVBARH;
+            CGFloat showH = view.y - self.orginalOffsetY;
+            CGFloat needOffsetY = contentH - showH;
+            if (needOffsetY >= 0) {
+                [self.tableView setContentOffset:CGPointMake(self.tableView.contentOffset.x, needOffsetY-self.orginalOffsetY) animated:NO];
+            }
         }
     });
+    
+    
 }
 
 - (void)ESKeyBoardToolViewDidEndEdit:(ESKeyBoardToolView *)view{
-    [self scrollToLastCell];
+    [self scrollToLastCellAnimated:YES];
 }
 
 #pragma mark - SocketManagerDelegate
@@ -165,9 +179,8 @@ SocketManagerDelegate>
 }
 
 - (void)socketManager:(SocketManager *)manager  itemUpFinishrefresh:(ChatMessageModel *)finishItem{
-    [self.messageItems addObject:finishItem];
     [self.tableView reloadData];
-    [self scrollToLastCell];
+    [self scrollToLastCellAnimated:NO];
 }
 
 // 正在接受的文件回调
@@ -175,38 +188,46 @@ SocketManagerDelegate>
     if (acceptingItem.finishAccept) {
         [self.messageItems addObject:acceptingItem];
         [self.tableView reloadData];
-        [self scrollToLastCell];
+        [self scrollToLastCellAnimated:YES];
     }else{
         // 刷新当前进度
     }
 }
 
 #pragma mark - private
-- (void)scrollToLastCell{
+- (void)scrollToLastCellAnimated:(BOOL)animated{
     if (self.messageItems.count <= 0) {
         return;
     }
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        CGFloat contentH = self.tableView.contentSize.height;
-        CGFloat showH = self.tableView.hj_height - (self.view.hj_height - self.keyBoardToolView.y - TitleViewHeight);
-        CGFloat needOffsetY =  (contentH - showH);
-        if (needOffsetY > 0) {
-            [self.tableView setContentOffset:CGPointMake(self.tableView.contentOffset.x, needOffsetY) animated:NO];
-        }
-        
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            CGFloat contentH = self.tableView.contentSize.height;
+            CGFloat showH = 0;
+            if (self.keyBoardToolView.inputTextView.isFirstResponder) {
+                showH = self.tableView.hj_height - self.keyBoardToolView.systemKeyboardH;
+            }else{
+                showH = self.tableView.hj_height;
+            }
+            CGFloat needOffsetY =  (contentH - showH);
+            if (needOffsetY > 0) {
+                [self.tableView setContentOffset:CGPointMake(self.tableView.contentOffset.x, needOffsetY) animated:animated];
+            }
+        });
     });
+    
     
 }
 
 - (void)sendMessageWithItem:(ChatMessageModel *)item{
+    [self.messageItems addObject:item];
+    [self.tableView reloadData];
     SocketManager *manager = [SocketManager shareSockManager];
     [manager sendMessageWithItem:item];
 }
 
 - (void)sendImageOrVideo{
     WS(weakSelf);
-    [[PickerImageVideoTool sharePickerImageVideoTool] showImagePickerWithMaxCount:1 completion:^(NSArray<UIImage *> *photos, NSArray *assets) {
+    [[PickerImageVideoTool sharePickerImageVideoTool] showImagePickerWithMaxCount:9 completion:^(NSArray<UIImage *> *photos, NSArray *assets) {
         NSInteger count = assets.count;
         id objc = nil;
         for (NSInteger i = 0; i < count; i++) {
@@ -276,10 +297,13 @@ SocketManagerDelegate>
 
 #pragma mark - table view delegate
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
-    if (velocity.y >= 0.1) {
-         [self.keyBoardToolView showKeyBoard];
-    }else if(velocity.y < 0){
-         [self.keyBoardToolView exitKeyBoard];
+//    if (velocity.y >= 0.1) {
+//         [self.keyBoardToolView showKeyBoard];
+//    }else if(velocity.y < 0){
+//         [self.keyBoardToolView exitKeyBoard];
+//    }
+    if(velocity.y < 0){
+        [self.keyBoardToolView exitKeyBoard];
     }
 }
 

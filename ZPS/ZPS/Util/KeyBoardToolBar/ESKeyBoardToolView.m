@@ -44,6 +44,7 @@ static CGFloat fontValue = 16.0;
     if (self = [super initWithFrame:frame]) {
         self.hj_height = TitleViewHeight;
         [self setupInit];
+        self.backgroundColor = [UIColor colorWithRed:231.0/255.0 green:232.0/255.0 blue:238.0/255.0 alpha:1];
     }
     return self;
 }
@@ -81,7 +82,6 @@ static CGFloat fontValue = 16.0;
 
 - (void)setupInit
 {
-    self.backgroundColor = [UIColor whiteColor];
     self.currentLine = 1;
     // 表情键盘按钮
     self.emoticonButton = [[UIButton alloc] init];
@@ -150,16 +150,17 @@ static CGFloat fontValue = 16.0;
     NSDictionary *userInfo = notification.userInfo;
     double duration = [userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     CGRect keyboardF = [userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    self.showTime = duration;
     self.systemKeyboardH = keyboardF.size.height;
     if (keyboardF.origin.y < HJSCREENH) { // 键盘弹出
-        self.showTime = duration;
-        self.systemKeyboardH = 0;
         if (!self.isEditing) {
             self.isEditing = YES;
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.showTime * 2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 self.isEditing = NO;
             });
         }
+    }else{ // 退出键盘
+        self.systemKeyboardH = 0;
     }
 }
 
@@ -179,7 +180,6 @@ static CGFloat fontValue = 16.0;
 #pragma mark - textView delegate
 - (void)textViewDidChange:(UITextView *)textView
 {
-    
     NSString *textStr = textView.text;
     if (textStr.length) {
         self.placeTitleLabel.hidden = YES;
@@ -239,7 +239,7 @@ static CGFloat fontValue = 16.0;
 
 - (void)textViewDidBeginEditing:(UITextView *)textView{
     if ([self.delegate respondsToSelector:@selector(ESKeyBoardToolViewDidEditing:changeY:)]) {
-            [self.delegate ESKeyBoardToolViewDidEditing:self changeY:0];
+        [self.delegate ESKeyBoardToolViewDidEditing:self changeY:0];
     }
 }
 
@@ -248,6 +248,7 @@ static CGFloat fontValue = 16.0;
     if ([self.delegate respondsToSelector:@selector(ESKeyBoardToolViewDidEndEdit:)]) {
         [self.delegate ESKeyBoardToolViewDidEndEdit:self];
     }
+    [self exitKeyBoardInputView];
 }
 
 
@@ -306,6 +307,13 @@ static CGFloat fontValue = 16.0;
     });
 }
 
+// 退出表情键盘 选项键盘
+- (void)exitKeyBoardInputView{
+    self.emoticonButton.selected = NO;
+    self.addButton.selected = NO;
+    self.inputTextView.inputView = nil;
+}
+
 #pragma mark - lazy
 - (ESEmoticonView *)emoticonView
 {
@@ -317,6 +325,7 @@ static CGFloat fontValue = 16.0;
         WS(weakSelf);
         _emoticonView.sendButtonDidClickBlock = ^{
             NSString *message = weakSelf.inputTextView.text;
+            [weakSelf.inputTextView resignFirstResponder];
             if ([weakSelf.delegate respondsToSelector:@selector(ESKeyBoardToolViewSendButtonDidClick: message:)]) {
                 weakSelf.isEditing = NO;
                 [weakSelf.delegate ESKeyBoardToolViewSendButtonDidClick:weakSelf message:message];
@@ -325,7 +334,6 @@ static CGFloat fontValue = 16.0;
             for (NSInteger i = 0; i < count; i++) {
                 [weakSelf.inputTextView deleteBackward];
             }
-            [weakSelf.inputTextView resignFirstResponder];
         };
         _emoticonView.insetEmoticonBlock = ^ (NSString *message){
             [weakSelf.inputTextView insertText:message];

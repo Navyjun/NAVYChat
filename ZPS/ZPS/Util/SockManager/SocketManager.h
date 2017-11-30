@@ -25,12 +25,13 @@
 @property (nonatomic, weak) id <SocketManagerDelegate> delegate;
 /// 保存数据的主地址
 @property (nonatomic, copy)  NSString *dataSavePath;
-
+/// 当有多个需要发送时
+@property (nonatomic, strong) NSMutableArray *needSendMoreItems;
 + (instancetype)shareSockManager;
 /// 监听端口
 - (BOOL)startListenPort:(uint16_t)prot;
 /// 连接
 - (BOOL)connentHost:(NSString *)host prot:(uint16_t)port;
-/// 发送数据
+/// 发送数据 <单条数据的发送>
 - (void)sendMessageWithItem:(ChatMessageModel *)item;
 @end

@@ -66,6 +66,10 @@ typedef NS_ENUM(int,ChatMessageType) {
 /// 是否在等待接收 <图片 / 视频 / 音频> 类型
 @property (nonatomic, assign) BOOL isWaitAcceptFile;
 
+/**************************** 发送相关 *********************************/
+/// 是否发送成功
+@property (nonatomic, assign) BOOL sendSuccess;
+
 /*************************** UI相关 *****************************/
 /// 消息宽度
 @property (nonatomic, assign) CGFloat messageW;

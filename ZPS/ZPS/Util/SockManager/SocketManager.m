@@ -87,13 +87,18 @@ static SocketManager *manager = nil;
 
 /// 发送数据
 - (void)sendMessageWithItem:(ChatMessageModel *)item{
+    [self.needSendMoreItems addObject:item];
+    if (self.needSendMoreItems.count < 2) {
+        [self sendOneMessageItem:item];
+    }else{
+        
+    }
+}
+
+- (void)sendOneMessageItem:(ChatMessageModel *)item{
     self.currentSendItem = item;
     NSData *textData = [self creationMessageDataWithItem:item];
     [self writeMediaMessageWithData:textData];
-//    if (item.chatMessageType == ChatMessageText) {
-//    }else if (item.chatMessageType == ChatMessageImage || item.chatMessageType == ChatMessageVideo){
-//        [self imageOrVideoFileSend:item];
-//    }
 }
 
 // 创建消息体
@@ -152,6 +157,7 @@ static SocketManager *manager = nil;
     }
     [self.clientSocketArray addObject:newSocket];
     [newSocket readDataWithTimeout:- 1 tag:0];
+    NSLog(@"%s",__func__);
 }
 
 /// 客户端连接到的
@@ -165,12 +171,10 @@ static SocketManager *manager = nil;
     NSDictionary *readDic = [readStr hj_jsonStringToDic];
     
     if ([readDic isKindOfClass:[NSDictionary class]]) {
-        NSLog(@"readDic = %@",readDic);
+        MYLog(@"readDic = %@",readDic);
         self.acceptItem = [ChatMessageModel mj_objectWithKeyValues:readDic];
         self.acceptItem.isFormMe = NO;
         self.acceptItem.finishAccept = self.acceptItem.chatMessageType != ChatMessageText ? NO : YES;
-        // 接收到非字符串类型
-        //self.acceptItem.isWaitAcceptFile = self.acceptItem.chatMessageType != ChatMessageText ? YES : NO;
     }else if (self.acceptItem.isWaitAcceptFile) {
         self.acceptItem.finishAccept = NO;
         self.acceptItem.acceptSize += data.length;
@@ -183,8 +187,7 @@ static SocketManager *manager = nil;
         }
         // 输出流 写数据
         NSInteger byt = [self.outputStream write:data.bytes maxLength:data.length];
-        NSLog(@"byt = %zd totalSize = %zd",byt,self.acceptItem.fileSize);
-        
+        MYLog(@"byt = %zd totalSize = %zd",byt,self.acceptItem.fileSize);
         if (self.acceptItem.acceptSize >= self.acceptItem.fileSize) {
             self.acceptItem.finishAccept = YES;
             [self.outputStream close];
@@ -208,8 +211,18 @@ static SocketManager *manager = nil;
     if (self.currentSendItem.sendTag == tag) {
         if (!self.currentSendItem.isWaitAcceptFile) {
             self.currentSendItem.temImage = nil;
+            self.currentSendItem.sendSuccess = YES;
             if ([self.delegate respondsToSelector:@selector(socketManager:itemUpFinishrefresh:)]) {
                 [self.delegate socketManager:self itemUpFinishrefresh:self.currentSendItem];
+            }
+            // 缓存数组
+            if (self.needSendMoreItems.count > 0) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self.needSendMoreItems removeObject:self.currentSendItem];
+                    if (self.needSendMoreItems.count > 0) {
+                        [self sendOneMessageItem:[self.needSendMoreItems firstObject]];
+                    }
+                });
             }
             
         }else{
@@ -266,6 +279,13 @@ static SocketManager *manager = nil;
         NSLog(@"filePath = %@",filePath);
     }
     return _dataSavePath;
+}
+
+- (NSMutableArray *)needSendMoreItems{
+    if (!_needSendMoreItems) {
+        _needSendMoreItems = [NSMutableArray array];
+    }
+    return _needSendMoreItems;
 }
 
 @end
