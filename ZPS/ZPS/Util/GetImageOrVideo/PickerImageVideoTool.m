@@ -31,6 +31,7 @@ static PickerImageVideoTool *tool = nil;
     imagePickerVc.allowPickingImage = YES;
     imagePickerVc.allowPickingOriginalPhoto = YES;
     imagePickerVc.allowPickingGif = YES;
+    imagePickerVc.allowPickingMultipleVideo = YES; // 是否可以多选视频
     UIViewController *rootVC = [UIApplication sharedApplication].keyWindow.rootViewController;
     [rootVC presentViewController:imagePickerVc animated:YES completion:nil];
 }
@@ -40,6 +41,11 @@ static PickerImageVideoTool *tool = nil;
     if (self.finishBlock) {
         self.finishBlock(photos, assets);
     }
+}
+
+- (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingVideo:(UIImage *)coverImage sourceAssets:(id)asset{
+    MYLog(@"用户选择了一个视频");
+    
 }
 
 

@@ -28,6 +28,8 @@
 @end
 
 @implementation ChatMessageCell
+
+
 + (instancetype)chatMessageCell:(UITableView *)tableView{
     ChatMessageCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([self class])];
     if (!cell) {
@@ -56,6 +58,7 @@
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    [super touchesBegan:touches withEvent:event];
     if (self.tapCellBlock) {
         self.tapCellBlock();
     }
@@ -63,6 +66,12 @@
 
 - (void)setDataModel:(ChatMessageModel *)dataModel{
     _dataModel = dataModel;
+    
+    if (dataModel.isSending ) {
+        _progressHub.hidden = NO;
+    }else if (dataModel.isSendFinish){
+        _progressHub.hidden = YES;
+    }
     
     [_messageBgImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(_dataModel.messageW);
@@ -113,10 +122,14 @@
         make.left.mas_equalTo(self.messageBgImageView.mas_left).offset(_dataModel.isFormMe ? 1 : 9.0);
         make.right.mas_equalTo(self.messageBgImageView.mas_right).offset(_dataModel.isFormMe ? -9.0 : -1);
     }];
-    
-    if (_dataModel.mediaMessageUrl) {
-        // 使用不保存到本地磁盘策略 <本地已保存图片>
-        [self.messageImageView sd_setImageWithURL:_dataModel.mediaMessageUrl placeholderImage:nil options:SDWebImageCacheMemoryOnly];
+    [self progressHub];
+    if (_dataModel.showImageUrl) {
+        if (_dataModel.chatMessageType == ChatMessageVideo) {
+            self.messageImageView.image = [ZPPublicMethod firstFrameWithVideoURL:_dataModel.mediaMessageUrl size:CGSizeMake(375, 667)];
+        }else{
+            // 使用不保存到本地磁盘策略 <本地已保存图片>
+            [self.messageImageView sd_setImageWithURL:_dataModel.showImageUrl placeholderImage:nil options:SDWebImageCacheMemoryOnly];
+        }
     }else{
         self.messageImageView.image = _dataModel.temImage;
     }
@@ -242,6 +255,14 @@
         }];
     }
     return _imageOrVideoView;
+}
+
+- (HJProgressHub *)progressHub{
+    if (!_progressHub) {
+        _progressHub = [HJProgressHub progressHubWithFrame:self.imageOrVideoView.bounds];
+        [self.imageOrVideoView addSubview:_progressHub];
+    }
+    return _progressHub;
 }
 
 @end

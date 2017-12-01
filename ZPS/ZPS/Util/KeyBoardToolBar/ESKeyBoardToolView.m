@@ -26,8 +26,6 @@ static CGFloat fontValue = 16.0;
 @property (nonatomic, strong) ESEmoticonView *emoticonView;
 /// 其它选项view
 @property (nonatomic, strong) ESAddOpationView *addOpationView;
-/// 当前textView的高度
-@property (nonatomic, assign) CGFloat nowHeight;
 /// 没一行文字的高度
 @property (nonatomic, assign) CGFloat textRowHeight;
 /// 当前的行数
@@ -43,8 +41,11 @@ static CGFloat fontValue = 16.0;
 {
     if (self = [super initWithFrame:frame]) {
         self.hj_height = TitleViewHeight;
+        self.nowHeight = TitleViewHeight;
         [self setupInit];
         self.backgroundColor = [UIColor colorWithRed:231.0/255.0 green:232.0/255.0 blue:238.0/255.0 alpha:1];
+        NSString *str = @"输入文字";
+        self.textRowHeight = [str hj_stringHeightWithMaxWidth:MAXFLOAT andFont:[UIFont systemFontOfSize:fontValue]].height;
     }
     return self;
 }
@@ -54,18 +55,18 @@ static CGFloat fontValue = 16.0;
     [super layoutSubviews];
     
     CGFloat margin = 10;
+    self.hj_height = self.nowHeight;
     // 表情按钮
     self.emoticonButton.size = CGSizeMake(30, 30);
     self.emoticonButton.x = margin;
-    self.emoticonButton.centerY = self.hj_height * 0.5;
+    self.emoticonButton.centerY = self.nowHeight * 0.5;
     
     // 输入框的背景图 / 输入框
     CGFloat inputX = CGRectGetMaxX(self.emoticonButton.frame) + margin;
     CGFloat inpitW = _isNeedHiddenAddButton ? (self.hj_width - inputX - 10) : (self.hj_width - 2 * inputX);
     CGFloat inputY = 5;
-    CGFloat inputH = self.hj_height - 2 * inputY;
-    NSString *str = @"输入文字";
-    self.textRowHeight = [str hj_stringHeightWithMaxWidth:inpitW andFont:[UIFont systemFontOfSize:fontValue]].height;
+    CGFloat inputH = self.nowHeight - 2 * inputY;
+
     self.inputBgImageView.frame = CGRectMake(inputX, inputY, inpitW, inputH);
     self.inputTextView.frame  = CGRectMake(inputX, inputY, inpitW, inputH);
     self.placeTitleLabel.frame = CGRectMake(inputX + 5, inputY, inpitW - 5, inputH);
@@ -75,7 +76,7 @@ static CGFloat fontValue = 16.0;
         CGFloat addBX = self.hj_width - inputX + margin;
         self.addButton.size = CGSizeMake(30, 30);
         self.addButton.x = addBX;
-        self.addButton.centerY = self.hj_height * 0.5;
+        self.addButton.centerY = self.nowHeight * 0.5;
     }
     
 }
@@ -116,10 +117,10 @@ static CGFloat fontValue = 16.0;
     _inputTextView.returnKeyType = UIReturnKeySend;
     [self addSubview:_inputTextView];
     
-
     // 加号按钮
     self.addButton = [[UIButton alloc] init];
     [self.addButton setImage:[UIImage imageNamed:@"添加_bt"] forState:UIControlStateNormal];
+    [self.addButton setImage:[UIImage imageNamed:@"文本_bt"] forState:UIControlStateSelected];
     [self.addButton addTarget:self action:@selector(addButtonDidClick:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.addButton];
     
@@ -131,7 +132,6 @@ static CGFloat fontValue = 16.0;
 
 - (void)dealloc
 {
-    MYLog(@"键盘工具条被销毁");
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -187,24 +187,13 @@ static CGFloat fontValue = 16.0;
         self.placeTitleLabel.hidden = NO;
     }
     self.isEditing = YES;
+    
     NSInteger height = ceilf([textView sizeThatFits:CGSizeMake(textView.bounds.size.width, MAXFLOAT)].height);
     NSInteger lines = height / self.textRowHeight;
-    // 判断最后一个字符是否为 "\n"
+    
+    // 判断最后一个字符是否为 "\n" 发送消息
     if ([textStr hasSuffix:@"\n"]) {
-        // 1.发送消息
-        self.hj_height = TitleViewHeight;
-        self.y += self.textRowHeight * (lines - 1);
-        _currentLine = 1;
-        self.isEditing = NO;
-        textView.text = nil;
-        textView.scrollEnabled = NO;
-        [textView resignFirstResponder];
-        
-        NSRange range = [textStr rangeOfString:@"\n"];
-        textStr = [textStr substringToIndex:range.location];
-        if ([self.delegate respondsToSelector:@selector(ESKeyBoardToolViewSendButtonDidClick: message:)]) {
-            [self.delegate ESKeyBoardToolViewSendButtonDidClick:self message:textStr];
-        }
+        [self sendMessageLayoutWithTextLines:lines message:textStr];
         return;
     }
     
@@ -229,12 +218,24 @@ static CGFloat fontValue = 16.0;
         self.hj_height -= offsetH;
         self.y += offsetH;
     }
+    self.nowHeight = self.hj_height;
     
     if ([self.delegate respondsToSelector:@selector(ESKeyBoardToolViewDidEditing:changeY:)] && _currentLine != lines) {
         [self.delegate ESKeyBoardToolViewDidEditing:self changeY:lines > _currentLine ? (-offsetH) : (offsetH)];
     }
     _currentLine = lines;
     
+}
+
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+{
+    if ([text isEqualToString:@"\n"])
+    {
+        NSInteger height = ceilf([textView sizeThatFits:CGSizeMake(textView.bounds.size.width, MAXFLOAT)].height);
+        NSInteger lines = height / self.textRowHeight;
+        [self sendMessageLayoutWithTextLines:lines message:textView.text];
+    }
+    return YES;
 }
 
 - (void)textViewDidBeginEditing:(UITextView *)textView{
@@ -249,6 +250,23 @@ static CGFloat fontValue = 16.0;
         [self.delegate ESKeyBoardToolViewDidEndEdit:self];
     }
     [self exitKeyBoardInputView];
+}
+
+#pragma mark - method
+// 消息发送后重新布局
+- (void)sendMessageLayoutWithTextLines:(NSInteger)lines message:(NSString *)message{
+    self.hj_height = TitleViewHeight;
+    self.nowHeight = TitleViewHeight;
+    self.y += self.textRowHeight * (lines - 1);
+    self.currentLine = 1;
+    self.isEditing = NO;
+    self.inputTextView.text = nil;
+    self.inputTextView.scrollEnabled = NO;
+    [self.inputTextView resignFirstResponder];
+    
+    if ([self.delegate respondsToSelector:@selector(ESKeyBoardToolViewSendButtonDidClick: message:)]) {
+        [self.delegate ESKeyBoardToolViewSendButtonDidClick:self message:message];
+    }
 }
 
 
@@ -268,7 +286,7 @@ static CGFloat fontValue = 16.0;
     [self changeInputView:self.inputView selected:button.selected];
     button.selected = !button.selected;
 }
-
+// 加号按钮
 - (void)addButtonDidClick:(UIButton *)button{
     if (self.emoticonButton.selected) {
         self.emoticonButton.selected = NO;
@@ -284,6 +302,7 @@ static CGFloat fontValue = 16.0;
 
 - (void)changeInputView:(UIView *)inputView selected:(BOOL)isSelected{
     if (!isSelected && self.inputTextView.inputView) {
+        [self.inputTextView becomeFirstResponder];
         self.inputTextView.inputView = inputView;
         return;
     }
@@ -309,9 +328,9 @@ static CGFloat fontValue = 16.0;
 
 // 退出表情键盘 选项键盘
 - (void)exitKeyBoardInputView{
-    self.emoticonButton.selected = NO;
-    self.addButton.selected = NO;
-    self.inputTextView.inputView = nil;
+//    self.emoticonButton.selected = NO;
+//    self.addButton.selected = NO;
+//    self.inputTextView.inputView = nil;
 }
 
 #pragma mark - lazy
@@ -325,15 +344,11 @@ static CGFloat fontValue = 16.0;
         WS(weakSelf);
         _emoticonView.sendButtonDidClickBlock = ^{
             NSString *message = weakSelf.inputTextView.text;
-            [weakSelf.inputTextView resignFirstResponder];
-            if ([weakSelf.delegate respondsToSelector:@selector(ESKeyBoardToolViewSendButtonDidClick: message:)]) {
-                weakSelf.isEditing = NO;
-                [weakSelf.delegate ESKeyBoardToolViewSendButtonDidClick:weakSelf message:message];
-            }
-            NSInteger count = message.length;
-            for (NSInteger i = 0; i < count; i++) {
-                [weakSelf.inputTextView deleteBackward];
-            }
+            NSInteger height = ceilf([weakSelf.inputTextView sizeThatFits:CGSizeMake(weakSelf.inputTextView.bounds.size.width, MAXFLOAT)].height);
+            NSInteger lines = height / weakSelf.textRowHeight;
+            // 1.发送消息
+            [weakSelf sendMessageLayoutWithTextLines:lines message:message];
+            weakSelf.isEditing = NO;
         };
         _emoticonView.insetEmoticonBlock = ^ (NSString *message){
             [weakSelf.inputTextView insertText:message];
@@ -348,8 +363,9 @@ static CGFloat fontValue = 16.0;
 - (ESAddOpationView *)addOpationView{
     if (!_addOpationView) {
         _addOpationView = [ESAddOpationView addOpationView];
-        OpationItem *item = [OpationItem opationItemWithName:@"照片" iconName:@"chat_img" type:OpationItem_image];
-        _addOpationView.opationItem = @[item];
+        OpationItem *imgItem = [OpationItem opationItemWithName:@"照片" iconName:@"chat_img" type:OpationItem_image];
+        //OpationItem *videoItem = [OpationItem opationItemWithName:@"视频" iconName:@"chat_video" type:OpationItem_video];
+        _addOpationView.opationItem = @[imgItem];
         
         WS(weakSelf);
         _addOpationView.selectedOpationHandle = ^(OpationItem_type type){

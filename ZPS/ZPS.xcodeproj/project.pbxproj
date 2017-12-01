@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EE13B3561FD0FB7E001A3F35 /* HJProgressHub.m in Sources */ = {isa = PBXBuildFile; fileRef = EE13B3551FD0FB7E001A3F35 /* HJProgressHub.m */; };
 		EE4051221FB3ECBF0054BC53 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4051211FB3ECBF0054BC53 /* AppDelegate.m */; };
 		EE4051251FB3ECBF0054BC53 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4051241FB3ECBF0054BC53 /* ViewController.m */; };
 		EE4051281FB3ECBF0054BC53 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EE4051261FB3ECBF0054BC53 /* Main.storyboard */; };
@@ -49,6 +50,8 @@
 		4B73FADC8DD1F938A4D1FFE1 /* Pods-ZPS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZPS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ZPS/Pods-ZPS.debug.xcconfig"; sourceTree = "<group>"; };
 		5940A233C49715EBE6655192 /* Pods-ZPS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZPS.release.xcconfig"; path = "Pods/Target Support Files/Pods-ZPS/Pods-ZPS.release.xcconfig"; sourceTree = "<group>"; };
 		95BFAECA09AF58978697F367 /* libPods-ZPS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ZPS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EE13B3541FD0FB7E001A3F35 /* HJProgressHub.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJProgressHub.h; sourceTree = "<group>"; };
+		EE13B3551FD0FB7E001A3F35 /* HJProgressHub.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJProgressHub.m; sourceTree = "<group>"; };
 		EE40511D1FB3ECBF0054BC53 /* ZPS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZPS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE4051201FB3ECBF0054BC53 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		EE4051211FB3ECBF0054BC53 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -149,6 +152,15 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		EE13B3531FD0FB24001A3F35 /* CustomView */ = {
+			isa = PBXGroup;
+			children = (
+				EE13B3541FD0FB7E001A3F35 /* HJProgressHub.h */,
+				EE13B3551FD0FB7E001A3F35 /* HJProgressHub.m */,
+			);
+			path = CustomView;
+			sourceTree = "<group>";
+		};
 		EE4051141FB3ECBF0054BC53 = {
 			isa = PBXGroup;
 			children = (
@@ -244,6 +256,7 @@
 		EE40513C1FB3EE0D0054BC53 /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				EE13B3531FD0FB24001A3F35 /* CustomView */,
 				EEE5190C1FCCF8060000AA7E /* Comment */,
 				EEE519021FCCEC770000AA7E /* GetImageOrVideo */,
 				EEE795521FCBAEA800541A69 /* RegexKitLite */,
@@ -577,6 +590,7 @@
 				EEE795581FCBEA9200541A69 /* ESAddOpationView.m in Sources */,
 				EE5CE2101FB52FB9001F5A30 /* HJWifiUtil.m in Sources */,
 				EEE519051FCCECB10000AA7E /* PickerImageVideoTool.m in Sources */,
+				EE13B3561FD0FB7E001A3F35 /* HJProgressHub.m in Sources */,
 				EEE795551FCBAEA800541A69 /* RegexKitLite.m in Sources */,
 				EE4051511FB404410054BC53 /* ServerSocketItem.m in Sources */,
 				EE5CE2391FB55651001F5A30 /* ImageViewController.m in Sources */,

@@ -12,7 +12,8 @@
 
 typedef NS_ENUM(NSInteger, OpationItem_type)
 {
-    OpationItem_image = 0 // 照片选择
+    OpationItem_image = 0, // 照片选择
+    OpationItem_video = 1  // 视频选择
 };
 
 

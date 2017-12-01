@@ -11,7 +11,10 @@
 #import "ChatMessageCell.h"
 #import "SocketManager.h"
 #import "PickerImageVideoTool.h"
+#import "TZImageManager.h"
 #import <SDImageCache.h>
+#import <AVKit/AVKit.h>
+#import <AVFoundation/AVFoundation.h>
 
 @interface ChatViewController ()
 <ESKeyBoardToolViewDelegate,
@@ -28,9 +31,13 @@ SocketManagerDelegate>
 @property (nonatomic, strong) UIImageView *chatBgImageView;
 /// tableView y 原始偏移值
 @property (nonatomic, assign) CGFloat orginalOffsetY;
-/// 消息
+/// 消息集合
 @property (nonatomic, strong) NSMutableArray *messageItems;
-@property (nonatomic, weak) NSTimer *refreshTime;
+/// 当前正在发送的item
+@property (nonatomic, strong) ChatMessageModel *tempSendingItem;
+/// 当前正在接收的item
+@property (nonatomic, strong) ChatMessageModel *tempAcceptingItem;
+
 @end
 
 @implementation ChatViewController
@@ -86,7 +93,7 @@ SocketManagerDelegate>
     if (keyboardF.origin.y >= self.view.hj_height) { // 退出键盘
         [self.keyBoardToolView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.bottom.mas_equalTo(self.view.mas_bottom);
-            make.height.mas_equalTo(TitleViewHeight);
+            make.height.mas_equalTo(self.keyBoardToolView.hj_height);
         }];
     } else {
         [self.keyBoardToolView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -175,7 +182,9 @@ SocketManagerDelegate>
 
 #pragma mark - SocketManagerDelegate
 - (void)socketManager:(SocketManager *)manager  itemUpingrefresh:(ChatMessageModel *)upingItem{
-    
+    // 刷新当前进度
+    ChatMessageCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:upingItem.locationIndex inSection:0]];
+    cell.progressHub.progress = 1.0 * upingItem.upSize / upingItem.fileSize;
 }
 
 - (void)socketManager:(SocketManager *)manager  itemUpFinishrefresh:(ChatMessageModel *)finishItem{
@@ -190,8 +199,9 @@ SocketManagerDelegate>
         [self.tableView reloadData];
         [self scrollToLastCellAnimated:YES];
     }else{
-        // 刷新当前进度
+       
     }
+    
 }
 
 #pragma mark - private
@@ -199,14 +209,14 @@ SocketManagerDelegate>
     if (self.messageItems.count <= 0) {
         return;
     }
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         dispatch_async(dispatch_get_main_queue(), ^{
             CGFloat contentH = self.tableView.contentSize.height;
             CGFloat showH = 0;
             if (self.keyBoardToolView.inputTextView.isFirstResponder) {
                 showH = self.tableView.hj_height - self.keyBoardToolView.systemKeyboardH;
             }else{
-                showH = self.tableView.hj_height;
+                showH = self.view.hj_height - self.keyBoardToolView.nowHeight;
             }
             CGFloat needOffsetY =  (contentH - showH);
             if (needOffsetY > 0) {
@@ -219,6 +229,7 @@ SocketManagerDelegate>
 }
 
 - (void)sendMessageWithItem:(ChatMessageModel *)item{
+    item.locationIndex = self.messageItems.count;
     [self.messageItems addObject:item];
     [self.tableView reloadData];
     SocketManager *manager = [SocketManager shareSockManager];
@@ -241,37 +252,51 @@ SocketManagerDelegate>
             messageM.userName = [UIDevice currentDevice].name;
             messageM.asset = asset;
             messageM.fileName = [ZPPublicMethod getAssetsName:asset only:YES];
-            messageM.temImage = photos[i];
             if (asset.mediaType == PHAssetMediaTypeImage){
-                messageM.chatMessageType = ChatMessageImage;
-                messageM.fileSize = UIImagePNGRepresentation(messageM.temImage).length;
-                SDImageCache *cache = [SDImageCache sharedImageCache];
-                [cache storeImage:messageM.temImage forKey:messageM.fileName toDisk:YES completion:^{
-                    messageM.mediaMessageUrl = [NSURL fileURLWithPath:[cache defaultCachePathForKey:messageM.fileName]];
-                }];
-                [weakSelf sendMessageWithItem:messageM];
-            }else if (asset.mediaType == PHAssetMediaTypeAudio){
-                messageM.chatMessageType = ChatMessageAudio;
+                messageM.temImage = photos[i];
+                [weakSelf pickImageHandle:messageM];
             }else if (asset.mediaType == PHAssetMediaTypeVideo) {
                 messageM.chatMessageType = ChatMessageVideo;
+                [weakSelf pickVideoHandle:messageM];
+            }else if (asset.mediaType == PHAssetMediaTypeAudio){
+                messageM.chatMessageType = ChatMessageAudio;
             }
             
-            // 视频
-            /*
-            [ZPPublicMethod getfilePath:asset Complete:^(NSURL *fileUrl) {
-                SDImageCache *cache = [SDImageCache sharedImageCache];
-                NSString *pathStr = [[fileUrl absoluteString] substringFromIndex:8];
-                [cache storeImage:messageM.temImage forKey:pathStr toDisk:YES completion:^{
-                    messageM.mediaMessageUrl = [NSURL fileURLWithPath:[cache defaultCachePathForKey:pathStr]];
-                }];
-                messageM.fileSize = [ZPPublicMethod getFileSize:pathStr];
-                [weakSelf sendMessageWithItem:messageM];
-            }];
-             */
         }
         
         
     }];
+}
+
+- (void)pickImageHandle:(ChatMessageModel*)messageM{
+    messageM.chatMessageType = ChatMessageImage;
+    messageM.fileSize = UIImagePNGRepresentation(messageM.temImage).length;
+    SDImageCache *cache = [SDImageCache sharedImageCache];
+    [cache storeImage:messageM.temImage forKey:messageM.fileName toDisk:YES completion:^{
+        messageM.showImageUrl = [NSURL fileURLWithPath:[cache defaultCachePathForKey:messageM.fileName]];
+        NSLog(@"imgMessageUrl = %@",messageM.mediaMessageUrl);
+    }];
+    [self sendMessageWithItem:messageM];
+}
+
+- (void)pickVideoHandle:(ChatMessageModel *)messageM{
+    // 视频getPhotoWithAsset
+     [ZPPublicMethod getfilePath:messageM.asset Complete:^(NSURL *fileUrl) {
+         messageM.fileSize = [ZPPublicMethod getFileSize:[[fileUrl absoluteString] substringFromIndex:8]];
+         [ZPPublicMethod getThumbnail:messageM.asset size:CGSizeMake(375, 667) result:^(UIImage *thumImage) {
+             if (messageM.temImage == nil) {
+                 messageM.temImage = thumImage;
+                 SDImageCache *cache = [SDImageCache sharedImageCache];
+                 NSString *keyStr = [messageM.fileName stringByAppendingString:@".JPG"];
+                 [cache storeImage:messageM.temImage forKey:keyStr toDisk:YES completion:^{
+                     messageM.showImageUrl = [NSURL fileURLWithPath:[cache defaultCachePathForKey:keyStr]];
+                     NSLog(@"mediaMessageUrl = %@",messageM.mediaMessageUrl);
+                 }];
+                 [self sendMessageWithItem:messageM];
+             }
+         }];
+     }];
+    
 }
 
 #pragma mark - table view data source delegate
@@ -304,6 +329,15 @@ SocketManagerDelegate>
 //    }
     if(velocity.y < 0){
         [self.keyBoardToolView exitKeyBoard];
+    }
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    ChatMessageModel *messageM = self.messageItems[indexPath.row];
+    if (messageM.chatMessageType == ChatMessageVideo) {
+        AVPlayerViewController *playVC = [[AVPlayerViewController alloc] init];
+        playVC.player = [AVPlayer playerWithURL:messageM.mediaMessageUrl];
+        [self presentViewController:playVC animated:YES completion:nil];
     }
 }
 

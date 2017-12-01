@@ -50,6 +50,8 @@ typedef NS_ENUM(NSInteger, ESKeyBoardToolView_type)
 @property (nonatomic, assign) CGFloat showTime;
 /// 系统键盘的高度
 @property (nonatomic, assign) CGFloat systemKeyboardH;
+/// self 当前的高度 <主要用于记录有未发送的消息时的高度>
+@property (nonatomic, assign) CGFloat nowHeight;
 
 - (void)exitKeyBoard;
 

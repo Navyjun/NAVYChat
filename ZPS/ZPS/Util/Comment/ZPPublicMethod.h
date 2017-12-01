@@ -59,4 +59,14 @@
  */
 + (void)getThumbnail:(PHAsset *)asset size:(CGSize)size result:(void(^)(UIImage *thumImage))result;
 
+
+/**
+ 通过URL地址获取视频第一帧图片
+
+ @param url URL地址
+ @param size size
+ @return 第一帧图片
+ */
++ (UIImage *)firstFrameWithVideoURL:(NSURL *)url size:(CGSize)size;
+
 @end
