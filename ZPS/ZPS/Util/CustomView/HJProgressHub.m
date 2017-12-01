@@ -18,8 +18,8 @@
 @end
 
 @implementation HJProgressHub
-+ (instancetype)progressHubWithFrame:(CGRect)frame{
-    HJProgressHub *hub = [[HJProgressHub alloc] initWithFrame:frame];
++ (instancetype)progressHub{
+    HJProgressHub *hub = [[HJProgressHub alloc] init];
     [hub setupUI];
     return hub;
 }
@@ -33,7 +33,7 @@
 
 - (void)setupUI{
     self.grayView = [[UIView alloc] initWithFrame:self.bounds];
-    self.grayView.backgroundColor = [UIColor colorWithRed:90.0/255.0 green:92.0/255.0 blue:96.0/255.0 alpha:0.5];
+    self.grayView.backgroundColor = [UIColor colorWithRed:90.0/255.0 green:92.0/255.0 blue:96.0/255.0 alpha:0.7];
     [self addSubview:self.grayView];
     
     self.indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
@@ -51,7 +51,7 @@
     self.grayView.hidden = NO;
     _progress = progress;
     [self.indicatorView startAnimating];
-    self.progressLabel.text = [NSString stringWithFormat:@"%.2f%%",progress];
+    self.progressLabel.text = [NSString stringWithFormat:@"%.2f%%",progress*100];
     NSLog(@"+++++++++++++++++++progressLabelText = %@",self.progressLabel.text);
     if (progress >= 1.0) {
         [self.indicatorView stopAnimating];

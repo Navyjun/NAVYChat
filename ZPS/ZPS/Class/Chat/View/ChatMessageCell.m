@@ -125,7 +125,11 @@
     [self progressHub];
     if (_dataModel.showImageUrl) {
         if (_dataModel.chatMessageType == ChatMessageVideo) {
-            self.messageImageView.image = [ZPPublicMethod firstFrameWithVideoURL:_dataModel.mediaMessageUrl size:CGSizeMake(375, 667)];
+            if (_dataModel.temImage) {
+                self.messageImageView.image = _dataModel.temImage;
+            }else{
+                self.messageImageView.image = [ZPPublicMethod firstFrameWithVideoURL:_dataModel.mediaMessageUrl size:CGSizeMake(375, 667)];
+            }
         }else{
             // 使用不保存到本地磁盘策略 <本地已保存图片>
             [self.messageImageView sd_setImageWithURL:_dataModel.showImageUrl placeholderImage:nil options:SDWebImageCacheMemoryOnly];
@@ -259,8 +263,11 @@
 
 - (HJProgressHub *)progressHub{
     if (!_progressHub) {
-        _progressHub = [HJProgressHub progressHubWithFrame:self.imageOrVideoView.bounds];
+        _progressHub = [HJProgressHub progressHub];
         [self.imageOrVideoView addSubview:_progressHub];
+        [_progressHub mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.left.right.mas_equalTo(self.imageOrVideoView);
+        }];
     }
     return _progressHub;
 }

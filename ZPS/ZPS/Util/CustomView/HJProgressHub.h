@@ -12,6 +12,6 @@
 /// progress
 @property (nonatomic, assign) CGFloat progress;
 
-+ (instancetype)progressHubWithFrame:(CGRect)frame;
++ (instancetype)progressHub;
 
 @end

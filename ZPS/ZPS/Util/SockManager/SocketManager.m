@@ -155,14 +155,16 @@ static SocketManager *manager = nil;
 
 // 媒体文件接受完成后发送的消息
 - (void)sendMediaAcceptEndMessage{
-    NSData *data = [FILE_ACCEPT_END dataUsingEncoding:NSUTF8StringEncoding];
-    self.currentSendItem = nil;
-    if (self.clientSocketArray.count > 0) {
-        GCDAsyncSocket *clientSocket = [self.clientSocketArray firstObject];
-        [clientSocket writeData:data withTimeout:-1 tag:-99999];
-    }else{
-        [self.tcpSocketManager writeData:data withTimeout:-1 tag:-99999];
-    }
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSData *data = [FILE_ACCEPT_END dataUsingEncoding:NSUTF8StringEncoding];
+        self.currentSendItem = nil;
+        if (self.clientSocketArray.count > 0) {
+            GCDAsyncSocket *clientSocket = [self.clientSocketArray firstObject];
+            [clientSocket writeData:data withTimeout:-1 tag:-99999];
+        }else{
+            [self.tcpSocketManager writeData:data withTimeout:-1 tag:-99999];
+        }
+    });
 }
 
 // 发送下一个消息体
@@ -200,6 +202,7 @@ static SocketManager *manager = nil;
     
     if ([readStr isEqualToString:FILE_ACCEPT_END]) {
         [self sendNextMessage];
+        //NSLog(@"readStr = %@",readStr);
         return;
     }else if ([readDic isKindOfClass:[NSDictionary class]]) {
         MYLog(@"readDic = %@",readDic);
@@ -219,7 +222,7 @@ static SocketManager *manager = nil;
         }
         // 输出流 写数据
         NSInteger byt = [self.outputStream write:data.bytes maxLength:data.length];
-        MYLog(@"byt = %zd totalSize = %zd acceptSize = %zd",byt,self.acceptItem.fileSize,self.acceptItem.acceptSize);
+        MYLog(@"byt = %zd totalSize = %zd acceptSize = %zd,datal = %zd",byt,self.acceptItem.fileSize,self.acceptItem.acceptSize,data.length);
         if (self.acceptItem.acceptSize >= self.acceptItem.fileSize) {
             self.acceptItem.finishAccept = YES;
             [self.outputStream close];
@@ -263,8 +266,10 @@ static SocketManager *manager = nil;
             
         }else{
             // 接下来需要传输文件
-            self.currentSendItem.isWaitAcceptFile = NO; // 改变状态
-            [self imageOrVideoFileSend:self.currentSendItem];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                self.currentSendItem.isWaitAcceptFile = NO; // 改变状态
+                [self imageOrVideoFileSend:self.currentSendItem];
+            });
         }
     }
     

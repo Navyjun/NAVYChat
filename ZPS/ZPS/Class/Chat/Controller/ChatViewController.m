@@ -292,6 +292,7 @@ SocketManagerDelegate>
                      messageM.showImageUrl = [NSURL fileURLWithPath:[cache defaultCachePathForKey:keyStr]];
                      NSLog(@"mediaMessageUrl = %@",messageM.mediaMessageUrl);
                  }];
+                 NSLog(@"currentThread = %@",[NSThread currentThread]);
                  [self sendMessageWithItem:messageM];
              }
          }];
