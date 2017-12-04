@@ -114,7 +114,7 @@ static SocketManager *manager = nil;
     messageData[@"fileSize"] = [NSNumber numberWithInteger:item.fileSize];
     if (item.chatMessageType == ChatMessageText) {
         messageData[@"messageContent"] = item.messageContent;
-    }else if (item.chatMessageType == ChatMessageImage || item.chatMessageType == ChatMessageVideo){
+    }else if (item.chatMessageType == ChatMessageImage || item.chatMessageType == ChatMessageVideo || item.chatMessageType == ChatMessageAudio){
         item.isWaitAcceptFile = YES;
         messageData[@"isWaitAcceptFile"] = [NSNumber numberWithBool:YES];
     }
@@ -133,10 +133,12 @@ static SocketManager *manager = nil;
             dispatch_sync(dispatch_get_main_queue(), ^{
                 sendItem.mediaMessageUrl = fileUrl;
                 NSData *sendData = [NSData dataWithContentsOfURL:sendItem.mediaMessageUrl options:NSDataReadingMappedIfSafe error:nil];
-                NSLog(@"sendDataL = %zd",sendData.length);
                 [self writeMediaMessageWithData:sendData];
             });
         }];
+    }else if (sendItem.chatMessageType == ChatMessageAudio){
+        NSData *sendData = [NSData dataWithContentsOfURL:sendItem.mediaMessageUrl options:NSDataReadingMappedIfSafe error:nil];
+        [self writeMediaMessageWithData:sendData];
     }
     
 }

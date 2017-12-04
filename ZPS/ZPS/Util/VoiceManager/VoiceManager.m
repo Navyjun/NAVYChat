@@ -14,6 +14,9 @@
 @property (nonatomic, strong) AVAudioRecorder *audioRecorder;
 /// 音频播放器
 @property (nonatomic, strong) AVAudioPlayer *audioPlayer;
+/// 存储完成后的回调
+@property (nonatomic, copy) void(^stopCompletion)(BOOL);
+
 @end
 
 @implementation VoiceManager
@@ -28,18 +31,31 @@ static VoiceManager *manager = nil;
 }
 
 // 开始录音
-- (void)beginRecordWithURL:(NSURL *)url  completion:(void(^)(BOOL finished))completion{
+- (void)beginRecordWithURL:(NSURL *)url{
+    self.currentRecordUrl = url;
     [self getAudioRecorderWithUrl:url];
     [self.audioRecorder record];
 }
 
-- (void)stopRecord{
+- (void)stopRecordCompletion:(void (^)(BOOL))completion{
+    self.stopCompletion = completion;
     [self.audioRecorder stop];
+}
+
+- (void)cancleRecord{
+    [self.audioRecorder stop];
+    BOOL delete = [self.audioRecorder deleteRecording];
+    NSLog(@"delete = %zd",delete);
 }
 
 // 开始播放
 - (void)playAudioWithURL:(NSURL *)url{
-    
+    if (url == nil) {
+        return;
+    }
+    [self getAudioPlayerWithUrl:url];
+    [self.audioPlayer prepareToPlay];
+    [self.audioPlayer play];
 }
 
 
@@ -49,6 +65,11 @@ static VoiceManager *manager = nil;
     //设置为播放和录音状态，以便可以在录制完之后播放录音
     [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
     [audioSession setActive:YES error:nil];
+    NSError *audioError = nil;
+    BOOL success = [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&audioError];
+    if(!success){
+        NSLog(@"error doing outputaudioportoverride - %@", [audioError localizedDescription]);
+    }
 }
 
 /// 取得录音文件设置
@@ -57,11 +78,11 @@ static VoiceManager *manager = nil;
     //设置录音格式
     [dicM setObject:@(kAudioFormatLinearPCM) forKey:AVFormatIDKey];
     //设置录音采样率，8000是电话采样率，对于一般录音已经够了
-    [dicM setObject:@(8000) forKey:AVSampleRateKey];
+    [dicM setObject:@(44100) forKey:AVSampleRateKey];
     //设置通道,这里采用单声道
     [dicM setObject:@(1) forKey:AVNumberOfChannelsKey];
     //每个采样点位数,分为8、16、24、32
-    [dicM setObject:@(8) forKey:AVLinearPCMBitDepthKey];
+    [dicM setObject:@(16) forKey:AVLinearPCMBitDepthKey];
     //是否使用浮点数采样
     [dicM setObject:@(YES) forKey:AVLinearPCMIsFloatKey];
     //....其他设置等
@@ -71,11 +92,12 @@ static VoiceManager *manager = nil;
 #pragma mark - 录音机代理方法
 /// 录音完成，录音完成后播放录音
 -(void)audioRecorderDidFinishRecording:(AVAudioRecorder *)recorder successfully:(BOOL)flag{
-    NSLog(@"recorder = %@",recorder.url);
-    [self getAudioPlayerWithUrl:recorder.url];
-    //[audioPlayer prepareToPlay];
-    [self.audioPlayer play];
-    NSLog(@"录音完成!");
+    if (self.stopCompletion) {
+        self.stopCompletion(flag);
+    }
+    //self.audioRecorder = nil;
+    //[self playAudioWithURL:self.currentRecordUrl];
+    NSLog(@"录音完成-%zd",flag);
 }
 
 #pragma mark - lazy

@@ -154,6 +154,7 @@ static CGFloat fontValue = 16.0;
     [self.beginRecordButton addTarget:self action:@selector(recordButtonDidFinish:) forControlEvents:UIControlEventTouchUpInside];
     [self.beginRecordButton addTarget:self action:@selector(recordButtonDidCancle:) forControlEvents:UIControlEventTouchUpOutside];
     [self addSubview:self.beginRecordButton];
+    self.beginRecordButton.hidden = YES;
     
     // 监听键盘高度变化
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyBoardWillChange:) name:UIKeyboardWillChangeFrameNotification object:nil];

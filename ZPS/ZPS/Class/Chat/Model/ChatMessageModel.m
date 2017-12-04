@@ -29,6 +29,8 @@
             [self messageContentWH];
         }else if (self.chatMessageType == ChatMessageImage || self.chatMessageType == ChatMessageVideo){
             _messageH = self.messageW * 1.5;
+        }else if(self.chatMessageType == ChatMessageAudio){
+            _messageH = 40.0;
         }
     }
     return _messageH;
@@ -41,6 +43,9 @@
         }else if (self.chatMessageType == ChatMessageImage || self.chatMessageType == ChatMessageVideo){
             CGFloat maxW = HJSCREENW - 2 * MESSAGELRMARGIN - (messageLabelForHeadLeftMargin + messageLabelForHeadRightMargin);
             _messageW = maxW - 40;
+        }else if(self.chatMessageType == ChatMessageAudio){
+            // 这个要根据时长来计算
+            _messageW = 80;
         }
     }
     return _messageW;

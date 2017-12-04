@@ -188,9 +188,28 @@ SocketManagerDelegate>
         case RecordVoiceStateBegin:{
             NSString *fileName = [[NSString stringWithFormat:@"%zd",[[NSDate date] timeIntervalSinceReferenceDate]] stringByAppendingString:@".caf"];
             NSString *savePath = [[SocketManager shareSockManager].dataSavePath stringByAppendingPathComponent:[fileName lastPathComponent]];
-            NSLog(@"savePath = %@",savePath);
-            [[VoiceManager voiceManagerShare] beginRecordWithURL:[NSURL fileURLWithPath:savePath] completion:nil];
+            [[VoiceManager voiceManagerShare] beginRecordWithURL:[NSURL fileURLWithPath:savePath]];
                         
+        }
+            break;
+        case RecordVoiceStateFinish:{
+            WS(weakSelf);
+            [[VoiceManager voiceManagerShare] stopRecordCompletion:^(BOOL finished) {
+                ChatMessageModel *messageM = [ChatMessageModel new];
+                messageM.isFormMe = YES;
+                messageM.userName = [UIDevice currentDevice].name;
+                messageM.chatMessageType = ChatMessageAudio;
+                messageM.mediaMessageUrl = [VoiceManager voiceManagerShare].currentRecordUrl;
+                messageM.fileName = [[NSString stringWithFormat:@"%zd",[[NSDate date] timeIntervalSinceReferenceDate]] stringByAppendingString:@".caf"];
+                NSData *audioData = [NSData dataWithContentsOfURL:messageM.mediaMessageUrl options:NSDataReadingMappedIfSafe error:nil];
+                messageM.fileSize = audioData.length;
+                [weakSelf.messageItems addObject:messageM];
+                [weakSelf.tableView reloadData];
+            }];
+        }
+            break;
+        case RecordVoiceStateCancle:{
+            [[VoiceManager voiceManagerShare] cancleRecord];
         }
             break;
             
@@ -350,6 +369,8 @@ SocketManagerDelegate>
         AVPlayerViewController *playVC = [[AVPlayerViewController alloc] init];
         playVC.player = [AVPlayer playerWithURL:messageM.mediaMessageUrl];
         [self presentViewController:playVC animated:YES completion:nil];
+    }else if (messageM.chatMessageType == ChatMessageAudio){
+        [[VoiceManager voiceManagerShare] playAudioWithURL:messageM.mediaMessageUrl];
     }
 }
 

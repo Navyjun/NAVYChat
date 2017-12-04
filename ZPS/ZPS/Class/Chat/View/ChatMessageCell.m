@@ -25,6 +25,7 @@
 @property (strong, nonatomic)  UIImageView *messageImageView;
 /// 视频播放按钮
 @property (strong, nonatomic)  UIImageView *videoPlayImage;
+@property (strong, nonatomic)  UILabel *audioLabel;
 @end
 
 @implementation ChatMessageCell
@@ -82,6 +83,8 @@
         [self layoutForMessageTextType];
     }else if (_dataModel.chatMessageType == ChatMessageImage || _dataModel.chatMessageType == ChatMessageVideo){
         [self layoutForMessageImageOrVidelType];
+    }else if (_dataModel.chatMessageType == ChatMessageAudio){
+        [self layoutForAudioType];
     }
 
     self.userIconImageView.hidden = _dataModel.isFormMe ? YES : NO;
@@ -105,6 +108,7 @@
 // 文字
 -(void)layoutForMessageTextType{
     _imageOrVideoView.hidden = YES;
+    _audioLabel.hidden = YES;
     self.messageLabel.hidden = NO;
     
     [self.messageLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -115,10 +119,24 @@
     
     self.messageLabel.attributedText = _dataModel.messageContentAttributed;
 }
+
+// 语音
+- (void)layoutForAudioType{
+    _imageOrVideoView.hidden = YES;
+    _messageLabel.hidden = YES;
+    self.audioLabel.hidden = NO;
+    [self.audioLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.bottom.mas_equalTo(self.messageBgImageView);
+        make.left.mas_equalTo(self.messageBgImageView.mas_left).offset(_dataModel.isFormMe ? messageLabelForHeadRightMargin : messageLabelForHeadLeftMargin);
+        make.right.mas_equalTo(self.messageBgImageView.mas_right).offset(_dataModel.isFormMe ? -messageLabelForHeadLeftMargin : -messageLabelForHeadRightMargin);
+    }];
+}
+
 // 图片/视频
 -(void)layoutForMessageImageOrVidelType{
     self.imageOrVideoView.hidden = NO;
     _messageLabel.hidden = YES;
+    _audioLabel.hidden = YES;
     self.videoPlayImage.hidden = _dataModel.chatMessageType == ChatMessageVideo ? NO : YES;
     [self.imageOrVideoView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.messageBgImageView.mas_top).offset(1);
@@ -258,6 +276,23 @@
         }];
     }
     return _imageOrVideoView;
+}
+
+// 音频
+- (UILabel *)audioLabel{
+    if (!_audioLabel) {
+        _audioLabel = [[UILabel alloc] init];
+        _audioLabel.font = [UIFont systemFontOfSize:MESSAGEFONT];
+        _audioLabel.textColor = [UIColor blackColor];
+        _audioLabel.textAlignment = NSTextAlignmentCenter;
+        _audioLabel.text = @"语音";
+        [self addSubview:_audioLabel];
+        [_audioLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.messageBgImageView.mas_top);
+            make.bottom.mas_equalTo(self.messageBgImageView.mas_bottom);
+        }];
+    }
+    return _audioLabel;
 }
 
 - (HJProgressHub *)progressHub{

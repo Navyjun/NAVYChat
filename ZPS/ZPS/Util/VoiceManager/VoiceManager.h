@@ -9,11 +9,17 @@
 #import <Foundation/Foundation.h>
 
 @interface VoiceManager : NSObject
+/// 当前录音url地址
+@property (nonatomic, strong) NSURL *currentRecordUrl;
 
 + (instancetype)voiceManagerShare;
 
-- (void)beginRecordWithURL:(NSURL *)url  completion:(void(^)(BOOL finished))completion;
+- (void)beginRecordWithURL:(NSURL *)url;
 
-- (void)stopRecord;
+- (void)stopRecordCompletion:(void(^)(BOOL finished))completion;
+
+- (void)cancleRecord;
+
+- (void)playAudioWithURL:(NSURL *)url;
 
 @end
