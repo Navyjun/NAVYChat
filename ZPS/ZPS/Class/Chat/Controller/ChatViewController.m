@@ -261,10 +261,7 @@ SocketManagerDelegate>
             }else if (asset.mediaType == PHAssetMediaTypeAudio){
                 messageM.chatMessageType = ChatMessageAudio;
             }
-            
         }
-        
-        
     }];
 }
 
@@ -274,7 +271,6 @@ SocketManagerDelegate>
     SDImageCache *cache = [SDImageCache sharedImageCache];
     [cache storeImage:messageM.temImage forKey:messageM.fileName toDisk:YES completion:^{
         messageM.showImageUrl = [NSURL fileURLWithPath:[cache defaultCachePathForKey:messageM.fileName]];
-        NSLog(@"imgMessageUrl = %@",messageM.mediaMessageUrl);
     }];
     [self sendMessageWithItem:messageM];
 }
@@ -282,20 +278,16 @@ SocketManagerDelegate>
 - (void)pickVideoHandle:(ChatMessageModel *)messageM{
     // 视频getPhotoWithAsset
      [ZPPublicMethod getfilePath:messageM.asset Complete:^(NSURL *fileUrl) {
-         messageM.fileSize = [ZPPublicMethod getFileSize:[[fileUrl absoluteString] substringFromIndex:8]];
-         [ZPPublicMethod getThumbnail:messageM.asset size:CGSizeMake(375, 667) result:^(UIImage *thumImage) {
-             if (messageM.temImage == nil) {
-                 messageM.temImage = thumImage;
-                 SDImageCache *cache = [SDImageCache sharedImageCache];
-                 NSString *keyStr = [messageM.fileName stringByAppendingString:@".JPG"];
-                 [cache storeImage:messageM.temImage forKey:keyStr toDisk:YES completion:^{
-                     messageM.showImageUrl = [NSURL fileURLWithPath:[cache defaultCachePathForKey:keyStr]];
-                     NSLog(@"mediaMessageUrl = %@",messageM.mediaMessageUrl);
-                 }];
-                 NSLog(@"currentThread = %@",[NSThread currentThread]);
-                 [self sendMessageWithItem:messageM];
-             }
-         }];
+         dispatch_sync(dispatch_get_main_queue(), ^{
+             messageM.fileSize = [ZPPublicMethod getFileSize:[[fileUrl absoluteString] substringFromIndex:8]];
+             messageM.temImage = [ZPPublicMethod firstFrameWithVideoURL:fileUrl size:CGSizeMake(375, 667)];
+             SDImageCache *cache = [SDImageCache sharedImageCache];
+             NSString *keyStr = [messageM.fileName stringByAppendingString:@".JPG"];
+             [cache storeImage:messageM.temImage forKey:keyStr toDisk:YES completion:^{
+                 messageM.showImageUrl = [NSURL fileURLWithPath:[cache defaultCachePathForKey:keyStr]];
+             }];
+             [self sendMessageWithItem:messageM];
+         });
      }];
     
 }

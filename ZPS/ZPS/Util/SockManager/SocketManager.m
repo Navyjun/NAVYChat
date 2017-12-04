@@ -202,7 +202,6 @@ static SocketManager *manager = nil;
     
     if ([readStr isEqualToString:FILE_ACCEPT_END]) {
         [self sendNextMessage];
-        //NSLog(@"readStr = %@",readStr);
         return;
     }else if ([readDic isKindOfClass:[NSDictionary class]]) {
         MYLog(@"readDic = %@",readDic);
@@ -216,7 +215,7 @@ static SocketManager *manager = nil;
         if (!self.outputStream) {
             self.acceptItem.acceptFilePath = [self.dataSavePath stringByAppendingPathComponent:[self.acceptItem.fileName lastPathComponent]];
             self.acceptItem.mediaMessageUrl = [NSURL fileURLWithPath:self.acceptItem.acceptFilePath];
-            self.acceptItem.showImageUrl = self.acceptItem.mediaMessageUrl;
+            self.acceptItem.showImageUrl = self.acceptItem.chatMessageType == ChatMessageImage ? self.acceptItem.mediaMessageUrl : nil;
             self.outputStream = [[NSOutputStream alloc] initToFileAtPath:self.acceptItem.acceptFilePath append:YES];
             [self.outputStream open];
         }
