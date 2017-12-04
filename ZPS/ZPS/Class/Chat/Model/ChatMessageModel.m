@@ -8,6 +8,7 @@
 
 #import "ChatMessageModel.h"
 #import "ESEmoticonTool.h"
+#import <SDImageCache.h>
 
 @implementation ChatMessageModel
 
@@ -58,6 +59,22 @@
         _messageContentAttributed = [ESEmoticonTool emoticonAttributedWithText:self.messageContent font:[UIFont systemFontOfSize:MESSAGEFONT]];
     }
     return _messageContentAttributed;
+}
+
+#pragma mark - 存储
+- (void)setFinishAccept:(BOOL)finishAccept{
+    _finishAccept = finishAccept;
+    // 只有视频才来保存第一帧的图片到本地
+    if (finishAccept && self.chatMessageType == ChatMessageVideo) {
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            UIImage *image = [ZPPublicMethod firstFrameWithVideoURL:self.mediaMessageUrl size:CGSizeMake(375, 667)];
+            SDImageCache *cache = [SDImageCache sharedImageCache];
+            NSString *keyStr = [self.fileName stringByAppendingString:@".JPG"];
+            [cache storeImage:image forKey:keyStr toDisk:YES completion:^{
+                self.showImageUrl = [NSURL fileURLWithPath:[cache defaultCachePathForKey:keyStr]];
+            }];
+        });
+    }
 }
 
 @end

@@ -14,10 +14,14 @@ static CGFloat fontValue = 16.0;
 @interface ESKeyBoardToolView () <UITextViewDelegate>
 /// 表情按钮
 @property (nonatomic, strong) UIButton *emoticonButton;
-/// 输入框的背景图片
-@property (nonatomic, strong) UIImageView *inputBgImageView;
 /// 加号按钮
 @property (nonatomic, strong) UIButton *addButton;
+/// 语音按钮
+@property (nonatomic, strong) UIButton *voiceButton;
+/// 开始录音按钮
+@property (nonatomic, strong) UIButton *beginRecordButton;
+/// 输入框的背景图片
+@property (nonatomic, strong) UIImageView *inputBgImageView;
 /// 占位文字的label
 @property (nonatomic, strong) UILabel *placeTitleLabel;
 /// inputView
@@ -56,20 +60,27 @@ static CGFloat fontValue = 16.0;
     
     CGFloat margin = 10;
     self.hj_height = self.nowHeight;
-    // 表情按钮
-    self.emoticonButton.size = CGSizeMake(30, 30);
-    self.emoticonButton.x = margin;
-    self.emoticonButton.centerY = self.nowHeight * 0.5;
+    
+    // 语音按钮
+    self.voiceButton.size = CGSizeMake(30, 30);
+    self.voiceButton.x = margin;
+    self.voiceButton.centerY = self.nowHeight * 0.5;
     
     // 输入框的背景图 / 输入框
-    CGFloat inputX = CGRectGetMaxX(self.emoticonButton.frame) + margin;
-    CGFloat inpitW = _isNeedHiddenAddButton ? (self.hj_width - inputX - 10) : (self.hj_width - 2 * inputX);
+    CGFloat inputX = CGRectGetMaxX(self.voiceButton.frame) + margin;
+    CGFloat inpitW = _isNeedHiddenAddButton ? (self.hj_width - inputX - 10) : (self.hj_width - 3 * inputX + margin);
     CGFloat inputY = 5;
     CGFloat inputH = self.nowHeight - 2 * inputY;
 
     self.inputBgImageView.frame = CGRectMake(inputX, inputY, inpitW, inputH);
     self.inputTextView.frame  = CGRectMake(inputX, inputY, inpitW, inputH);
     self.placeTitleLabel.frame = CGRectMake(inputX + 5, inputY, inpitW - 5, inputH);
+    self.beginRecordButton.frame = self.inputTextView.frame;
+    
+    // 表情按钮
+    self.emoticonButton.size = CGSizeMake(30, 30);
+    self.emoticonButton.x = CGRectGetMaxX(self.inputTextView.frame) + margin;;
+    self.emoticonButton.centerY = self.nowHeight * 0.5;
     
     // 添加按钮
     if (!_isNeedHiddenAddButton) {
@@ -90,6 +101,14 @@ static CGFloat fontValue = 16.0;
     [self.emoticonButton setImage:[UIImage imageNamed:@"文本_bt"] forState:UIControlStateSelected];
     [self.emoticonButton addTarget:self action:@selector(emoticonButtonDidClick:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.emoticonButton];
+    
+    // 语音按钮
+    self.voiceButton = [[UIButton alloc] init];
+    [self.voiceButton setImage:[UIImage imageNamed:@"音频_bt"] forState:UIControlStateNormal];
+    [self.voiceButton setImage:[UIImage imageNamed:@"文本_bt"] forState:UIControlStateSelected];
+    [self.voiceButton addTarget:self action:@selector(voiceButtonDidClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:self.voiceButton];
+    
     
     // 输入框背景图
     self.inputBgImageView = [[UIImageView alloc] init];
@@ -123,6 +142,18 @@ static CGFloat fontValue = 16.0;
     [self.addButton setImage:[UIImage imageNamed:@"文本_bt"] forState:UIControlStateSelected];
     [self.addButton addTarget:self action:@selector(addButtonDidClick:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.addButton];
+    
+    // 开始录音按钮
+    self.beginRecordButton = [[UIButton alloc] init];
+    self.beginRecordButton.backgroundColor = [UIColor colorWithRed:231.0/255.0 green:232.0/255.0 blue:238.0/255.0 alpha:0.5];
+    [self.beginRecordButton setTitle:@"按住 说话" forState:UIControlStateNormal];
+    [self.beginRecordButton setTitle:@"松开 结束" forState:UIControlStateSelected];
+    [self.beginRecordButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [self.beginRecordButton setTitleColor:[UIColor blackColor] forState:UIControlStateSelected];
+    [self.beginRecordButton addTarget:self action:@selector(recordButtonDidBegin:) forControlEvents:UIControlEventTouchDown];
+    [self.beginRecordButton addTarget:self action:@selector(recordButtonDidFinish:) forControlEvents:UIControlEventTouchUpInside];
+    [self.beginRecordButton addTarget:self action:@selector(recordButtonDidCancle:) forControlEvents:UIControlEventTouchUpOutside];
+    [self addSubview:self.beginRecordButton];
     
     // 监听键盘高度变化
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyBoardWillChange:) name:UIKeyboardWillChangeFrameNotification object:nil];
@@ -271,6 +302,34 @@ static CGFloat fontValue = 16.0;
 
 
 #pragma mark - event
+// 语音按钮
+- (void)voiceButtonDidClick:(UIButton *)button{
+    button.selected = !button.selected;
+    self.beginRecordButton.hidden = !button.selected;
+}
+
+// 开始录音
+- (void)recordButtonDidBegin:(UIButton *)button{
+    if ([self.delegate respondsToSelector:@selector(ESKeyBoardToolViewRecordWithState:)]) {
+        [self.delegate ESKeyBoardToolViewRecordWithState:RecordVoiceStateBegin];
+    }
+}
+
+// 发送录音
+- (void)recordButtonDidFinish:(UIButton *)button{
+    if ([self.delegate respondsToSelector:@selector(ESKeyBoardToolViewRecordWithState:)]) {
+        [self.delegate ESKeyBoardToolViewRecordWithState:RecordVoiceStateFinish];
+    }
+}
+
+// 取消
+- (void)recordButtonDidCancle:(UIButton *)button{
+    if ([self.delegate respondsToSelector:@selector(ESKeyBoardToolViewRecordWithState:)]) {
+        [self.delegate ESKeyBoardToolViewRecordWithState:RecordVoiceStateCancle];
+    }
+}
+
+
 // 表情按钮的点击
 - (void)emoticonButtonDidClick:(UIButton *)button
 {
@@ -328,9 +387,9 @@ static CGFloat fontValue = 16.0;
 
 // 退出表情键盘 选项键盘
 - (void)exitKeyBoardInputView{
-//    self.emoticonButton.selected = NO;
-//    self.addButton.selected = NO;
-//    self.inputTextView.inputView = nil;
+    self.emoticonButton.selected = NO;
+    self.addButton.selected = NO;
+    self.inputTextView.inputView = nil;
 }
 
 #pragma mark - lazy

@@ -11,10 +11,12 @@
 #import "ChatMessageCell.h"
 #import "SocketManager.h"
 #import "PickerImageVideoTool.h"
+#import "VoiceManager.h"
 #import "TZImageManager.h"
 #import <SDImageCache.h>
 #import <AVKit/AVKit.h>
 #import <AVFoundation/AVFoundation.h>
+
 
 @interface ChatViewController ()
 <ESKeyBoardToolViewDelegate,
@@ -180,6 +182,23 @@ SocketManagerDelegate>
     [self scrollToLastCellAnimated:YES];
 }
 
+// 语音相关
+- (void)ESKeyBoardToolViewRecordWithState:(RecordVoiceState)state{
+    switch (state) {
+        case RecordVoiceStateBegin:{
+            NSString *fileName = [[NSString stringWithFormat:@"%zd",[[NSDate date] timeIntervalSinceReferenceDate]] stringByAppendingString:@".caf"];
+            NSString *savePath = [[SocketManager shareSockManager].dataSavePath stringByAppendingPathComponent:[fileName lastPathComponent]];
+            NSLog(@"savePath = %@",savePath);
+            [[VoiceManager voiceManagerShare] beginRecordWithURL:[NSURL fileURLWithPath:savePath] completion:nil];
+                        
+        }
+            break;
+            
+        default:
+            break;
+    }
+}
+
 #pragma mark - SocketManagerDelegate
 - (void)socketManager:(SocketManager *)manager  itemUpingrefresh:(ChatMessageModel *)upingItem{
     // 刷新当前进度
@@ -221,11 +240,11 @@ SocketManagerDelegate>
             CGFloat needOffsetY =  (contentH - showH);
             if (needOffsetY > 0) {
                 [self.tableView setContentOffset:CGPointMake(self.tableView.contentOffset.x, needOffsetY) animated:animated];
+            }else{
+                [self.tableView setContentOffset:CGPointMake(self.tableView.contentOffset.x, -NAVBARH) animated:animated];
             }
         });
     });
-    
-    
 }
 
 - (void)sendMessageWithItem:(ChatMessageModel *)item{
@@ -261,10 +280,7 @@ SocketManagerDelegate>
             }else if (asset.mediaType == PHAssetMediaTypeAudio){
                 messageM.chatMessageType = ChatMessageAudio;
             }
-            
         }
-        
-        
     }];
 }
 
@@ -274,7 +290,6 @@ SocketManagerDelegate>
     SDImageCache *cache = [SDImageCache sharedImageCache];
     [cache storeImage:messageM.temImage forKey:messageM.fileName toDisk:YES completion:^{
         messageM.showImageUrl = [NSURL fileURLWithPath:[cache defaultCachePathForKey:messageM.fileName]];
-        NSLog(@"imgMessageUrl = %@",messageM.mediaMessageUrl);
     }];
     [self sendMessageWithItem:messageM];
 }
@@ -282,20 +297,16 @@ SocketManagerDelegate>
 - (void)pickVideoHandle:(ChatMessageModel *)messageM{
     // 视频getPhotoWithAsset
      [ZPPublicMethod getfilePath:messageM.asset Complete:^(NSURL *fileUrl) {
-         messageM.fileSize = [ZPPublicMethod getFileSize:[[fileUrl absoluteString] substringFromIndex:8]];
-         [ZPPublicMethod getThumbnail:messageM.asset size:CGSizeMake(375, 667) result:^(UIImage *thumImage) {
-             if (messageM.temImage == nil) {
-                 messageM.temImage = thumImage;
-                 SDImageCache *cache = [SDImageCache sharedImageCache];
-                 NSString *keyStr = [messageM.fileName stringByAppendingString:@".JPG"];
-                 [cache storeImage:messageM.temImage forKey:keyStr toDisk:YES completion:^{
-                     messageM.showImageUrl = [NSURL fileURLWithPath:[cache defaultCachePathForKey:keyStr]];
-                     NSLog(@"mediaMessageUrl = %@",messageM.mediaMessageUrl);
-                 }];
-                 NSLog(@"currentThread = %@",[NSThread currentThread]);
-                 [self sendMessageWithItem:messageM];
-             }
-         }];
+         dispatch_sync(dispatch_get_main_queue(), ^{
+             messageM.fileSize = [ZPPublicMethod getFileSize:[[fileUrl absoluteString] substringFromIndex:8]];
+             messageM.temImage = [ZPPublicMethod firstFrameWithVideoURL:fileUrl size:CGSizeMake(375, 667)];
+             SDImageCache *cache = [SDImageCache sharedImageCache];
+             NSString *keyStr = [messageM.fileName stringByAppendingString:@".JPG"];
+             [cache storeImage:messageM.temImage forKey:keyStr toDisk:YES completion:^{
+                 messageM.showImageUrl = [NSURL fileURLWithPath:[cache defaultCachePathForKey:keyStr]];
+             }];
+             [self sendMessageWithItem:messageM];
+         });
      }];
     
 }

@@ -20,6 +20,15 @@ typedef NS_ENUM(NSInteger, ESKeyBoardToolView_type)
     ESKeyBoardToolView_typeAdd                 // 加号按钮的点击
 };
 
+typedef NS_ENUM(NSInteger, RecordVoiceState)
+{
+    RecordVoiceStateBegin = 0,  // 开始
+    RecordVoiceStateFinish = 1, // 结束
+    RecordVoiceStateCancle = 2  // 取消
+};
+
+
+
 @class ESKeyBoardToolView;
 
 @protocol ESKeyBoardToolViewDelegate <NSObject>
@@ -27,6 +36,8 @@ typedef NS_ENUM(NSInteger, ESKeyBoardToolView_type)
 @optional
 /// 加号选项view的点击
 - (void)ESKeyBoardToolViewAddOpationDidSelected:(ESKeyBoardToolView *)view withType:(OpationItem_type)type;
+/// 录音 开始 结束
+- (void)ESKeyBoardToolViewRecordWithState:(RecordVoiceState)state;
 /// 点击发送按钮
 - (void)ESKeyBoardToolViewSendButtonDidClick:(ESKeyBoardToolView *)view message:(NSString *)message;
 /// 当正在编辑文字时view的Y值变化

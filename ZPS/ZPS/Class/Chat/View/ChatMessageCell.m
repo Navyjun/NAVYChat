@@ -67,12 +67,6 @@
 - (void)setDataModel:(ChatMessageModel *)dataModel{
     _dataModel = dataModel;
     
-    if (dataModel.isSending ) {
-        _progressHub.hidden = NO;
-    }else if (dataModel.isSendFinish){
-        _progressHub.hidden = YES;
-    }
-    
     [_messageBgImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(_dataModel.messageW);
         make.top.mas_equalTo(self.userNameLabel.mas_bottom).offset(6);
@@ -95,6 +89,16 @@
     self.messageBgImageView.image = _dataModel.isFormMe ? self.meMessageImage : self.friendMessageImage;
     self.userNameLabel.textAlignment = _dataModel.isFormMe ? NSTextAlignmentRight : NSTextAlignmentLeft;
     self.userNameLabel.text = _dataModel.userName;
+    
+    if (_dataModel.isFormMe) {
+        if (dataModel.isSending ) {
+            _progressHub.hidden = NO;
+        }else if (dataModel.isSendFinish){
+            _progressHub.hidden = YES;
+        }
+    }else{
+        _progressHub.hidden = YES;
+    }
     
 }
 
@@ -124,20 +128,15 @@
     }];
     [self progressHub];
     if (_dataModel.showImageUrl) {
-        if (_dataModel.chatMessageType == ChatMessageVideo) {
-            if (_dataModel.temImage) {
-                self.messageImageView.image = _dataModel.temImage;
-            }else{
-                self.messageImageView.image = [ZPPublicMethod firstFrameWithVideoURL:_dataModel.mediaMessageUrl size:CGSizeMake(375, 667)];
-            }
-        }else{
-            // 使用不保存到本地磁盘策略 <本地已保存图片>
-            [self.messageImageView sd_setImageWithURL:_dataModel.showImageUrl placeholderImage:nil options:SDWebImageCacheMemoryOnly];
-        }
+        // 使用不保存到本地磁盘策略 <本地已保存图片>
+        [self.messageImageView sd_setImageWithURL:_dataModel.showImageUrl placeholderImage:nil options:SDWebImageCacheMemoryOnly];
     }else{
-        self.messageImageView.image = _dataModel.temImage;
+        if (_dataModel.chatMessageType == ChatMessageImage) {
+            self.messageImageView.image = _dataModel.temImage;
+        }else if (_dataModel.chatMessageType == ChatMessageVideo){
+            self.messageImageView.image = [ZPPublicMethod firstFrameWithVideoURL:_dataModel.mediaMessageUrl size:CGSizeMake(375, 667)];
+        }
     }
-    
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
