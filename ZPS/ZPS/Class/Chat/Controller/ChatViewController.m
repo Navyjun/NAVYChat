@@ -11,10 +11,12 @@
 #import "ChatMessageCell.h"
 #import "SocketManager.h"
 #import "PickerImageVideoTool.h"
+#import "VoiceManager.h"
 #import "TZImageManager.h"
 #import <SDImageCache.h>
 #import <AVKit/AVKit.h>
 #import <AVFoundation/AVFoundation.h>
+
 
 @interface ChatViewController ()
 <ESKeyBoardToolViewDelegate,
@@ -180,6 +182,23 @@ SocketManagerDelegate>
     [self scrollToLastCellAnimated:YES];
 }
 
+// 语音相关
+- (void)ESKeyBoardToolViewRecordWithState:(RecordVoiceState)state{
+    switch (state) {
+        case RecordVoiceStateBegin:{
+            NSString *fileName = [[NSString stringWithFormat:@"%zd",[[NSDate date] timeIntervalSinceReferenceDate]] stringByAppendingString:@".caf"];
+            NSString *savePath = [[SocketManager shareSockManager].dataSavePath stringByAppendingPathComponent:[fileName lastPathComponent]];
+            NSLog(@"savePath = %@",savePath);
+            [[VoiceManager voiceManagerShare] beginRecordWithURL:[NSURL fileURLWithPath:savePath] completion:nil];
+                        
+        }
+            break;
+            
+        default:
+            break;
+    }
+}
+
 #pragma mark - SocketManagerDelegate
 - (void)socketManager:(SocketManager *)manager  itemUpingrefresh:(ChatMessageModel *)upingItem{
     // 刷新当前进度
@@ -221,11 +240,11 @@ SocketManagerDelegate>
             CGFloat needOffsetY =  (contentH - showH);
             if (needOffsetY > 0) {
                 [self.tableView setContentOffset:CGPointMake(self.tableView.contentOffset.x, needOffsetY) animated:animated];
+            }else{
+                [self.tableView setContentOffset:CGPointMake(self.tableView.contentOffset.x, -NAVBARH) animated:animated];
             }
         });
     });
-    
-    
 }
 
 - (void)sendMessageWithItem:(ChatMessageModel *)item{

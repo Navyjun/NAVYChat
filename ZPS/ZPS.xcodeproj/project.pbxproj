@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EE00831B1FD4FDA50050DC17 /* VoiceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EE00831A1FD4FDA50050DC17 /* VoiceManager.m */; };
 		EE13B3561FD0FB7E001A3F35 /* HJProgressHub.m in Sources */ = {isa = PBXBuildFile; fileRef = EE13B3551FD0FB7E001A3F35 /* HJProgressHub.m */; };
 		EE4051221FB3ECBF0054BC53 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4051211FB3ECBF0054BC53 /* AppDelegate.m */; };
 		EE4051251FB3ECBF0054BC53 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4051241FB3ECBF0054BC53 /* ViewController.m */; };
@@ -50,6 +51,8 @@
 		4B73FADC8DD1F938A4D1FFE1 /* Pods-ZPS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZPS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ZPS/Pods-ZPS.debug.xcconfig"; sourceTree = "<group>"; };
 		5940A233C49715EBE6655192 /* Pods-ZPS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZPS.release.xcconfig"; path = "Pods/Target Support Files/Pods-ZPS/Pods-ZPS.release.xcconfig"; sourceTree = "<group>"; };
 		95BFAECA09AF58978697F367 /* libPods-ZPS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ZPS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EE0083191FD4FDA50050DC17 /* VoiceManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VoiceManager.h; sourceTree = "<group>"; };
+		EE00831A1FD4FDA50050DC17 /* VoiceManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VoiceManager.m; sourceTree = "<group>"; };
 		EE13B3541FD0FB7E001A3F35 /* HJProgressHub.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJProgressHub.h; sourceTree = "<group>"; };
 		EE13B3551FD0FB7E001A3F35 /* HJProgressHub.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJProgressHub.m; sourceTree = "<group>"; };
 		EE40511D1FB3ECBF0054BC53 /* ZPS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZPS.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -150,6 +153,15 @@
 				5940A233C49715EBE6655192 /* Pods-ZPS.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		EE0083181FD4FCD30050DC17 /* VoiceManager */ = {
+			isa = PBXGroup;
+			children = (
+				EE0083191FD4FDA50050DC17 /* VoiceManager.h */,
+				EE00831A1FD4FDA50050DC17 /* VoiceManager.m */,
+			);
+			path = VoiceManager;
 			sourceTree = "<group>";
 		};
 		EE13B3531FD0FB24001A3F35 /* CustomView */ = {
@@ -256,6 +268,7 @@
 		EE40513C1FB3EE0D0054BC53 /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				EE0083181FD4FCD30050DC17 /* VoiceManager */,
 				EE13B3531FD0FB24001A3F35 /* CustomView */,
 				EEE5190C1FCCF8060000AA7E /* Comment */,
 				EEE519021FCCEC770000AA7E /* GetImageOrVideo */,
@@ -605,6 +618,7 @@
 				EE5CE20F1FB52FB9001F5A30 /* getgateway.c in Sources */,
 				EE40514A1FB3F0470054BC53 /* ServerSocketManager.m in Sources */,
 				EED35A2A1FC6BC0B005B0A26 /* ChatMessageModel.m in Sources */,
+				EE00831B1FD4FDA50050DC17 /* VoiceManager.m in Sources */,
 				EED35A261FC6A3AA005B0A26 /* ChatMessageCell.m in Sources */,
 				EEE795511FCB9D5400541A69 /* ZPBaseViewController.m in Sources */,
 				EE4051551FB43B770054BC53 /* ZPHomeCell.m in Sources */,
