@@ -16,7 +16,7 @@
 
 - (void)beginRecordWithURL:(NSURL *)url;
 
-- (void)stopRecordCompletion:(void(^)(BOOL finished))completion;
+- (void)stopRecordCompletion:(void(^)(BOOL finished,float duration))completion;
 
 - (void)cancleRecord;
 

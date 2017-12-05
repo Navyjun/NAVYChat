@@ -9,7 +9,7 @@
 #import "ZPCommentData.h"
 
 ///  当前扫描得到的 ip
-NSString *CURRENT_HOST = @"192.168.0.102"; //@"192.168.2.15";  
+NSString *CURRENT_HOST = @"192.168.2.15";  //@"192.168.0.102"; //
 ///  当前扫描得到的 端口号
 NSInteger CURRENT_PORT = 67543;
 ///  当前扫描得到的 wifi 名称

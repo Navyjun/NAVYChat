@@ -45,7 +45,7 @@
             _messageW = maxW - 40;
         }else if(self.chatMessageType == ChatMessageAudio){
             // 这个要根据时长来计算
-            _messageW = 80;
+            _messageW = 120;
         }
     }
     return _messageW;

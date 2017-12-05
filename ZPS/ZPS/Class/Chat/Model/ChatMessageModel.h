@@ -36,6 +36,8 @@ typedef NS_ENUM(int,ChatMessageType) {
 @property (nonatomic, copy) NSURL *mediaMessageUrl;
 /// 需要展现的图片URL地址
 @property (nonatomic, copy) NSURL *showImageUrl;
+/// 音视频时长
+@property (nonatomic, assign) float mediaDuration;
 /// 是否来至于自己
 @property (nonatomic, assign) BOOL isFormMe;
 /// 临时引用图片

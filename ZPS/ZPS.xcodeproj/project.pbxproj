@@ -10,22 +10,15 @@
 		EE00831B1FD4FDA50050DC17 /* VoiceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EE00831A1FD4FDA50050DC17 /* VoiceManager.m */; };
 		EE13B3561FD0FB7E001A3F35 /* HJProgressHub.m in Sources */ = {isa = PBXBuildFile; fileRef = EE13B3551FD0FB7E001A3F35 /* HJProgressHub.m */; };
 		EE4051221FB3ECBF0054BC53 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4051211FB3ECBF0054BC53 /* AppDelegate.m */; };
-		EE4051251FB3ECBF0054BC53 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4051241FB3ECBF0054BC53 /* ViewController.m */; };
 		EE4051281FB3ECBF0054BC53 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EE4051261FB3ECBF0054BC53 /* Main.storyboard */; };
 		EE40512A1FB3ECBF0054BC53 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EE4051291FB3ECBF0054BC53 /* Assets.xcassets */; };
 		EE40512D1FB3ECBF0054BC53 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EE40512B1FB3ECBF0054BC53 /* LaunchScreen.storyboard */; };
 		EE4051301FB3ECBF0054BC53 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EE40512F1FB3ECBF0054BC53 /* main.m */; };
 		EE4051421FB3EE370054BC53 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = EE40513F1FB3EE370054BC53 /* GCDAsyncSocket.m */; };
 		EE4051431FB3EE370054BC53 /* GCDAsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4051411FB3EE370054BC53 /* GCDAsyncUdpSocket.m */; };
-		EE40514A1FB3F0470054BC53 /* ServerSocketManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4051491FB3F0470054BC53 /* ServerSocketManager.m */; };
 		EE40514E1FB4041A0054BC53 /* NSString+path.m in Sources */ = {isa = PBXBuildFile; fileRef = EE40514D1FB4041A0054BC53 /* NSString+path.m */; };
-		EE4051511FB404410054BC53 /* ServerSocketItem.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4051501FB404410054BC53 /* ServerSocketItem.m */; };
-		EE4051551FB43B770054BC53 /* ZPHomeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4051521FB43B760054BC53 /* ZPHomeCell.m */; };
-		EE4051561FB43B770054BC53 /* ZPHomeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE4051541FB43B770054BC53 /* ZPHomeCell.xib */; };
 		EE5CE20F1FB52FB9001F5A30 /* getgateway.c in Sources */ = {isa = PBXBuildFile; fileRef = EE5CE20A1FB52FB9001F5A30 /* getgateway.c */; };
 		EE5CE2101FB52FB9001F5A30 /* HJWifiUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = EE5CE20D1FB52FB9001F5A30 /* HJWifiUtil.m */; };
-		EE5CE2391FB55651001F5A30 /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE5CE2381FB55651001F5A30 /* ImageViewController.m */; };
-		EE86840D1FBD62D50010B0C7 /* LocationFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE86840C1FBD62D50010B0C7 /* LocationFileViewController.m */; };
 		EED35A0E1FC65CAE005B0A26 /* ESKeyBoardToolView.m in Sources */ = {isa = PBXBuildFile; fileRef = EED35A071FC65CAE005B0A26 /* ESKeyBoardToolView.m */; };
 		EED35A0F1FC65CAE005B0A26 /* ESEmoticonTool.m in Sources */ = {isa = PBXBuildFile; fileRef = EED35A091FC65CAE005B0A26 /* ESEmoticonTool.m */; };
 		EED35A101FC65CAE005B0A26 /* ESEmoticonView.m in Sources */ = {isa = PBXBuildFile; fileRef = EED35A0C1FC65CAE005B0A26 /* ESEmoticonView.m */; };
@@ -58,8 +51,6 @@
 		EE40511D1FB3ECBF0054BC53 /* ZPS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZPS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE4051201FB3ECBF0054BC53 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		EE4051211FB3ECBF0054BC53 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		EE4051231FB3ECBF0054BC53 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		EE4051241FB3ECBF0054BC53 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		EE4051271FB3ECBF0054BC53 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		EE4051291FB3ECBF0054BC53 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EE40512C1FB3ECBF0054BC53 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -69,24 +60,13 @@
 		EE40513F1FB3EE370054BC53 /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
 		EE4051401FB3EE370054BC53 /* GCDAsyncUdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncUdpSocket.h; sourceTree = "<group>"; };
 		EE4051411FB3EE370054BC53 /* GCDAsyncUdpSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncUdpSocket.m; sourceTree = "<group>"; };
-		EE4051481FB3F0470054BC53 /* ServerSocketManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ServerSocketManager.h; sourceTree = "<group>"; };
-		EE4051491FB3F0470054BC53 /* ServerSocketManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ServerSocketManager.m; sourceTree = "<group>"; };
 		EE40514C1FB4041A0054BC53 /* NSString+path.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+path.h"; sourceTree = "<group>"; };
 		EE40514D1FB4041A0054BC53 /* NSString+path.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+path.m"; sourceTree = "<group>"; };
-		EE40514F1FB404410054BC53 /* ServerSocketItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ServerSocketItem.h; sourceTree = "<group>"; };
-		EE4051501FB404410054BC53 /* ServerSocketItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ServerSocketItem.m; sourceTree = "<group>"; };
-		EE4051521FB43B760054BC53 /* ZPHomeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZPHomeCell.m; sourceTree = "<group>"; };
-		EE4051531FB43B760054BC53 /* ZPHomeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZPHomeCell.h; sourceTree = "<group>"; };
-		EE4051541FB43B770054BC53 /* ZPHomeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ZPHomeCell.xib; sourceTree = "<group>"; };
 		EE5CE20A1FB52FB9001F5A30 /* getgateway.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = getgateway.c; sourceTree = "<group>"; };
 		EE5CE20B1FB52FB9001F5A30 /* getgateway.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = getgateway.h; sourceTree = "<group>"; };
 		EE5CE20C1FB52FB9001F5A30 /* HJWifiUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJWifiUtil.h; sourceTree = "<group>"; };
 		EE5CE20D1FB52FB9001F5A30 /* HJWifiUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HJWifiUtil.m; sourceTree = "<group>"; };
 		EE5CE20E1FB52FB9001F5A30 /* route.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = route.h; sourceTree = "<group>"; };
-		EE5CE2371FB55651001F5A30 /* ImageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageViewController.h; sourceTree = "<group>"; };
-		EE5CE2381FB55651001F5A30 /* ImageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImageViewController.m; sourceTree = "<group>"; };
-		EE86840B1FBD62D50010B0C7 /* LocationFileViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LocationFileViewController.h; sourceTree = "<group>"; };
-		EE86840C1FBD62D50010B0C7 /* LocationFileViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocationFileViewController.m; sourceTree = "<group>"; };
 		EED35A061FC65CAE005B0A26 /* ESKeyBoardToolView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESKeyBoardToolView.h; sourceTree = "<group>"; };
 		EED35A071FC65CAE005B0A26 /* ESKeyBoardToolView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESKeyBoardToolView.m; sourceTree = "<group>"; };
 		EED35A081FC65CAE005B0A26 /* EmoticonContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmoticonContentView.h; sourceTree = "<group>"; };
@@ -217,39 +197,8 @@
 			children = (
 				EEE7954B1FCB9D0800541A69 /* Base */,
 				EED35A011FC65B09005B0A26 /* Chat */,
-				EED35A001FC65AD4005B0A26 /* FileAccept */,
 			);
 			path = Class;
-			sourceTree = "<group>";
-		};
-		EE4051381FB3ED9E0054BC53 /* Controller */ = {
-			isa = PBXGroup;
-			children = (
-				EE4051231FB3ECBF0054BC53 /* ViewController.h */,
-				EE4051241FB3ECBF0054BC53 /* ViewController.m */,
-				EE5CE2371FB55651001F5A30 /* ImageViewController.h */,
-				EE5CE2381FB55651001F5A30 /* ImageViewController.m */,
-				EE86840B1FBD62D50010B0C7 /* LocationFileViewController.h */,
-				EE86840C1FBD62D50010B0C7 /* LocationFileViewController.m */,
-			);
-			path = Controller;
-			sourceTree = "<group>";
-		};
-		EE4051391FB3EDAA0054BC53 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
-		EE40513A1FB3EDB20054BC53 /* View */ = {
-			isa = PBXGroup;
-			children = (
-				EE4051531FB43B760054BC53 /* ZPHomeCell.h */,
-				EE4051521FB43B760054BC53 /* ZPHomeCell.m */,
-				EE4051541FB43B770054BC53 /* ZPHomeCell.xib */,
-			);
-			path = View;
 			sourceTree = "<group>";
 		};
 		EE40513B1FB3EDC70054BC53 /* resource */ = {
@@ -296,10 +245,6 @@
 		EE4051441FB3EFAD0054BC53 /* SockManager */ = {
 			isa = PBXGroup;
 			children = (
-				EE4051481FB3F0470054BC53 /* ServerSocketManager.h */,
-				EE4051491FB3F0470054BC53 /* ServerSocketManager.m */,
-				EE40514F1FB404410054BC53 /* ServerSocketItem.h */,
-				EE4051501FB404410054BC53 /* ServerSocketItem.m */,
 				EEE519061FCCEF530000AA7E /* SocketManager.h */,
 				EEE519071FCCEF530000AA7E /* SocketManager.m */,
 			);
@@ -329,16 +274,6 @@
 				EE5CE20E1FB52FB9001F5A30 /* route.h */,
 			);
 			path = wifi;
-			sourceTree = "<group>";
-		};
-		EED35A001FC65AD4005B0A26 /* FileAccept */ = {
-			isa = PBXGroup;
-			children = (
-				EE4051381FB3ED9E0054BC53 /* Controller */,
-				EE4051391FB3EDAA0054BC53 /* Model */,
-				EE40513A1FB3EDB20054BC53 /* View */,
-			);
-			path = FileAccept;
 			sourceTree = "<group>";
 		};
 		EED35A011FC65B09005B0A26 /* Chat */ = {
@@ -532,7 +467,6 @@
 				EED35A221FC665D0005B0A26 /* defaultEmotion.plist in Resources */,
 				EE40512D1FB3ECBF0054BC53 /* LaunchScreen.storyboard in Resources */,
 				EE40512A1FB3ECBF0054BC53 /* Assets.xcassets in Resources */,
-				EE4051561FB43B770054BC53 /* ZPHomeCell.xib in Resources */,
 				EE4051281FB3ECBF0054BC53 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -596,17 +530,13 @@
 				EE4051421FB3EE370054BC53 /* GCDAsyncSocket.m in Sources */,
 				EE4051431FB3EE370054BC53 /* GCDAsyncUdpSocket.m in Sources */,
 				EED35A0E1FC65CAE005B0A26 /* ESKeyBoardToolView.m in Sources */,
-				EE4051251FB3ECBF0054BC53 /* ViewController.m in Sources */,
 				EED35A201FC664F4005B0A26 /* ChatViewController.m in Sources */,
-				EE86840D1FBD62D50010B0C7 /* LocationFileViewController.m in Sources */,
 				EEE519121FCCF81B0000AA7E /* ZPCommentData.m in Sources */,
 				EEE795581FCBEA9200541A69 /* ESAddOpationView.m in Sources */,
 				EE5CE2101FB52FB9001F5A30 /* HJWifiUtil.m in Sources */,
 				EEE519051FCCECB10000AA7E /* PickerImageVideoTool.m in Sources */,
 				EE13B3561FD0FB7E001A3F35 /* HJProgressHub.m in Sources */,
 				EEE795551FCBAEA800541A69 /* RegexKitLite.m in Sources */,
-				EE4051511FB404410054BC53 /* ServerSocketItem.m in Sources */,
-				EE5CE2391FB55651001F5A30 /* ImageViewController.m in Sources */,
 				EEE519111FCCF81B0000AA7E /* ZPPublicMethod.m in Sources */,
 				EE4051301FB3ECBF0054BC53 /* main.m in Sources */,
 				EED35A1A1FC65F70005B0A26 /* UIView+Extension.m in Sources */,
@@ -616,12 +546,10 @@
 				EE4051221FB3ECBF0054BC53 /* AppDelegate.m in Sources */,
 				EED35A101FC65CAE005B0A26 /* ESEmoticonView.m in Sources */,
 				EE5CE20F1FB52FB9001F5A30 /* getgateway.c in Sources */,
-				EE40514A1FB3F0470054BC53 /* ServerSocketManager.m in Sources */,
 				EED35A2A1FC6BC0B005B0A26 /* ChatMessageModel.m in Sources */,
 				EE00831B1FD4FDA50050DC17 /* VoiceManager.m in Sources */,
 				EED35A261FC6A3AA005B0A26 /* ChatMessageCell.m in Sources */,
 				EEE795511FCB9D5400541A69 /* ZPBaseViewController.m in Sources */,
-				EE4051551FB43B770054BC53 /* ZPHomeCell.m in Sources */,
 				EED35A141FC65CD5005B0A26 /* ESEmotionModel.m in Sources */,
 				EEE519081FCCEF530000AA7E /* SocketManager.m in Sources */,
 			);

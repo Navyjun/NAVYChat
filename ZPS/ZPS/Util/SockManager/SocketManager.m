@@ -112,6 +112,7 @@ static SocketManager *manager = nil;
     messageData[@"userName"] = item.userName;
     messageData[@"chatMessageType"] = [NSNumber numberWithInt:item.chatMessageType];
     messageData[@"fileSize"] = [NSNumber numberWithInteger:item.fileSize];
+    messageData[@"mediaDuration"] = [NSNumber numberWithFloat:item.mediaDuration];
     if (item.chatMessageType == ChatMessageText) {
         messageData[@"messageContent"] = item.messageContent;
     }else if (item.chatMessageType == ChatMessageImage || item.chatMessageType == ChatMessageVideo || item.chatMessageType == ChatMessageAudio){

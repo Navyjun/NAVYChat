@@ -147,7 +147,8 @@ static CGFloat fontValue = 16.0;
     self.beginRecordButton = [[UIButton alloc] init];
     self.beginRecordButton.backgroundColor = [UIColor colorWithRed:231.0/255.0 green:232.0/255.0 blue:238.0/255.0 alpha:0.5];
     [self.beginRecordButton setTitle:@"按住 说话" forState:UIControlStateNormal];
-    [self.beginRecordButton setTitle:@"松开 结束" forState:UIControlStateSelected];
+    [self.beginRecordButton setTitle:@"松开 结束" forState:UIControlStateHighlighted];
+    [self.beginRecordButton setBackgroundImage:[UIImage imageWithColor:[UIColor grayColor]] forState:UIControlStateHighlighted];
     [self.beginRecordButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [self.beginRecordButton setTitleColor:[UIColor blackColor] forState:UIControlStateSelected];
     [self.beginRecordButton addTarget:self action:@selector(recordButtonDidBegin:) forControlEvents:UIControlEventTouchDown];
@@ -201,6 +202,7 @@ static CGFloat fontValue = 16.0;
         return;
     }
     [self endEditing:YES];
+    [self exitKeyBoardInputView];
 }
 
 - (void)showKeyBoard{
@@ -281,7 +283,7 @@ static CGFloat fontValue = 16.0;
     if ([self.delegate respondsToSelector:@selector(ESKeyBoardToolViewDidEndEdit:)]) {
         [self.delegate ESKeyBoardToolViewDidEndEdit:self];
     }
-    [self exitKeyBoardInputView];
+    
 }
 
 #pragma mark - method
@@ -307,6 +309,10 @@ static CGFloat fontValue = 16.0;
 - (void)voiceButtonDidClick:(UIButton *)button{
     button.selected = !button.selected;
     self.beginRecordButton.hidden = !button.selected;
+    if (button.selected) {
+        [self.inputTextView resignFirstResponder];
+        [self exitKeyBoardInputView];
+    }
 }
 
 // 开始录音
@@ -343,8 +349,8 @@ static CGFloat fontValue = 16.0;
     if (!self.emoticonView.superview) {
         [self.inputView addSubview:self.emoticonView];
     }
-    [self changeInputView:self.inputView selected:button.selected];
     button.selected = !button.selected;
+    [self changeInputView:self.inputView selected:button.selected];
 }
 // 加号按钮
 - (void)addButtonDidClick:(UIButton *)button{
@@ -356,33 +362,39 @@ static CGFloat fontValue = 16.0;
     if (!self.addOpationView.superview) {
         [self.inputView addSubview:self.addOpationView];
     }
-    [self changeInputView:self.inputView selected:button.selected];
     button.selected = !button.selected;
+    [self changeInputView:self.inputView selected:button.selected];
 }
 
 - (void)changeInputView:(UIView *)inputView selected:(BOOL)isSelected{
-    if (!isSelected && self.inputTextView.inputView) {
+    // 取消语音按钮选中
+    if (self.voiceButton.isSelected) {
+        [self voiceButtonDidClick:self.voiceButton];
+    }
+    
+    if (isSelected && self.inputTextView.inputView) {
         [self.inputTextView becomeFirstResponder];
         self.inputTextView.inputView = inputView;
         return;
     }
     
     __block CGFloat orginY = self.y;
-    if (!self.inputTextView.inputView) {
-        self.inputTextView.inputView = inputView;
-    }else{
+    if (!isSelected) {
         self.inputTextView.inputView = nil;
+    }else{
+        self.inputTextView.inputView = inputView;
     }
+    
     // 退出键盘
     [self.inputTextView resignFirstResponder];
     // 再次成为第一响应者
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self.inputTextView becomeFirstResponder];
-            orginY = self.y - orginY;
-            if ([self.delegate respondsToSelector:@selector(ESKeyBoardToolViewDidEditing:changeY:)]) {
-                [self.delegate ESKeyBoardToolViewDidEditing:self changeY:orginY];
-            }
-            _isChangeEmoticon = NO;
+        orginY = self.y - orginY;
+        if ([self.delegate respondsToSelector:@selector(ESKeyBoardToolViewDidEditing:changeY:)]) {
+            [self.delegate ESKeyBoardToolViewDidEditing:self changeY:orginY];
+        }
+        _isChangeEmoticon = NO;
     });
 }
 

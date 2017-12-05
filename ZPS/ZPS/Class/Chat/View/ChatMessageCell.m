@@ -130,6 +130,7 @@
         make.left.mas_equalTo(self.messageBgImageView.mas_left).offset(_dataModel.isFormMe ? messageLabelForHeadRightMargin : messageLabelForHeadLeftMargin);
         make.right.mas_equalTo(self.messageBgImageView.mas_right).offset(_dataModel.isFormMe ? -messageLabelForHeadLeftMargin : -messageLabelForHeadRightMargin);
     }];
+    self.audioLabel.text = [NSString stringWithFormat:@"语音(%.0fs)",_dataModel.mediaDuration];
 }
 
 // 图片/视频
@@ -152,7 +153,9 @@
         if (_dataModel.chatMessageType == ChatMessageImage) {
             self.messageImageView.image = _dataModel.temImage;
         }else if (_dataModel.chatMessageType == ChatMessageVideo){
-            self.messageImageView.image = [ZPPublicMethod firstFrameWithVideoURL:_dataModel.mediaMessageUrl size:CGSizeMake(375, 667)];
+            if (!_dataModel.temImage) {
+                self.messageImageView.image = [ZPPublicMethod firstFrameWithVideoURL:_dataModel.mediaMessageUrl size:CGSizeMake(375, 667)];
+            }
         }
     }
 }
@@ -168,8 +171,6 @@
     }
     return _friendMessageImage;
 }
-
-
 
 - (UIImage *)meMessageImage{
     if (!_meMessageImage) {
@@ -286,6 +287,7 @@
         _audioLabel.textColor = [UIColor blackColor];
         _audioLabel.textAlignment = NSTextAlignmentCenter;
         _audioLabel.text = @"语音";
+        _audioLabel.font = [UIFont systemFontOfSize:15.0];
         [self addSubview:_audioLabel];
         [_audioLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.messageBgImageView.mas_top);

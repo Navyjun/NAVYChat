@@ -189,22 +189,25 @@ SocketManagerDelegate>
             NSString *fileName = [[NSString stringWithFormat:@"%zd",[[NSDate date] timeIntervalSinceReferenceDate]] stringByAppendingString:@".caf"];
             NSString *savePath = [[SocketManager shareSockManager].dataSavePath stringByAppendingPathComponent:[fileName lastPathComponent]];
             [[VoiceManager voiceManagerShare] beginRecordWithURL:[NSURL fileURLWithPath:savePath]];
-                        
         }
             break;
         case RecordVoiceStateFinish:{
             WS(weakSelf);
-            [[VoiceManager voiceManagerShare] stopRecordCompletion:^(BOOL finished) {
+            [[VoiceManager voiceManagerShare] stopRecordCompletion:^(BOOL finished,float duration) {
+                if (duration < 1.0) {
+                    NSLog(@"时长小于1s 不发送");
+                    return ;
+                }
                 ChatMessageModel *messageM = [ChatMessageModel new];
                 messageM.isFormMe = YES;
                 messageM.userName = [UIDevice currentDevice].name;
                 messageM.chatMessageType = ChatMessageAudio;
                 messageM.mediaMessageUrl = [VoiceManager voiceManagerShare].currentRecordUrl;
+                messageM.mediaDuration = duration;
                 messageM.fileName = [[NSString stringWithFormat:@"%zd",[[NSDate date] timeIntervalSinceReferenceDate]] stringByAppendingString:@".caf"];
                 NSData *audioData = [NSData dataWithContentsOfURL:messageM.mediaMessageUrl options:NSDataReadingMappedIfSafe error:nil];
                 messageM.fileSize = audioData.length;
-                [weakSelf.messageItems addObject:messageM];
-                [weakSelf.tableView reloadData];
+                [weakSelf sendMessageWithItem:messageM];
             }];
         }
             break;
@@ -260,7 +263,7 @@ SocketManagerDelegate>
             if (needOffsetY > 0) {
                 [self.tableView setContentOffset:CGPointMake(self.tableView.contentOffset.x, needOffsetY) animated:animated];
             }else{
-                [self.tableView setContentOffset:CGPointMake(self.tableView.contentOffset.x, -NAVBARH) animated:animated];
+                [self.tableView setContentOffset:CGPointMake(self.tableView.contentOffset.x, -(NAVBARH)) animated:animated];
             }
         });
     });
@@ -270,6 +273,7 @@ SocketManagerDelegate>
     item.locationIndex = self.messageItems.count;
     [self.messageItems addObject:item];
     [self.tableView reloadData];
+    [self scrollToLastCellAnimated:YES];
     SocketManager *manager = [SocketManager shareSockManager];
     [manager sendMessageWithItem:item];
 }
