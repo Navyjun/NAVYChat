@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "ChatViewController.h"
+#import "RTCViewController.h"
 
 @interface AppDelegate ()
 
@@ -18,7 +19,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    ChatViewController *chatVC = [[ChatViewController alloc] init];
+    RTCViewController *chatVC = [[RTCViewController alloc] init];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:chatVC];
     self.window.rootViewController = navController;
     [self.window makeKeyAndVisible];

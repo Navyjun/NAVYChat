@@ -12,6 +12,7 @@
 
 // 当接受到SENDFILEHEADINFO  服务端发送的字符
 static NSString *const FILE_ACCEPT_END = @"FILE_ACCEPT_END";
+static int const RTCTAG = -11111;
 
 @interface SocketManager()
 /// socket
@@ -177,6 +178,16 @@ static SocketManager *manager = nil;
     }
 }
 
+#pragma mark - rtc message send
+- (void)RTCMessageSendWithData:(NSData *)rtcData{
+    if (self.clientSocketArray.count > 0) {
+        GCDAsyncSocket *clientSocket = [self.clientSocketArray firstObject];
+        [clientSocket writeData:rtcData withTimeout:-1 tag:RTCTAG];
+    }else{
+        [self.tcpSocketManager writeData:rtcData withTimeout:-1 tag:RTCTAG];
+    }
+}
+
 #pragma mark - GCDSocketDelegate
 /// 新的客户端连接上
 - (void)socket:(GCDAsyncSocket *)sock didAcceptNewSocket:(GCDAsyncSocket *)newSocket{
@@ -208,9 +219,17 @@ static SocketManager *manager = nil;
         return;
     }else if ([readDic isKindOfClass:[NSDictionary class]]) {
         MYLog(@"readDic = %@",readDic);
-        self.acceptItem = [ChatMessageModel mj_objectWithKeyValues:readDic];
-        self.acceptItem.isFormMe = NO;
-        self.acceptItem.finishAccept = self.acceptItem.chatMessageType != ChatMessageText ? NO : YES;
+        // eventName
+        id eventName = readDic[@"eventName"];
+        if (eventName != nil) { // RTC 专用回调
+            if ([self.delegate respondsToSelector:@selector(socketManager:RTCDidReadData:)]) {
+                [self.delegate socketManager:self RTCDidReadData:readDic];
+            }
+        }else{
+            self.acceptItem = [ChatMessageModel mj_objectWithKeyValues:readDic];
+            self.acceptItem.isFormMe = NO;
+            self.acceptItem.finishAccept = self.acceptItem.chatMessageType != ChatMessageText ? NO : YES;
+        }
     }else if (self.acceptItem.isWaitAcceptFile) {
         self.acceptItem.finishAccept = NO;
         self.acceptItem.acceptSize += data.length;
@@ -256,10 +275,6 @@ static SocketManager *manager = nil;
                 [self.delegate socketManager:self itemUpFinishrefresh:self.currentSendItem];
             }
 
-            // 缓存数组
-//            if (self.currentSendItem) {
-//                [self.needSendMoreItems removeObject:self.currentSendItem];
-//            }
             for (ChatMessageModel *item in self.needSendMoreItems.reverseObjectEnumerator) {
                 if (item.isSendFinish) {
                     [self.needSendMoreItems removeObject:item];

@@ -17,7 +17,8 @@
 - (void)socketManager:(SocketManager *)manager  itemUpFinishrefresh:(ChatMessageModel *)finishItem;
 // 正在接受的文件回调
 - (void)socketManager:(SocketManager *)manager  itemAcceptingrefresh:(ChatMessageModel *)acceptingItem;
-
+// 针对 WebRTC 信令的发送/接收
+- (void)socketManager:(SocketManager *)manager  RTCDidReadData:(NSDictionary *)readDic;
 @end
 
 @interface SocketManager : NSObject
@@ -34,4 +35,6 @@
 - (BOOL)connentHost:(NSString *)host prot:(uint16_t)port;
 /// 发送数据 <单条数据的发送>
 - (void)sendMessageWithItem:(ChatMessageModel *)item;
+/// 值针对 rtc 信息的发送
+- (void)RTCMessageSendWithData:(NSData*)rtcData;
 @end
