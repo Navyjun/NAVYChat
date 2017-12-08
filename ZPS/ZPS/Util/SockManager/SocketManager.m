@@ -12,7 +12,7 @@
 
 // 当接受到SENDFILEHEADINFO  服务端发送的字符
 static NSString *const FILE_ACCEPT_END = @"FILE_ACCEPT_END";
-static int const RTCTAG = -11111;
+
 
 @interface SocketManager()
 /// socket
@@ -179,12 +179,12 @@ static SocketManager *manager = nil;
 }
 
 #pragma mark - rtc message send
-- (void)RTCMessageSendWithData:(NSData *)rtcData{
+- (void)RTCMessageSendWithData:(NSData *)rtcData withTag:(long)tag{
     if (self.clientSocketArray.count > 0) {
         GCDAsyncSocket *clientSocket = [self.clientSocketArray firstObject];
-        [clientSocket writeData:rtcData withTimeout:-1 tag:RTCTAG];
+        [clientSocket writeData:rtcData withTimeout:-1 tag:tag];
     }else{
-        [self.tcpSocketManager writeData:rtcData withTimeout:-1 tag:RTCTAG];
+        [self.tcpSocketManager writeData:rtcData withTimeout:-1 tag:tag];
     }
 }
 
@@ -218,13 +218,11 @@ static SocketManager *manager = nil;
         [self sendNextMessage];
         return;
     }else if ([readDic isKindOfClass:[NSDictionary class]]) {
-        MYLog(@"readDic = %@",readDic);
+        // MYLog(@"readDic = %@",readDic);
         // eventName
-        id eventName = readDic[@"eventName"];
-        if (eventName != nil) { // RTC 专用回调
-            if ([self.delegate respondsToSelector:@selector(socketManager:RTCDidReadData:)]) {
-                [self.delegate socketManager:self RTCDidReadData:readDic];
-            }
+        // id eventName = readDic[@"eventName"];
+        if (readDic[@"sdp"] || readDic[@"type"]) { // RTC 专用回调
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"kReceivedSinalingMessageNotification" object:nil userInfo:readDic];
         }else{
             self.acceptItem = [ChatMessageModel mj_objectWithKeyValues:readDic];
             self.acceptItem.isFormMe = NO;
@@ -265,6 +263,9 @@ static SocketManager *manager = nil;
 // 文件传输完毕后的回调
 - (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag{
     MYLog(@"%s \n tag = %ld",__func__,tag);
+    if ([self.rtcDelegate respondsToSelector:@selector(socketManager:didWriteDataWithTag:)]) {
+        [self.rtcDelegate socketManager:self didWriteDataWithTag:tag];
+    }
     if (self.currentSendItem.sendTag == tag) {
         if (!self.currentSendItem.isWaitAcceptFile) {
             self.currentSendItem.temImage = nil;

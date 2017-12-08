@@ -11,19 +11,27 @@
 @class SocketManager;
 
 @protocol SocketManagerDelegate <NSObject>
+@optional
 // 正在上传的文件回调
 - (void)socketManager:(SocketManager *)manager  itemUpingrefresh:(ChatMessageModel *)upingItem;
 // 文件上传完毕的回调
 - (void)socketManager:(SocketManager *)manager  itemUpFinishrefresh:(ChatMessageModel *)finishItem;
 // 正在接受的文件回调
 - (void)socketManager:(SocketManager *)manager  itemAcceptingrefresh:(ChatMessageModel *)acceptingItem;
+@end
+
+@protocol SocketManagerForRTCDelegate <NSObject>
+@optional
 // 针对 WebRTC 信令的发送/接收
 - (void)socketManager:(SocketManager *)manager  RTCDidReadData:(NSDictionary *)readDic;
+- (void)socketManager:(SocketManager *)manager  didWriteDataWithTag:(long)tag;
 @end
 
 @interface SocketManager : NSObject
 /// delegate
 @property (nonatomic, weak) id <SocketManagerDelegate> delegate;
+/// SocketManagerForRTCDelegate
+@property (nonatomic, weak) id <SocketManagerForRTCDelegate> rtcDelegate;
 /// 保存数据的主地址
 @property (nonatomic, copy)  NSString *dataSavePath;
 /// 当有多个需要发送时
@@ -36,5 +44,5 @@
 /// 发送数据 <单条数据的发送>
 - (void)sendMessageWithItem:(ChatMessageModel *)item;
 /// 值针对 rtc 信息的发送
-- (void)RTCMessageSendWithData:(NSData*)rtcData;
+- (void)RTCMessageSendWithData:(NSData*)rtcData withTag:(long)tag;
 @end
