@@ -10,6 +10,8 @@
 #import "WebRTCHelper.h"
 #import "WebRTCClient.h"
 
+#import "VideoOrAudioCallView.h"
+
 #define KScreenWidth [UIScreen mainScreen].bounds.size.width
 #define KScreenHeight [UIScreen mainScreen].bounds.size.height
 
@@ -51,6 +53,7 @@
     }
     
     _remoteVideoTracks = [NSMutableDictionary dictionary];
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -68,9 +71,6 @@
 //    [[WebRTCHelper shareWebRTCHelper] inviteVoiceOrVideo];
     WebRTCClient *client = [WebRTCClient sharedInstance];
     [client startEngine];
-    client.myJID = [UIDevice currentDevice].name;
-    client.remoteJID = @"9050918";
-    
     [client showRTCViewByRemoteName:[UIDevice currentDevice].name isVideo:YES isCaller:YES];
 }
 
