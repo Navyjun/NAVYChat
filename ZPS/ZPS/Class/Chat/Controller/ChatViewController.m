@@ -17,6 +17,8 @@
 #import <AVKit/AVKit.h>
 #import <AVFoundation/AVFoundation.h>
 
+#import "WebRTCClient.h"
+
 
 @interface ChatViewController ()
 <ESKeyBoardToolViewDelegate,
@@ -46,6 +48,9 @@ SocketManagerDelegate>
 #pragma mark - life cycle
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    WebRTCClient *client = [WebRTCClient sharedInstance];
+    [client startEngine];
     
     // 便于测试
     if (HJSCREENH < 667) {
@@ -148,6 +153,11 @@ SocketManagerDelegate>
     switch (type) {
         case OpationItem_image:{
             [self sendImageOrVideo];
+        }
+            break;
+        case OpationItem_video:{
+            [self.keyBoardToolView exitKeyBoard];
+            [self inviteVideoChat];
         }
             break;
             
@@ -276,6 +286,13 @@ SocketManagerDelegate>
     [self scrollToLastCellAnimated:YES];
     SocketManager *manager = [SocketManager shareSockManager];
     [manager sendMessageWithItem:item];
+}
+
+// 发起视频聊天
+- (void)inviteVideoChat{
+    WebRTCClient *client = [WebRTCClient sharedInstance];
+    [client startEngine];
+    [client showRTCViewByRemoteName:[UIDevice currentDevice].name isVideo:YES isCaller:YES];
 }
 
 - (void)sendImageOrVideo{

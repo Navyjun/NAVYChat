@@ -25,12 +25,17 @@ static CGFloat const FVVH = 168.0;
 @property (nonatomic, strong) UIView *bottomCallinng;
 /// 顶部用户信息view
 @property (nonatomic, strong) UIView *topUserInfoView;
+/// 连接状态
+@property (nonatomic, strong) UILabel *stateL;
 
 /// 当前角色
 @property (nonatomic, assign) CurrentRole role;
 /// 当前用户名称
 @property (nonatomic, copy) NSString *currentRoleName;
-
+/// 顶部/底部view的显示状态
+@property (nonatomic, assign) BOOL opationViewHiddenState;
+/// 是否连接成功
+@property (nonatomic, assign) BOOL connectSuccess;
 @end
 
 @implementation VideoOrAudioCallView
@@ -38,7 +43,7 @@ static CGFloat const FVVH = 168.0;
     VideoOrAudioCallView *view = [[self alloc] initWithFrame:[UIScreen mainScreen].bounds];
     view.role = role;
     view.currentRoleName = name;
-    view.backgroundColor = [UIColor whiteColor];
+    //view.backgroundColor = [UIColor whiteColor];
     [[UIApplication sharedApplication].keyWindow addSubview:view];
     [view setupInit];
     
@@ -46,6 +51,10 @@ static CGFloat const FVVH = 168.0;
 }
 
 - (void)setupInit{
+    UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:self.bounds];
+    toolbar.barStyle = UIBarStyleBlackTranslucent;
+    [self addSubview:toolbar];
+    
     // 自己视频view
     self.meVideoView = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
     [self addSubview:self.meVideoView];
@@ -66,7 +75,31 @@ static CGFloat const FVVH = 168.0;
     }
 }
 
+// 连接成功后的操作
+- (void)connectFinshHandle{
+    [self showTopAndBottomView:NO];
+    self.connectSuccess = YES;
+    self.stateL.text = @"已连接";
+}
+
+- (void)showTopAndBottomView:(BOOL)isShow{
+    [UIView animateWithDuration:0.5 animations:^{
+        self.topUserInfoView.y = isShow ? 30 : -TOPH;
+        self.bottomOpationView.y = isShow ? (HJSCREENH - (BOTTOMH)) : HJSCREENH;
+    } completion:^(BOOL finished) {
+        self.opationViewHiddenState = !isShow;
+        if (!isShow) {
+            self.topUserInfoView.hidden = YES;
+        }
+    }];
+}
+
 #pragma mark - event
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    if (self.connectSuccess) {
+        [self showTopAndBottomView:self.opationViewHiddenState];
+    }
+}
 // 取消按钮的点击
 - (void)cancleButtonDidClick:(UIButton *)button{
     if (self.closeHandle) {
@@ -76,6 +109,8 @@ static CGFloat const FVVH = 168.0;
 
 // 接听按钮的点击
 - (void)acceptButtonDidClick:(UIButton *)button{
+    [self.bottomForOnCall removeFromSuperview];
+    [self bottomForCall];
     if (self.acceptHandle) {
         self.acceptHandle();
     }
@@ -119,8 +154,7 @@ static CGFloat const FVVH = 168.0;
         [_topUserInfoView addSubview:stateL];
         stateL.origin = CGPointMake(nameLx, CGRectGetMaxY(nameL.frame));
         [stateL sizeToFit];
-        
-        //_topUserInfoView.backgroundColor = [UIColor grayColor];
+        self.stateL = stateL;
     }
     return _topUserInfoView;
 }

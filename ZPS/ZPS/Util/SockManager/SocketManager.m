@@ -28,6 +28,8 @@ static NSString *const FILE_ACCEPT_END = @"FILE_ACCEPT_END";
 /// 输出流
 @property (nonatomic, strong) NSOutputStream *outputStream;
 
+/// 用户接收 比较长的字符串
+@property (nonatomic, copy) NSString *saveAcceptLongStr;
 @end
 
 @implementation SocketManager
@@ -213,21 +215,43 @@ static SocketManager *manager = nil;
     
     NSString *readStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     NSDictionary *readDic = [readStr hj_jsonStringToDic];
-    MYLog(@"readDic = %@",readDic);
+    //MYLog(@"readDic = %@",readDic);
+    
+    // webRTC 音视频通话的处理  RTC 专用回调
+    if (readDic == nil) {
+        NSString *rtcType = @"{\"type\":\"";
+        if ([readStr containsString:rtcType] || (self.saveAcceptLongStr.length > 0)) {
+            NSDictionary *rtcDic = [self.saveAcceptLongStr hj_jsonStringToDic];
+            if (rtcDic == nil && self.saveAcceptLongStr.length) {
+                self.saveAcceptLongStr = [NSString stringWithFormat:@"%@%@",self.saveAcceptLongStr,readStr];
+                rtcDic = [self.saveAcceptLongStr hj_jsonStringToDic];
+                if (rtcDic) {
+                    readDic = rtcDic;
+                }
+            }
+            
+            if (self.saveAcceptLongStr.length <= 0) {
+                self.saveAcceptLongStr = readStr;
+            }
+        }
+    }
+    if (readDic[@"sdp"] || readDic[@"type"]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"kReceivedSinalingMessageNotification" object:nil userInfo:readDic];
+        self.saveAcceptLongStr = nil;
+        return;
+    }
+    
+    
+    // 发送消息的处理
     if ([readStr isEqualToString:FILE_ACCEPT_END]) {
         [self sendNextMessage];
         return;
-    }else if ([readDic isKindOfClass:[NSDictionary class]]) {
-         MYLog(@"readDic = %@",readDic);
-        // eventName
-        // id eventName = readDic[@"eventName"];
-        if (readDic[@"sdp"] || readDic[@"type"]) { // RTC 专用回调
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"kReceivedSinalingMessageNotification" object:nil userInfo:readDic];
-        }else{
-            self.acceptItem = [ChatMessageModel mj_objectWithKeyValues:readDic];
-            self.acceptItem.isFormMe = NO;
-            self.acceptItem.finishAccept = self.acceptItem.chatMessageType != ChatMessageText ? NO : YES;
-        }
+    }else if ([readDic isKindOfClass:[NSDictionary class]]) { // 此处还需考虑发送 超长字符串内容的处理
+        
+        self.acceptItem = [ChatMessageModel mj_objectWithKeyValues:readDic];
+        self.acceptItem.isFormMe = NO;
+        self.acceptItem.finishAccept = self.acceptItem.chatMessageType != ChatMessageText ? NO : YES;
+        
     }else if (self.acceptItem.isWaitAcceptFile) {
         self.acceptItem.finishAccept = NO;
         self.acceptItem.acceptSize += data.length;

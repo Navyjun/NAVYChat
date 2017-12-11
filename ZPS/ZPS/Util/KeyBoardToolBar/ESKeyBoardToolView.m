@@ -436,8 +436,8 @@ static CGFloat fontValue = 16.0;
     if (!_addOpationView) {
         _addOpationView = [ESAddOpationView addOpationView];
         OpationItem *imgItem = [OpationItem opationItemWithName:@"照片" iconName:@"chat_img" type:OpationItem_image];
-        //OpationItem *videoItem = [OpationItem opationItemWithName:@"视频" iconName:@"chat_video" type:OpationItem_video];
-        _addOpationView.opationItem = @[imgItem];
+        OpationItem *videoItem = [OpationItem opationItemWithName:@"视频聊天" iconName:@"chat_video" type:OpationItem_video];
+        _addOpationView.opationItem = @[imgItem,videoItem];
         
         WS(weakSelf);
         _addOpationView.selectedOpationHandle = ^(OpationItem_type type){

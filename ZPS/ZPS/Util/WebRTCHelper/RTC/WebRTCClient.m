@@ -81,9 +81,7 @@ static WebRTCClient *instance = nil;
 
 - (void)addNotifications
 {
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hangupEvent) name:kHangUpNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveSignalingMessage:) name:@"kReceivedSinalingMessageNotification" object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptAction) name:kAcceptNotification object:nil];
 }
 
 + (instancetype)allocWithZone:(struct _NSZone *)zone
@@ -144,11 +142,6 @@ static WebRTCClient *instance = nil;
 - (void)showRTCViewByRemoteName:(NSString *)remoteName isVideo:(BOOL)isVideo isCaller:(BOOL)isCaller
 {
     // 1.显示视图
-//    self.rtcView = [[RTCView alloc] initWithIsVideo:isVideo isCallee:!isCaller];
-//    self.rtcView.nickName = remoteName;
-//    self.rtcView.connectText = @"等待对方接听";
-//    self.rtcView.netTipText = @"网络状况良好";
-//    [self.rtcView show];
     WS(weakSelf);
     self.callView = [VideoOrAudioCallView callViewWithUserName:remoteName isVideo:isVideo role:isCaller ? RoleCaller : RoleCallee];
     self.callView.acceptHandle = ^{
@@ -209,7 +202,6 @@ static WebRTCClient *instance = nil;
     // 添加 mediaStream
     [self.peerConnection addStream:mediaStream];
     
-//    RTCEAGLVideoView *localVideoView = [[RTCEAGLVideoView alloc] initWithFrame:self.rtcView.ownImageView.bounds];
     RTCEAGLVideoView *localVideoView = [[RTCEAGLVideoView alloc] initWithFrame:self.callView.meVideoView.bounds];
     localVideoView.transform = CGAffineTransformMakeScale(-1, 1);
     localVideoView.delegate = self;
@@ -218,7 +210,6 @@ static WebRTCClient *instance = nil;
     
     [self.localVideoTrack addRenderer:self.localVideoView];
     
-//    RTCEAGLVideoView *remoteVideoView = [[RTCEAGLVideoView alloc] initWithFrame:self.rtcView.adverseImageView.bounds];
     RTCEAGLVideoView *remoteVideoView = [[RTCEAGLVideoView alloc] initWithFrame:self.callView.friendVideoView.bounds];
     remoteVideoView.transform = CGAffineTransformMakeScale(-1, 1);
     remoteVideoView.delegate = self;
@@ -286,10 +277,7 @@ static WebRTCClient *instance = nil;
 }
 
 #pragma mark - private method
-- (void)requestRoomServerWithURL:(NSString *)URL
-{
-    
-}
+
 
 - (RTCSessionDescription *)descriptionWithDescription:(RTCSessionDescription *)description videoFormat:(NSString *)videoFormat
 {
@@ -490,6 +478,8 @@ static WebRTCClient *instance = nil;
             [self.remoteVideoView renderFrame:nil];
             self.remoteVideoTrack = stream.videoTracks[0];
             [self.remoteVideoTrack addRenderer:self.remoteVideoView];
+            // 连接成功后的UI操作
+            [self.callView connectFinshHandle];
         }
         
         [self videoView:self.remoteVideoView didChangeVideoSize:self.callView.friendVideoView.bounds.size];
@@ -592,8 +582,6 @@ static WebRTCClient *instance = nil;
     if (self.HaveSentCandidate) {
         return;
     }
-    NSLog(@"新的 Ice candidate 被发现.");
-    
     NSDictionary *jsonDict = @{@"type":@"candidate",
                                @"label":[NSNumber numberWithInteger:candidate.sdpMLineIndex],
                                @"id":candidate.sdpMid,
@@ -601,8 +589,6 @@ static WebRTCClient *instance = nil;
                                };
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:nil];
     if (jsonData.length > 0) {
-        NSString *jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        //[[HLIMClient shareClient] sendSignalingMessage:jsonStr toUser:self.remoteJID];
         [[SocketManager shareSockManager] RTCMessageSendWithData:jsonData withTag:-100];
         self.HaveSentCandidate = YES;
     }
@@ -623,16 +609,12 @@ didCreateSessionDescription:(RTCSessionDescription *)sdp
 {
     if (error) {
         NSLog(@"创建SessionDescription 失败");
-#warning 这里创建 创建SessionDescription 失败
     } else {
         NSLog(@"创建SessionDescription 成功");
         //RTCSessionDescription *sdpH264 = [self descriptionWithDescription:sdp videoFormat:@"H264"];
         [self.peerConnection setLocalDescriptionWithDelegate:self sessionDescription:sdp];
         NSDictionary *jsonDict = @{ @"type" : sdp.type, @"sdp" : sdp.description};
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:nil];
-        //NSString *jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        
-        //[[HLIMClient shareClient] sendSignalingMessage:jsonStr toUser:self.remoteJID];
         [[SocketManager shareSockManager] RTCMessageSendWithData:jsonData withTag:-100];
     }
 }
@@ -642,14 +624,11 @@ didCreateSessionDescription:(RTCSessionDescription *)sdp
 didSetSessionDescriptionWithError:(NSError *)error
 {
     NSLog(@"%s",__func__);
-    
-    if (error) {
-        if (peerConnection.signalingState == RTCSignalingHaveLocalOffer) {
-            // 发送offer 信令其实更应该在这里发
-            NSLog(@"设置SessionDescription失败:%d",peerConnection.signalingState);
-        }
-        return;
+    if (peerConnection.signalingState == RTCSignalingHaveLocalOffer) {
+        // 发送offer 信令其实更应该在这里发
+        
     }
+    
 }
 
 #pragma mark - RTCEAGLVideoViewDelegate

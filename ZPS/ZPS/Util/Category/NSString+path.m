@@ -37,7 +37,7 @@
 //                                                       options:NSJSONWritingPrettyPrinted
 //                                                         error:nil];
     NSData *jsonData = [self dataUsingEncoding:NSUTF8StringEncoding];
-    NSMutableDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingAllowFragments error:nil];
+    NSMutableDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
     return dic;
 }
 
@@ -235,8 +235,8 @@
 - (NSString *)hj_replaceEmpty
 {
     NSString *newString = nil;
-    newString = [self stringByReplacingOccurrencesOfString:@" " withString:@""];
-    newString = [newString stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+    //newString = [self stringByReplacingOccurrencesOfString:@" " withString:@""];
+    newString = [self stringByReplacingOccurrencesOfString:@"\n" withString:@""];
     return newString;
 }
 

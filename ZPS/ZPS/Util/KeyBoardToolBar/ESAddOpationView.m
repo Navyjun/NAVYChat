@@ -67,7 +67,7 @@ static CGFloat viewH = 216;
 @implementation OpationItem
 
 + (instancetype)opationItemWithName:(NSString *)itemName iconName:(NSString *)iconName type:(OpationItem_type)type{
-    OpationItem *item = [[self alloc] init];
+    OpationItem *item = [[OpationItem alloc] init];
     item.itemName = itemName;
     item.itemIconName = iconName;
     item.type = type;
@@ -89,15 +89,16 @@ static CGFloat viewH = 216;
 
 -(void)layoutSubviews{
     [super layoutSubviews];
+    CGFloat imgW = 56.0;
+    CGFloat labelH = 18.0;
+    self.imageView.frame = CGRectMake((self.hj_width - imgW)*0.5,
+                                      self.hj_height - labelH - imgW - 5,
+                                      imgW, imgW);
     
     self.titleLabel.frame = CGRectMake(0,
-                                       self.hj_height - self.titleLabel.hj_height,
+                                       self.hj_height - labelH,
                                        self.hj_width,
-                                       self.titleLabel.hj_height);
-    CGFloat imgW = 56.0;
-    self.imageView.frame = CGRectMake((self.hj_width - imgW)*0.5,
-                                      self.hj_height - self.titleLabel.hj_height - imgW - 5,
-                                      imgW, imgW);
+                                       labelH);
 }
 
 - (void)setHighlighted:(BOOL)highlighted{

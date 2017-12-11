@@ -8,13 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import "VideoOrAudioCallView.h"
-//#import "RTCView.h"
+
 
 @interface WebRTCClient : NSObject
-
-//@property (strong, nonatomic)   RTCView            *rtcView;
-//@property (copy, nonatomic)     NSString            *myJID;  /**< 自己的JID */
-//@property (copy, nonatomic)     NSString            *remoteJID;    /**< 对方JID */
 
 ///
 @property (nonatomic, strong) VideoOrAudioCallView *callView;

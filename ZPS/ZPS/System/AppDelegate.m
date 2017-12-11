@@ -19,7 +19,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    RTCViewController *chatVC = [[RTCViewController alloc] init];
+    ChatViewController *chatVC = [[ChatViewController alloc] init];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:chatVC];
     self.window.rootViewController = navController;
     [self.window makeKeyAndVisible];

@@ -30,4 +30,6 @@ typedef enum : NSUInteger {
 
 - (void)closeWithCompletion:(void(^)(BOOL finished))fin;
 
+- (void)connectFinshHandle;
+
 @end
