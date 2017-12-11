@@ -31,6 +31,7 @@
 
 #import "SocketManager.h"
 
+
 //google提供的
 static NSString *const RTCSTUNServerURL = @"stun:stun.l.google.com:19302";
 static NSString *const RTCSTUNServerURL2 = @"stun:23.21.150.121";
@@ -80,9 +81,9 @@ static WebRTCClient *instance = nil;
 
 - (void)addNotifications
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hangupEvent) name:kHangUpNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hangupEvent) name:kHangUpNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveSignalingMessage:) name:@"kReceivedSinalingMessageNotification" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptAction) name:kAcceptNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptAction) name:kAcceptNotification object:nil];
 }
 
 + (instancetype)allocWithZone:(struct _NSZone *)zone
@@ -143,11 +144,19 @@ static WebRTCClient *instance = nil;
 - (void)showRTCViewByRemoteName:(NSString *)remoteName isVideo:(BOOL)isVideo isCaller:(BOOL)isCaller
 {
     // 1.显示视图
-    self.rtcView = [[RTCView alloc] initWithIsVideo:isVideo isCallee:!isCaller];
-    self.rtcView.nickName = remoteName;
-    self.rtcView.connectText = @"等待对方接听";
-    self.rtcView.netTipText = @"网络状况良好";
-    [self.rtcView show];
+//    self.rtcView = [[RTCView alloc] initWithIsVideo:isVideo isCallee:!isCaller];
+//    self.rtcView.nickName = remoteName;
+//    self.rtcView.connectText = @"等待对方接听";
+//    self.rtcView.netTipText = @"网络状况良好";
+//    [self.rtcView show];
+    WS(weakSelf);
+    self.callView = [VideoOrAudioCallView callViewWithUserName:remoteName isVideo:isVideo role:isCaller ? RoleCaller : RoleCallee];
+    self.callView.acceptHandle = ^{
+        [weakSelf acceptAction];
+    };
+    self.callView.closeHandle = ^{
+        [weakSelf hangupEvent];
+    };
     
     // 2.播放声音
 //    NSURL *audioURL;
@@ -175,7 +184,7 @@ static WebRTCClient *instance = nil;
     } else {
         // 如果是接收者，就要处理信令信息，创建一个answer
         NSLog(@"如果是接收者，就要处理信令信息");
-        self.rtcView.connectText = isVideo ? @"视频通话":@"语音通话";
+        //self.rtcView.connectText = isVideo ? @"视频通话":@"语音通话";
     }
 }
 
@@ -200,25 +209,28 @@ static WebRTCClient *instance = nil;
     // 添加 mediaStream
     [self.peerConnection addStream:mediaStream];
     
-    RTCEAGLVideoView *localVideoView = [[RTCEAGLVideoView alloc] initWithFrame:self.rtcView.ownImageView.bounds];
+//    RTCEAGLVideoView *localVideoView = [[RTCEAGLVideoView alloc] initWithFrame:self.rtcView.ownImageView.bounds];
+    RTCEAGLVideoView *localVideoView = [[RTCEAGLVideoView alloc] initWithFrame:self.callView.meVideoView.bounds];
     localVideoView.transform = CGAffineTransformMakeScale(-1, 1);
     localVideoView.delegate = self;
-    [self.rtcView.ownImageView addSubview:localVideoView];
+    [self.callView.meVideoView addSubview:localVideoView];
     self.localVideoView = localVideoView;
     
     [self.localVideoTrack addRenderer:self.localVideoView];
     
-    RTCEAGLVideoView *remoteVideoView = [[RTCEAGLVideoView alloc] initWithFrame:self.rtcView.adverseImageView.bounds];
+//    RTCEAGLVideoView *remoteVideoView = [[RTCEAGLVideoView alloc] initWithFrame:self.rtcView.adverseImageView.bounds];
+    RTCEAGLVideoView *remoteVideoView = [[RTCEAGLVideoView alloc] initWithFrame:self.callView.friendVideoView.bounds];
     remoteVideoView.transform = CGAffineTransformMakeScale(-1, 1);
     remoteVideoView.delegate = self;
-    [self.rtcView.adverseImageView addSubview:remoteVideoView];
+    [self.callView.friendVideoView addSubview:remoteVideoView];
     self.remoteVideoView = remoteVideoView;
 }
 
 - (void)cleanCache
 {
     // 1.将试图置为nil
-    self.rtcView = nil;
+//    self.rtcView = nil;
+    self.callView = nil;
     
     // 2.将音乐停止
     if ([_audioPlayer isPlaying]) {
@@ -269,8 +281,8 @@ static WebRTCClient *instance = nil;
 
 - (void)resizeViews
 {
-    [self videoView:self.localVideoView didChangeVideoSize:self.rtcView.ownImageView.bounds.size];
-    [self videoView:self.remoteVideoView didChangeVideoSize:self.rtcView.adverseImageView.bounds.size];
+//    [self videoView:self.localVideoView didChangeVideoSize:self.rtcView.ownImageView.bounds.size];
+//    [self videoView:self.remoteVideoView didChangeVideoSize:self.rtcView.adverseImageView.bounds.size];
 }
 
 #pragma mark - private method
@@ -351,8 +363,7 @@ static WebRTCClient *instance = nil;
     NSDictionary *dict = notification.userInfo;
     NSString *type = dict[@"type"];
     if ([type isEqualToString:@"offer"]) {
-        self.remoteJID = dict[@"name"];
-        [self showRTCViewByRemoteName:self.remoteJID isVideo:YES isCaller:NO];
+        [self showRTCViewByRemoteName:CURRENT_FRIENDNAME isVideo:YES isCaller:NO];
         
         [self.messages insertObject:dict atIndex:0];
     } else if ([type isEqualToString:@"answer"]) {
@@ -405,7 +416,7 @@ static WebRTCClient *instance = nil;
         [self.peerConnection addICECandidate:candidate];
     } else if ([type isEqualToString:@"bye"]) {
 
-        if (self.rtcView) {
+        if (self.callView) {
             NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
             NSString *jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
             if (jsonStr.length > 0) {
@@ -413,7 +424,11 @@ static WebRTCClient *instance = nil;
                 [[SocketManager shareSockManager] RTCMessageSendWithData:jsonData withTag:-100];
             }
             
-            [self.rtcView dismiss];
+            //[self.rtcView dismiss];
+            WS(weakSelf);
+            [self.callView closeWithCompletion:^(BOOL finished) {
+                weakSelf.callView = nil;
+            }];
             
             [self cleanCache];
         }
@@ -477,8 +492,9 @@ static WebRTCClient *instance = nil;
             [self.remoteVideoTrack addRenderer:self.remoteVideoView];
         }
         
-        [self videoView:self.remoteVideoView didChangeVideoSize:self.rtcView.adverseImageView.bounds.size];
-        [self videoView:self.localVideoView didChangeVideoSize:self.rtcView.ownImageView.bounds.size];
+        [self videoView:self.remoteVideoView didChangeVideoSize:self.callView.friendVideoView.bounds.size];
+        [self videoView:self.localVideoView didChangeVideoSize:self.callView.meVideoView.bounds.size];
+        
     });
 }
 

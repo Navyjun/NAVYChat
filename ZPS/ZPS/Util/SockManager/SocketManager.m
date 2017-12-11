@@ -218,7 +218,7 @@ static SocketManager *manager = nil;
         [self sendNextMessage];
         return;
     }else if ([readDic isKindOfClass:[NSDictionary class]]) {
-        // MYLog(@"readDic = %@",readDic);
+         MYLog(@"readDic = %@",readDic);
         // eventName
         // id eventName = readDic[@"eventName"];
         if (readDic[@"sdp"] || readDic[@"type"]) { // RTC 专用回调

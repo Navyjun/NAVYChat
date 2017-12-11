@@ -15,6 +15,11 @@ UIKIT_EXTERN NSInteger CURRENT_PORT;
 ///  当前扫描得到的 wifi 名称
 UIKIT_EXTERN NSString *CURRENT_WIFINAME;
 
+///  当前聊天 对方的名称
+UIKIT_EXTERN NSString *CURRENT_FRIENDNAME;
+///  当前聊天 自己的名称
+UIKIT_EXTERN NSString *CURRENT_MENAME;
+
 @interface ZPCommentData : NSObject
 
 @end
