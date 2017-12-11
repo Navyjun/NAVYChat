@@ -213,7 +213,7 @@ static SocketManager *manager = nil;
     
     NSString *readStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     NSDictionary *readDic = [readStr hj_jsonStringToDic];
-    
+    MYLog(@"readDic = %@",readDic);
     if ([readStr isEqualToString:FILE_ACCEPT_END]) {
         [self sendNextMessage];
         return;
