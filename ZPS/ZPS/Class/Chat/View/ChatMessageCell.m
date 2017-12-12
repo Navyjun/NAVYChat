@@ -160,6 +160,11 @@
     }
 }
 
+- (void)updataProgressWithValue:(CGFloat)progress{
+    self.progressHub.hidden = NO;
+    self.progressHub.progress = progress;
+}
+
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
 }

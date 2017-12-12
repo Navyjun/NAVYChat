@@ -15,6 +15,6 @@
 @property (nonatomic, strong) HJProgressHub *progressHub;
 @property (nonatomic, copy) void (^tapCellBlock)(void);
 + (instancetype)chatMessageCell:(UITableView *)tableView;
-
+- (void)updataProgressWithValue:(CGFloat)progress;
 @end
 

@@ -36,6 +36,8 @@ static CGFloat const FVVH = 168.0;
 @property (nonatomic, assign) BOOL opationViewHiddenState;
 /// 是否连接成功
 @property (nonatomic, assign) BOOL connectSuccess;
+/// 是否显示自己全屏 默认YES
+@property (nonatomic, assign) BOOL showFullImgMe;
 @end
 
 @implementation VideoOrAudioCallView
@@ -51,6 +53,7 @@ static CGFloat const FVVH = 168.0;
 }
 
 - (void)setupInit{
+    self.showFullImgMe = YES;
     UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:self.bounds];
     toolbar.barStyle = UIBarStyleBlackTranslucent;
     [self addSubview:toolbar];
@@ -62,6 +65,8 @@ static CGFloat const FVVH = 168.0;
     // 对方的视频
     self.friendVideoView = [[UIView alloc] init];
     self.friendVideoView.frame = CGRectMake(HJSCREENW - FVVW - 5, 30, FVVW, FVVH);
+//    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(changeFullVideo)];
+//    [self.friendVideoView addGestureRecognizer:tap];
     [self addSubview:self.friendVideoView];
     
     // 头部view
@@ -88,10 +93,15 @@ static CGFloat const FVVH = 168.0;
         self.bottomOpationView.y = isShow ? (HJSCREENH - (BOTTOMH)) : HJSCREENH;
     } completion:^(BOOL finished) {
         self.opationViewHiddenState = !isShow;
-        if (!isShow) {
-            self.topUserInfoView.hidden = YES;
-        }
     }];
+}
+
+- (void)changeFullVideo{
+    self.meVideoView.frame  = self.showFullImgMe?CGRectMake(HJSCREENW - FVVW - 5, 30, FVVW, FVVH):[UIScreen mainScreen].bounds;
+    self.friendVideoView.frame = self.showFullImgMe?[UIScreen mainScreen].bounds:CGRectMake(HJSCREENW - FVVW - 5, 30, FVVW, FVVH);
+    if (self.changeVideoPointHandle) {
+        self.changeVideoPointHandle();
+    }
 }
 
 #pragma mark - event

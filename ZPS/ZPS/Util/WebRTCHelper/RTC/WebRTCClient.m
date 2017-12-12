@@ -150,6 +150,9 @@ static WebRTCClient *instance = nil;
     self.callView.closeHandle = ^{
         [weakSelf hangupEvent];
     };
+    self.callView.changeVideoPointHandle = ^(){
+        [weakSelf changeVideoPointHandle];
+    };
     
     // 2.播放声音
 //    NSURL *audioURL;
@@ -175,9 +178,7 @@ static WebRTCClient *instance = nil;
         // 如果是发起者，创建一个offer信令
         [self.peerConnection createOfferWithDelegate:self constraints:self.sdpConstraints];
     } else {
-        // 如果是接收者，就要处理信令信息，创建一个answer
         NSLog(@"如果是接收者，就要处理信令信息");
-        //self.rtcView.connectText = isVideo ? @"视频通话":@"语音通话";
     }
 }
 
@@ -339,7 +340,12 @@ static WebRTCClient *instance = nil;
     return [[RTCSessionDescription alloc] initWithType:description.type sdp:mangledSDPString];
 }
 
-#pragma mark - notification events
+#pragma mark - events
+- (void)changeVideoPointHandle{
+    [self videoView:self.remoteVideoView didChangeVideoSize:self.callView.friendVideoView.bounds.size];
+    [self videoView:self.localVideoView didChangeVideoSize:self.callView.meVideoView.bounds.size];
+}
+
 - (void)hangupEvent
 {
     NSDictionary *dict = @{@"type":@"bye"};
@@ -408,7 +414,6 @@ static WebRTCClient *instance = nil;
             NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
             NSString *jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
             if (jsonStr.length > 0) {
-                // [[HLIMClient shareClient] sendSignalingMessage:jsonStr toUser:self.remoteJID];
                 [[SocketManager shareSockManager] RTCMessageSendWithData:jsonData withTag:-100];
             }
             

@@ -49,8 +49,8 @@ SocketManagerDelegate>
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    WebRTCClient *client = [WebRTCClient sharedInstance];
-    [client startEngine];
+    [[WebRTCClient sharedInstance] startEngine];
+    
     
     // 便于测试
     if (HJSCREENH < 667) {
@@ -173,6 +173,10 @@ SocketManagerDelegate>
             CGFloat offsetY = contentH - self.tableView.hj_height + view.systemKeyboardH;
             if (offsetY > 0) {
                 [self.tableView setContentOffset:CGPointMake(self.tableView.contentOffset.x, offsetY) animated:YES];
+            }else{
+                if (offsetY > (-NAVBARH)) {
+                    [self.tableView setContentOffset:CGPointMake(self.tableView.contentOffset.x, offsetY) animated:YES];
+                }
             }
         }else{
             // 此处需判断  导航条是否存在
@@ -235,7 +239,8 @@ SocketManagerDelegate>
 - (void)socketManager:(SocketManager *)manager  itemUpingrefresh:(ChatMessageModel *)upingItem{
     // 刷新当前进度
     ChatMessageCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:upingItem.locationIndex inSection:0]];
-    cell.progressHub.progress = 1.0 * upingItem.upSize / upingItem.fileSize;
+    CGFloat progress = 1.0 * upingItem.upSize / upingItem.fileSize;
+    [cell updataProgressWithValue:progress];
 }
 
 - (void)socketManager:(SocketManager *)manager  itemUpFinishrefresh:(ChatMessageModel *)finishItem{
@@ -273,7 +278,11 @@ SocketManagerDelegate>
             if (needOffsetY > 0) {
                 [self.tableView setContentOffset:CGPointMake(self.tableView.contentOffset.x, needOffsetY) animated:animated];
             }else{
-                [self.tableView setContentOffset:CGPointMake(self.tableView.contentOffset.x, -(NAVBARH)) animated:animated];
+                if (needOffsetY > (-NAVBARH)) {
+                    [self.tableView setContentOffset:CGPointMake(self.tableView.contentOffset.x, needOffsetY) animated:animated];
+                }else{
+                    [self.tableView setContentOffset:CGPointMake(self.tableView.contentOffset.x, -(NAVBARH)) animated:animated];
+                }
             }
         });
     });

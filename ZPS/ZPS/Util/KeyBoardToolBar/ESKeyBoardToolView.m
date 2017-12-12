@@ -198,9 +198,9 @@ static CGFloat fontValue = 16.0;
 }
 
 - (void)exitKeyBoard{
-    if (self.isEditing) {
-        return;
-    }
+//    if (self.isEditing) {
+//        return;
+//    }
     [self endEditing:YES];
     [self exitKeyBoardInputView];
 }

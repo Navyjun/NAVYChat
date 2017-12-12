@@ -22,8 +22,11 @@ typedef enum : NSUInteger {
 @property (nonatomic, strong) UIView *friendVideoView;
 /// 接受回调
 @property (nonatomic, copy) void(^acceptHandle)(void);
+/// 切换视频位置的回调
+@property (nonatomic, copy) void(^changeVideoPointHandle)();
 /// 断开的回调
 @property (nonatomic, copy) void(^closeHandle)(void);
+
 
 
 + (instancetype)callViewWithUserName:(NSString *)name isVideo:(BOOL)video role:(CurrentRole)role;
