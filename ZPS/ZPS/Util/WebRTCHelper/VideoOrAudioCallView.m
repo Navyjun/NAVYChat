@@ -65,8 +65,8 @@ static CGFloat const FVVH = 168.0;
     // 对方的视频
     self.friendVideoView = [[UIView alloc] init];
     self.friendVideoView.frame = CGRectMake(HJSCREENW - FVVW - 5, 30, FVVW, FVVH);
-//    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(changeFullVideo)];
-//    [self.friendVideoView addGestureRecognizer:tap];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(changeFullVideo)];
+    [self.friendVideoView addGestureRecognizer:tap];
     [self addSubview:self.friendVideoView];
     
     // 头部view

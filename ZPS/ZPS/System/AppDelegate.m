@@ -8,7 +8,6 @@
 
 #import "AppDelegate.h"
 #import "ChatViewController.h"
-#import "RTCViewController.h"
 
 @interface AppDelegate ()
 

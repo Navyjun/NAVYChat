@@ -71,9 +71,8 @@ static WebRTCClient *instance = nil;
     dispatch_once(&onceToken, ^{
         instance = [[[self class] alloc] init];
         [instance ICEServers];
+        [instance startEngine];
         instance.messages = [NSMutableArray array];
-        // 添加STUN 服务器
-//        [instance.ICEServers addObject:[instance defaultSTUNServer]];
         [instance addNotifications];
     });
     return instance;
@@ -120,7 +119,7 @@ static WebRTCClient *instance = nil;
                                       [[RTCPair alloc] initWithKey:@"OfferToReceiveVideo" value:@"true"]
                                       ];
     NSArray *optionalConstraints = @[[[RTCPair alloc] initWithKey:@"DtlsSrtpKeyAgreement" value:@"false"]];
-    self.pcConstraints = [[RTCMediaConstraints alloc] initWithMandatoryConstraints:mandatoryConstraints optionalConstraints:optionalConstraints];
+    self.pcConstraints = [[RTCMediaConstraints alloc] initWithMandatoryConstraints:nil optionalConstraints:optionalConstraints];
     
     //set SDP's Constraints in order to (offer/answer)
     NSArray *sdpMandatoryConstraints = @[[[RTCPair alloc] initWithKey:@"OfferToReceiveAudio" value:@"true"],
@@ -193,6 +192,7 @@ static WebRTCClient *instance = nil;
     RTCMediaStream *mediaStream = [self.peerConnectionFactory mediaStreamWithLabel:@"ARDAMS"];
     // 添加 local video track
     RTCAVFoundationVideoSource *source = [[RTCAVFoundationVideoSource alloc] initWithFactory:self.peerConnectionFactory constraints:self.videoConstraints];
+    source.useTorch = YES;
     RTCVideoTrack *localVideoTrack = [[RTCVideoTrack alloc] initWithFactory:self.peerConnectionFactory source:source trackId:@"AVAMSv0"];
     [mediaStream addVideoTrack:localVideoTrack];
     self.localVideoTrack = localVideoTrack;

@@ -207,6 +207,7 @@ static SocketManager *manager = nil;
 /// 客户端连接到的
 - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port{
     NSLog(@"%s",__func__);
+    CURRENT_CONNECT_STATE = YES;
 }
 
 /// 接收到消息
@@ -278,6 +279,9 @@ static SocketManager *manager = nil;
     
     if ([self.delegate respondsToSelector:@selector(socketManager:itemAcceptingrefresh:)]) {
         [self.delegate socketManager:self itemAcceptingrefresh:self.acceptItem];
+        if (self.acceptItem.finishAccept) {
+            self.acceptItem = nil;
+        }
     }
     
     
@@ -299,7 +303,7 @@ static SocketManager *manager = nil;
             if ([self.delegate respondsToSelector:@selector(socketManager:itemUpFinishrefresh:)]) {
                 [self.delegate socketManager:self itemUpFinishrefresh:self.currentSendItem];
             }
-
+            
             for (ChatMessageModel *item in self.needSendMoreItems.reverseObjectEnumerator) {
                 if (item.isSendFinish) {
                     [self.needSendMoreItems removeObject:item];
@@ -343,6 +347,7 @@ static SocketManager *manager = nil;
 /// 断开连接
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err{
     NSLog(@"%s - err=%@",__func__,err.localizedDescription);
+    CURRENT_CONNECT_STATE = NO;
     [self.clientSocketArray removeAllObjects];
     [self.needSendMoreItems removeAllObjects];
     self.currentSendItem = nil;

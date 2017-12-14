@@ -18,6 +18,7 @@
 #import <AVFoundation/AVFoundation.h>
 
 #import "WebRTCClient.h"
+#import "WebRTCManager.h"
 
 
 @interface ChatViewController ()
@@ -299,9 +300,12 @@ SocketManagerDelegate>
 
 // 发起视频聊天
 - (void)inviteVideoChat{
-    WebRTCClient *client = [WebRTCClient sharedInstance];
-    [client startEngine];
-    [client showRTCViewByRemoteName:[UIDevice currentDevice].name isVideo:YES isCaller:YES];
+//    WebRTCClient *client = [WebRTCClient sharedInstance];
+//    [client startEngine];
+//    [client showRTCViewByRemoteName:[UIDevice currentDevice].name isVideo:YES isCaller:YES];
+    
+    WebRTCManager *manager = [WebRTCManager webRTCManagerShare];
+    [manager showRTCViewWithRemotName:[UIDevice currentDevice].name isVideo:YES isCaller:YES];
 }
 
 - (void)sendImageOrVideo{

@@ -9,15 +9,14 @@
 /* Begin PBXBuildFile section */
 		EE00831B1FD4FDA50050DC17 /* VoiceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EE00831A1FD4FDA50050DC17 /* VoiceManager.m */; };
 		EE13B3561FD0FB7E001A3F35 /* HJProgressHub.m in Sources */ = {isa = PBXBuildFile; fileRef = EE13B3551FD0FB7E001A3F35 /* HJProgressHub.m */; };
+		EE23C8A91FE0C33A00DD6B54 /* WebRTCHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = EE23C8A81FE0C33A00DD6B54 /* WebRTCHelper.m */; };
 		EE4051221FB3ECBF0054BC53 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4051211FB3ECBF0054BC53 /* AppDelegate.m */; };
-		EE4051281FB3ECBF0054BC53 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EE4051261FB3ECBF0054BC53 /* Main.storyboard */; };
 		EE40512A1FB3ECBF0054BC53 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EE4051291FB3ECBF0054BC53 /* Assets.xcassets */; };
 		EE40512D1FB3ECBF0054BC53 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EE40512B1FB3ECBF0054BC53 /* LaunchScreen.storyboard */; };
 		EE4051301FB3ECBF0054BC53 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EE40512F1FB3ECBF0054BC53 /* main.m */; };
 		EE4051421FB3EE370054BC53 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = EE40513F1FB3EE370054BC53 /* GCDAsyncSocket.m */; };
 		EE4051431FB3EE370054BC53 /* GCDAsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4051411FB3EE370054BC53 /* GCDAsyncUdpSocket.m */; };
 		EE40514E1FB4041A0054BC53 /* NSString+path.m in Sources */ = {isa = PBXBuildFile; fileRef = EE40514D1FB4041A0054BC53 /* NSString+path.m */; };
-		EE581DE21FD7CE55003B679F /* WebRTCHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = EE581DE11FD7CE55003B679F /* WebRTCHelper.m */; };
 		EE581E061FD7CEFE003B679F /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE581E051FD7CED4003B679F /* CoreMedia.framework */; };
 		EE581E081FD7CF17003B679F /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE581E071FD7CF08003B679F /* AVFoundation.framework */; };
 		EE581E0A1FD7CF36003B679F /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE581E091FD7CF29003B679F /* AudioToolbox.framework */; };
@@ -29,8 +28,6 @@
 		EE581E161FD7CFC8003B679F /* libstdc++.6.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = EE581E151FD7CFC7003B679F /* libstdc++.6.tbd */; };
 		EE581E181FD7CFD5003B679F /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = EE581E171FD7CFD4003B679F /* libc++.tbd */; };
 		EE581E1A1FD7CFE7003B679F /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = EE581E191FD7CFE7003B679F /* libresolv.tbd */; };
-		EE581E1E1FD7DE5F003B679F /* RTCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE581E1C1FD7DE5F003B679F /* RTCViewController.m */; };
-		EE581E1F1FD7DE5F003B679F /* RTCViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE581E1D1FD7DE5F003B679F /* RTCViewController.xib */; };
 		EE5CE20F1FB52FB9001F5A30 /* getgateway.c in Sources */ = {isa = PBXBuildFile; fileRef = EE5CE20A1FB52FB9001F5A30 /* getgateway.c */; };
 		EE5CE2101FB52FB9001F5A30 /* HJWifiUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = EE5CE20D1FB52FB9001F5A30 /* HJWifiUtil.m */; };
 		EEB0D3651FDB795400683782 /* WebRTCManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EEB0D3641FDB795400683782 /* WebRTCManager.m */; };
@@ -112,10 +109,11 @@
 		EE00831A1FD4FDA50050DC17 /* VoiceManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VoiceManager.m; sourceTree = "<group>"; };
 		EE13B3541FD0FB7E001A3F35 /* HJProgressHub.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJProgressHub.h; sourceTree = "<group>"; };
 		EE13B3551FD0FB7E001A3F35 /* HJProgressHub.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJProgressHub.m; sourceTree = "<group>"; };
+		EE23C8A71FE0C33A00DD6B54 /* WebRTCHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebRTCHelper.h; sourceTree = "<group>"; };
+		EE23C8A81FE0C33A00DD6B54 /* WebRTCHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebRTCHelper.m; sourceTree = "<group>"; };
 		EE40511D1FB3ECBF0054BC53 /* ZPS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZPS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE4051201FB3ECBF0054BC53 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		EE4051211FB3ECBF0054BC53 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		EE4051271FB3ECBF0054BC53 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		EE4051291FB3ECBF0054BC53 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EE40512C1FB3ECBF0054BC53 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EE40512E1FB3ECBF0054BC53 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -126,8 +124,6 @@
 		EE4051411FB3EE370054BC53 /* GCDAsyncUdpSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncUdpSocket.m; sourceTree = "<group>"; };
 		EE40514C1FB4041A0054BC53 /* NSString+path.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+path.h"; sourceTree = "<group>"; };
 		EE40514D1FB4041A0054BC53 /* NSString+path.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+path.m"; sourceTree = "<group>"; };
-		EE581DE01FD7CE55003B679F /* WebRTCHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebRTCHelper.h; sourceTree = "<group>"; };
-		EE581DE11FD7CE55003B679F /* WebRTCHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebRTCHelper.m; sourceTree = "<group>"; };
 		EE581DE51FD7CE9E003B679F /* RTCAudioSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCAudioSource.h; sourceTree = "<group>"; };
 		EE581DE61FD7CE9E003B679F /* RTCAudioTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCAudioTrack.h; sourceTree = "<group>"; };
 		EE581DE71FD7CE9E003B679F /* RTCAVFoundationVideoSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCAVFoundationVideoSource.h; sourceTree = "<group>"; };
@@ -169,9 +165,6 @@
 		EE581E151FD7CFC7003B679F /* libstdc++.6.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.tbd"; path = "usr/lib/libstdc++.6.tbd"; sourceTree = SDKROOT; };
 		EE581E171FD7CFD4003B679F /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		EE581E191FD7CFE7003B679F /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
-		EE581E1B1FD7DE5F003B679F /* RTCViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTCViewController.h; sourceTree = "<group>"; };
-		EE581E1C1FD7DE5F003B679F /* RTCViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTCViewController.m; sourceTree = "<group>"; };
-		EE581E1D1FD7DE5F003B679F /* RTCViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RTCViewController.xib; sourceTree = "<group>"; };
 		EE5CE20A1FB52FB9001F5A30 /* getgateway.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = getgateway.c; sourceTree = "<group>"; };
 		EE5CE20B1FB52FB9001F5A30 /* getgateway.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = getgateway.h; sourceTree = "<group>"; };
 		EE5CE20C1FB52FB9001F5A30 /* HJWifiUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJWifiUtil.h; sourceTree = "<group>"; };
@@ -394,7 +387,6 @@
 			isa = PBXGroup;
 			children = (
 				EED35A211FC665D0005B0A26 /* defaultEmotion.plist */,
-				EE4051261FB3ECBF0054BC53 /* Main.storyboard */,
 				EE4051291FB3ECBF0054BC53 /* Assets.xcassets */,
 				EE40512B1FB3ECBF0054BC53 /* LaunchScreen.storyboard */,
 				EE40512E1FB3ECBF0054BC53 /* Info.plist */,
@@ -458,8 +450,6 @@
 			isa = PBXGroup;
 			children = (
 				EEE6D6B31FDA90C20072BD15 /* RTC */,
-				EE581DE01FD7CE55003B679F /* WebRTCHelper.h */,
-				EE581DE11FD7CE55003B679F /* WebRTCHelper.m */,
 				EEB0D3631FDB795300683782 /* WebRTCManager.h */,
 				EEB0D3641FDB795400683782 /* WebRTCManager.m */,
 				EEB0D3661FDB7A0900683782 /* VideoOrAudioCallView.h */,
@@ -541,9 +531,6 @@
 			children = (
 				EED35A1E1FC664F4005B0A26 /* ChatViewController.h */,
 				EED35A1F1FC664F4005B0A26 /* ChatViewController.m */,
-				EE581E1B1FD7DE5F003B679F /* RTCViewController.h */,
-				EE581E1C1FD7DE5F003B679F /* RTCViewController.m */,
-				EE581E1D1FD7DE5F003B679F /* RTCViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -625,6 +612,8 @@
 				EEE6D6DF1FDA90C20072BD15 /* sound */,
 				EEE6D6E61FDA90C20072BD15 /* WebRTCClient.h */,
 				EEE6D6E71FDA90C20072BD15 /* WebRTCClient.m */,
+				EE23C8A71FE0C33A00DD6B54 /* WebRTCHelper.h */,
+				EE23C8A81FE0C33A00DD6B54 /* WebRTCHelper.m */,
 			);
 			path = RTC;
 			sourceTree = "<group>";
@@ -806,7 +795,6 @@
 				EEE6D70D1FDA90C20072BD15 /* view_audio_reply_message_bg@2x.png in Resources */,
 				EEE6D7061FDA90C20072BD15 /* icon_avp_video_gray@2x.png in Resources */,
 				EEE6D6F91FDA90C20072BD15 /* icon_avp_loudspeaker_blue@2x.png in Resources */,
-				EE581E1F1FD7DE5F003B679F /* RTCViewController.xib in Resources */,
 				EED35A221FC665D0005B0A26 /* defaultEmotion.plist in Resources */,
 				EE40512D1FB3ECBF0054BC53 /* LaunchScreen.storyboard in Resources */,
 				EEE6D6F71FDA90C20072BD15 /* icon_avp_invite_white@2x.png in Resources */,
@@ -823,7 +811,6 @@
 				EEE6D6F51FDA90C20072BD15 /* icon_avp_invite_blue@2x.png in Resources */,
 				EEE6D7151FDA90C20072BD15 /* Message_system.mp3 in Resources */,
 				EEE6D6F61FDA90C20072BD15 /* icon_avp_invite_gray@2x.png in Resources */,
-				EE4051281FB3ECBF0054BC53 /* Main.storyboard in Resources */,
 				EEE6D6FA1FDA90C20072BD15 /* icon_avp_loudspeaker_gray@2x.png in Resources */,
 				EEE6D7051FDA90C20072BD15 /* icon_avp_video_blue@2x.png in Resources */,
 				EEE6D6E91FDA90C20072BD15 /* 456.png in Resources */,
@@ -904,7 +891,6 @@
 				EED35A201FC664F4005B0A26 /* ChatViewController.m in Sources */,
 				EEB0D3681FDB7A0900683782 /* VideoOrAudioCallView.m in Sources */,
 				EEE519121FCCF81B0000AA7E /* ZPCommentData.m in Sources */,
-				EE581E1E1FD7DE5F003B679F /* RTCViewController.m in Sources */,
 				EEE795581FCBEA9200541A69 /* ESAddOpationView.m in Sources */,
 				EEE6D70F1FDA90C20072BD15 /* RTCView.m in Sources */,
 				EE5CE2101FB52FB9001F5A30 /* HJWifiUtil.m in Sources */,
@@ -914,11 +900,11 @@
 				EE13B3561FD0FB7E001A3F35 /* HJProgressHub.m in Sources */,
 				EEE795551FCBAEA800541A69 /* RegexKitLite.m in Sources */,
 				EEE519111FCCF81B0000AA7E /* ZPPublicMethod.m in Sources */,
+				EE23C8A91FE0C33A00DD6B54 /* WebRTCHelper.m in Sources */,
 				EE4051301FB3ECBF0054BC53 /* main.m in Sources */,
 				EED35A1A1FC65F70005B0A26 /* UIView+Extension.m in Sources */,
 				EED35A0F1FC65CAE005B0A26 /* ESEmoticonTool.m in Sources */,
 				EEE6D70E1FDA90C20072BD15 /* RTCButton.m in Sources */,
-				EE581DE21FD7CE55003B679F /* WebRTCHelper.m in Sources */,
 				EED35A111FC65CAE005B0A26 /* EmoticonContentView.m in Sources */,
 				EED35A171FC65F5C005B0A26 /* UIImage+Image.m in Sources */,
 				EE4051221FB3ECBF0054BC53 /* AppDelegate.m in Sources */,
@@ -936,14 +922,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		EE4051261FB3ECBF0054BC53 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				EE4051271FB3ECBF0054BC53 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		EE40512B1FB3ECBF0054BC53 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

@@ -10,6 +10,7 @@
 #import "ESEmoticonView.h"
 
 static CGFloat fontValue = 16.0;
+static CGFloat MAXH = 103.0;
 
 @interface ESKeyBoardToolView () <UITextViewDelegate>
 /// 表情按钮
@@ -30,12 +31,12 @@ static CGFloat fontValue = 16.0;
 @property (nonatomic, strong) ESEmoticonView *emoticonView;
 /// 其它选项view
 @property (nonatomic, strong) ESAddOpationView *addOpationView;
-/// 没一行文字的高度
+/// 每一行文字的高度
 @property (nonatomic, assign) CGFloat textRowHeight;
 /// 当前的行数
 @property (nonatomic, assign) NSInteger currentLine;
-/// 当前是否正在编辑 外界不能操作退出键盘
-@property (nonatomic, assign) BOOL isEditing;
+/// 最大行数时的高度
+@property (nonatomic, assign) CGFloat maxHeight;
 @end
 
 @implementation ESKeyBoardToolView
@@ -60,6 +61,7 @@ static CGFloat fontValue = 16.0;
     
     CGFloat margin = 10;
     self.hj_height = self.nowHeight;
+  
     
     // 语音按钮
     self.voiceButton.size = CGSizeMake(30, 30);
@@ -186,12 +188,6 @@ static CGFloat fontValue = 16.0;
     self.showTime = duration;
     self.systemKeyboardH = keyboardF.size.height;
     if (keyboardF.origin.y < HJSCREENH) { // 键盘弹出
-        if (!self.isEditing) {
-            self.isEditing = YES;
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.showTime * 2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                self.isEditing = NO;
-            });
-        }
     }else{ // 退出键盘
         self.systemKeyboardH = 0;
     }
@@ -220,7 +216,6 @@ static CGFloat fontValue = 16.0;
     }else{
         self.placeTitleLabel.hidden = NO;
     }
-    self.isEditing = YES;
     
     NSInteger height = ceilf([textView sizeThatFits:CGSizeMake(textView.bounds.size.width, MAXFLOAT)].height);
     NSInteger lines = height / self.textRowHeight;
@@ -235,10 +230,20 @@ static CGFloat fontValue = 16.0;
     if (lines > maxLines) {
         textView.scrollEnabled = YES;
         _currentLine = maxLines;
+//        if (self.nowHeight == TitleViewHeight) { // 第一次发送消息
+//            CGFloat offsetH = (maxLines - 1) * self.textRowHeight;
+//            self.hj_height = MAXH;
+//            self.y -= offsetH;
+//            [self layoutIfNeeded];
+//        }
         return;
     }
     textView.scrollEnabled = NO;
     
+    // 同一行不需要再次计算
+    if (_currentLine == lines) {
+        return;
+    }
     // 当前变化的高度
     CGFloat offsetH = self.textRowHeight;
     
@@ -258,7 +263,6 @@ static CGFloat fontValue = 16.0;
         [self.delegate ESKeyBoardToolViewDidEditing:self changeY:lines > _currentLine ? (-offsetH) : (offsetH)];
     }
     _currentLine = lines;
-    
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
@@ -279,7 +283,6 @@ static CGFloat fontValue = 16.0;
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView{
-    self.isEditing = NO;
     if ([self.delegate respondsToSelector:@selector(ESKeyBoardToolViewDidEndEdit:)]) {
         [self.delegate ESKeyBoardToolViewDidEndEdit:self];
     }
@@ -293,7 +296,6 @@ static CGFloat fontValue = 16.0;
     self.nowHeight = TitleViewHeight;
     self.y += self.textRowHeight * (lines - 1);
     self.currentLine = 1;
-    self.isEditing = NO;
     self.inputTextView.text = nil;
     self.inputTextView.scrollEnabled = NO;
     [self.inputTextView resignFirstResponder];
@@ -420,7 +422,6 @@ static CGFloat fontValue = 16.0;
             NSInteger lines = height / weakSelf.textRowHeight;
             // 1.发送消息
             [weakSelf sendMessageLayoutWithTextLines:lines message:message];
-            weakSelf.isEditing = NO;
         };
         _emoticonView.insetEmoticonBlock = ^ (NSString *message){
             [weakSelf.inputTextView insertText:message];

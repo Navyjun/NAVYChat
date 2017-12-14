@@ -23,7 +23,7 @@ typedef enum : NSUInteger {
 /// 接受回调
 @property (nonatomic, copy) void(^acceptHandle)(void);
 /// 切换视频位置的回调
-@property (nonatomic, copy) void(^changeVideoPointHandle)();
+@property (nonatomic, copy) void(^changeVideoPointHandle)(void);
 /// 断开的回调
 @property (nonatomic, copy) void(^closeHandle)(void);
 

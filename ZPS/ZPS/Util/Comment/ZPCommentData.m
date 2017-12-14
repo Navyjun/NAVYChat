@@ -19,6 +19,8 @@ NSString *CURRENT_WIFINAME = nil;
 NSString *CURRENT_FRIENDNAME = @"iPod";
 ///  当前聊天 自己的名称
 NSString *CURRENT_MENAME = nil;
+/// 当前连接状态
+BOOL CURRENT_CONNECT_STATE = NO;
 
 @implementation ZPCommentData
 
