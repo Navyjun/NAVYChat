@@ -62,6 +62,13 @@ SocketManagerDelegate>
     }
     
     [self setupInit];
+    
+    if (@available(iOS 11.0, *)) {
+        NSLog(@"safeAreaInsets = %@",NSStringFromUIEdgeInsets(self.view.safeAreaInsets));
+        NSLog(@"frame = %@",NSStringFromCGRect(self.view.frame));
+    } else {
+        
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -100,7 +107,8 @@ SocketManagerDelegate>
     CGRect keyboardF = [userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
     if (keyboardF.origin.y >= self.view.hj_height) { // 退出键盘
         [self.keyBoardToolView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.view.mas_bottom);
+            //make.bottom.mas_equalTo(self.view.mas_bottom);
+            make.bottom.mas_equalTo(self.view.mas_bottom).offset(HJSCREENH == IPHONEXH?-34:0);
             make.height.mas_equalTo(self.keyBoardToolView.hj_height);
         }];
     } else {
@@ -171,7 +179,7 @@ SocketManagerDelegate>
     dispatch_async(dispatch_get_main_queue(), ^{
         CGFloat contentH = self.tableView.contentSize.height;
         if (yValue == 0) { // 键盘弹出的时候
-            CGFloat offsetY = contentH - self.tableView.hj_height + view.systemKeyboardH;
+            CGFloat offsetY = contentH - self.tableView.hj_height + view.systemKeyboardH - BOTTOMSAFEH;
             if (offsetY > 0) {
                 [self.tableView setContentOffset:CGPointMake(self.tableView.contentOffset.x, offsetY) animated:YES];
             }else{
@@ -273,7 +281,7 @@ SocketManagerDelegate>
             if (self.keyBoardToolView.inputTextView.isFirstResponder) {
                 showH = self.tableView.hj_height - self.keyBoardToolView.systemKeyboardH;
             }else{
-                showH = self.view.hj_height - self.keyBoardToolView.nowHeight;
+                showH = self.view.hj_height - self.keyBoardToolView.nowHeight - BOTTOMSAFEH;
             }
             CGFloat needOffsetY =  (contentH - showH);
             if (needOffsetY > 0) {
@@ -300,10 +308,6 @@ SocketManagerDelegate>
 
 // 发起视频聊天
 - (void)inviteVideoChat{
-//    WebRTCClient *client = [WebRTCClient sharedInstance];
-//    [client startEngine];
-//    [client showRTCViewByRemoteName:[UIDevice currentDevice].name isVideo:YES isCaller:YES];
-    
     WebRTCManager *manager = [WebRTCManager webRTCManagerShare];
     [manager showRTCViewWithRemotName:[UIDevice currentDevice].name isVideo:YES isCaller:YES];
 }
@@ -418,8 +422,9 @@ SocketManagerDelegate>
         self.keyBoardToolView.delegate = self;
         [self.view addSubview:self.keyBoardToolView];
         [self.keyBoardToolView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.bottom.mas_equalTo(self.view);
+            make.left.right.mas_equalTo(self.view);
             make.height.mas_equalTo(TitleViewHeight);
+            make.bottom.mas_equalTo(self.view.mas_bottom).offset(-BOTTOMSAFEH);
         }];
     }
     return _keyBoardToolView;
@@ -440,7 +445,7 @@ SocketManagerDelegate>
         [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.right.mas_equalTo(self.view);
             make.top.mas_equalTo(self.view);
-            make.height.mas_equalTo(self.view.hj_height - TitleViewHeight);
+            make.height.mas_equalTo(self.view.hj_height - TitleViewHeight - BOTTOMSAFEH);
         }];
     }
     return _tableView;

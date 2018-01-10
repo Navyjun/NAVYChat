@@ -230,12 +230,6 @@ static CGFloat MAXH = 103.0;
     if (lines > maxLines) {
         textView.scrollEnabled = YES;
         _currentLine = maxLines;
-//        if (self.nowHeight == TitleViewHeight) { // 第一次发送消息
-//            CGFloat offsetH = (maxLines - 1) * self.textRowHeight;
-//            self.hj_height = MAXH;
-//            self.y -= offsetH;
-//            [self layoutIfNeeded];
-//        }
         return;
     }
     textView.scrollEnabled = NO;
@@ -272,6 +266,7 @@ static CGFloat MAXH = 103.0;
         NSInteger height = ceilf([textView sizeThatFits:CGSizeMake(textView.bounds.size.width, MAXFLOAT)].height);
         NSInteger lines = height / self.textRowHeight;
         [self sendMessageLayoutWithTextLines:lines message:textView.text];
+        return NO;
     }
     return YES;
 }
