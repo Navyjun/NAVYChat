@@ -17,7 +17,6 @@
 #import <AVKit/AVKit.h>
 #import <AVFoundation/AVFoundation.h>
 
-#import "WebRTCClient.h"
 #import "WebRTCManager.h"
 
 
@@ -50,7 +49,6 @@ SocketManagerDelegate>
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [[WebRTCClient sharedInstance] startEngine];
     
     
     // 便于测试

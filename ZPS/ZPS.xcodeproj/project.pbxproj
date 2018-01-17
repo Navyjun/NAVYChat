@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		EE00831B1FD4FDA50050DC17 /* VoiceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EE00831A1FD4FDA50050DC17 /* VoiceManager.m */; };
 		EE13B3561FD0FB7E001A3F35 /* HJProgressHub.m in Sources */ = {isa = PBXBuildFile; fileRef = EE13B3551FD0FB7E001A3F35 /* HJProgressHub.m */; };
-		EE23C8A91FE0C33A00DD6B54 /* WebRTCHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = EE23C8A81FE0C33A00DD6B54 /* WebRTCHelper.m */; };
 		EE4051221FB3ECBF0054BC53 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4051211FB3ECBF0054BC53 /* AppDelegate.m */; };
 		EE40512A1FB3ECBF0054BC53 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EE4051291FB3ECBF0054BC53 /* Assets.xcassets */; };
 		EE40512D1FB3ECBF0054BC53 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EE40512B1FB3ECBF0054BC53 /* LaunchScreen.storyboard */; };
@@ -86,15 +85,12 @@
 		EEE6D70B1FDA90C20072BD15 /* portrait.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EEE6D6D81FDA90C20072BD15 /* portrait.jpg */; };
 		EEE6D70C1FDA90C20072BD15 /* portrait@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EEE6D6D91FDA90C20072BD15 /* portrait@2x.png */; };
 		EEE6D70D1FDA90C20072BD15 /* view_audio_reply_message_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EEE6D6DA1FDA90C20072BD15 /* view_audio_reply_message_bg@2x.png */; };
-		EEE6D70E1FDA90C20072BD15 /* RTCButton.m in Sources */ = {isa = PBXBuildFile; fileRef = EEE6D6DC1FDA90C20072BD15 /* RTCButton.m */; };
-		EEE6D70F1FDA90C20072BD15 /* RTCView.m in Sources */ = {isa = PBXBuildFile; fileRef = EEE6D6DE1FDA90C20072BD15 /* RTCView.m */; };
 		EEE6D7101FDA90C20072BD15 /* AVChat_busy.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = EEE6D6E01FDA90C20072BD15 /* AVChat_busy.mp3 */; };
 		EEE6D7111FDA90C20072BD15 /* AVChat_endCall.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = EEE6D6E11FDA90C20072BD15 /* AVChat_endCall.mp3 */; };
 		EEE6D7121FDA90C20072BD15 /* AVChat_incoming.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = EEE6D6E21FDA90C20072BD15 /* AVChat_incoming.mp3 */; };
 		EEE6D7131FDA90C20072BD15 /* AVChat_waitingForAnswer.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = EEE6D6E31FDA90C20072BD15 /* AVChat_waitingForAnswer.mp3 */; };
 		EEE6D7141FDA90C20072BD15 /* incomingRing.wav in Resources */ = {isa = PBXBuildFile; fileRef = EEE6D6E41FDA90C20072BD15 /* incomingRing.wav */; };
 		EEE6D7151FDA90C20072BD15 /* Message_system.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = EEE6D6E51FDA90C20072BD15 /* Message_system.mp3 */; };
-		EEE6D7161FDA90C20072BD15 /* WebRTCClient.m in Sources */ = {isa = PBXBuildFile; fileRef = EEE6D6E71FDA90C20072BD15 /* WebRTCClient.m */; };
 		EEE795511FCB9D5400541A69 /* ZPBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EEE795501FCB9D5400541A69 /* ZPBaseViewController.m */; };
 		EEE795551FCBAEA800541A69 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = EEE795541FCBAEA800541A69 /* RegexKitLite.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EEE795581FCBEA9200541A69 /* ESAddOpationView.m in Sources */ = {isa = PBXBuildFile; fileRef = EEE795571FCBEA9200541A69 /* ESAddOpationView.m */; };
@@ -109,8 +105,6 @@
 		EE00831A1FD4FDA50050DC17 /* VoiceManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VoiceManager.m; sourceTree = "<group>"; };
 		EE13B3541FD0FB7E001A3F35 /* HJProgressHub.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJProgressHub.h; sourceTree = "<group>"; };
 		EE13B3551FD0FB7E001A3F35 /* HJProgressHub.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HJProgressHub.m; sourceTree = "<group>"; };
-		EE23C8A71FE0C33A00DD6B54 /* WebRTCHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebRTCHelper.h; sourceTree = "<group>"; };
-		EE23C8A81FE0C33A00DD6B54 /* WebRTCHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebRTCHelper.m; sourceTree = "<group>"; };
 		EE40511D1FB3ECBF0054BC53 /* ZPS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZPS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE4051201FB3ECBF0054BC53 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		EE4051211FB3ECBF0054BC53 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -244,18 +238,12 @@
 		EEE6D6D81FDA90C20072BD15 /* portrait.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = portrait.jpg; sourceTree = "<group>"; };
 		EEE6D6D91FDA90C20072BD15 /* portrait@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "portrait@2x.png"; sourceTree = "<group>"; };
 		EEE6D6DA1FDA90C20072BD15 /* view_audio_reply_message_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "view_audio_reply_message_bg@2x.png"; sourceTree = "<group>"; };
-		EEE6D6DB1FDA90C20072BD15 /* RTCButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCButton.h; sourceTree = "<group>"; };
-		EEE6D6DC1FDA90C20072BD15 /* RTCButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RTCButton.m; sourceTree = "<group>"; };
-		EEE6D6DD1FDA90C20072BD15 /* RTCView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTCView.h; sourceTree = "<group>"; };
-		EEE6D6DE1FDA90C20072BD15 /* RTCView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RTCView.m; sourceTree = "<group>"; };
 		EEE6D6E01FDA90C20072BD15 /* AVChat_busy.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = AVChat_busy.mp3; sourceTree = "<group>"; };
 		EEE6D6E11FDA90C20072BD15 /* AVChat_endCall.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = AVChat_endCall.mp3; sourceTree = "<group>"; };
 		EEE6D6E21FDA90C20072BD15 /* AVChat_incoming.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = AVChat_incoming.mp3; sourceTree = "<group>"; };
 		EEE6D6E31FDA90C20072BD15 /* AVChat_waitingForAnswer.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = AVChat_waitingForAnswer.mp3; sourceTree = "<group>"; };
 		EEE6D6E41FDA90C20072BD15 /* incomingRing.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = incomingRing.wav; sourceTree = "<group>"; };
 		EEE6D6E51FDA90C20072BD15 /* Message_system.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Message_system.mp3; sourceTree = "<group>"; };
-		EEE6D6E61FDA90C20072BD15 /* WebRTCClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebRTCClient.h; sourceTree = "<group>"; };
-		EEE6D6E71FDA90C20072BD15 /* WebRTCClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebRTCClient.m; sourceTree = "<group>"; };
 		EEE7954F1FCB9D5400541A69 /* ZPBaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZPBaseViewController.h; sourceTree = "<group>"; };
 		EEE795501FCB9D5400541A69 /* ZPBaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZPBaseViewController.m; sourceTree = "<group>"; };
 		EEE795531FCBAEA800541A69 /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
@@ -605,15 +593,7 @@
 			isa = PBXGroup;
 			children = (
 				EEE6D6B41FDA90C20072BD15 /* icons */,
-				EEE6D6DB1FDA90C20072BD15 /* RTCButton.h */,
-				EEE6D6DC1FDA90C20072BD15 /* RTCButton.m */,
-				EEE6D6DD1FDA90C20072BD15 /* RTCView.h */,
-				EEE6D6DE1FDA90C20072BD15 /* RTCView.m */,
 				EEE6D6DF1FDA90C20072BD15 /* sound */,
-				EEE6D6E61FDA90C20072BD15 /* WebRTCClient.h */,
-				EEE6D6E71FDA90C20072BD15 /* WebRTCClient.m */,
-				EE23C8A71FE0C33A00DD6B54 /* WebRTCHelper.h */,
-				EE23C8A81FE0C33A00DD6B54 /* WebRTCHelper.m */,
 			);
 			path = RTC;
 			sourceTree = "<group>";
@@ -892,19 +872,15 @@
 				EEB0D3681FDB7A0900683782 /* VideoOrAudioCallView.m in Sources */,
 				EEE519121FCCF81B0000AA7E /* ZPCommentData.m in Sources */,
 				EEE795581FCBEA9200541A69 /* ESAddOpationView.m in Sources */,
-				EEE6D70F1FDA90C20072BD15 /* RTCView.m in Sources */,
 				EE5CE2101FB52FB9001F5A30 /* HJWifiUtil.m in Sources */,
 				EEE519051FCCECB10000AA7E /* PickerImageVideoTool.m in Sources */,
-				EEE6D7161FDA90C20072BD15 /* WebRTCClient.m in Sources */,
 				EEB0D3651FDB795400683782 /* WebRTCManager.m in Sources */,
 				EE13B3561FD0FB7E001A3F35 /* HJProgressHub.m in Sources */,
 				EEE795551FCBAEA800541A69 /* RegexKitLite.m in Sources */,
 				EEE519111FCCF81B0000AA7E /* ZPPublicMethod.m in Sources */,
-				EE23C8A91FE0C33A00DD6B54 /* WebRTCHelper.m in Sources */,
 				EE4051301FB3ECBF0054BC53 /* main.m in Sources */,
 				EED35A1A1FC65F70005B0A26 /* UIView+Extension.m in Sources */,
 				EED35A0F1FC65CAE005B0A26 /* ESEmoticonTool.m in Sources */,
-				EEE6D70E1FDA90C20072BD15 /* RTCButton.m in Sources */,
 				EED35A111FC65CAE005B0A26 /* EmoticonContentView.m in Sources */,
 				EED35A171FC65F5C005B0A26 /* UIImage+Image.m in Sources */,
 				EE4051221FB3ECBF0054BC53 /* AppDelegate.m in Sources */,

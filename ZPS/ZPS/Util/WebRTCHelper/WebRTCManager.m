@@ -10,9 +10,6 @@
 #import <CoreTelephony/CTCallCenter.h>
 #import <CoreTelephony/CTCall.h>
 
-#import "WebRTCClient.h"
-
-
 #import "RTCICEServer.h"
 #import "RTCICECandidate.h"
 #import "RTCICEServer.h"
