@@ -52,7 +52,7 @@ SocketManagerDelegate>
     
     
     // 便于测试
-    if (HJSCREENH < 667) {
+    if (HJSCREENH == 667) {
         SocketManager *manager = [SocketManager shareSockManager];
         manager.delegate = self;
         [manager dataSavePath];
@@ -82,7 +82,7 @@ SocketManagerDelegate>
 - (void)setupInit{
     self.navigationItem.title = @"NAVY-Chat";
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"背景" style:UIBarButtonItemStyleDone target:self action:@selector(rightItemDidClick)];
-    if (HJSCREENH >= 667) {
+    if (HJSCREENH > 667) {
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"连接" style:UIBarButtonItemStyleDone target:self action:@selector(leftItemDidClick)];
     }
     
